@@ -1,0 +1,173 @@
+import type { Metadata } from "next";
+import Image from "next/image";
+import { Instagram } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Events — Elizabeth's Gift",
+  description:
+    "Learn about the Townies Open golf tournament benefiting Elizabeth's Gift.",
+};
+
+export default function EventsPage() {
+  return (
+    <>
+      {/* Hero */}
+      <section className="bg-charcoal text-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <p className="text-olive-muted font-semibold text-sm uppercase tracking-wide mb-4">
+            Events
+          </p>
+          <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-cream">
+            Townies Open
+          </h1>
+          <p className="mt-4 font-serif text-xl text-gold">
+            Golf for Good
+          </p>
+        </div>
+      </section>
+
+      {/* About Townies */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div>
+              <h2 className="font-serif text-3xl text-charcoal mb-6">
+                Who Are the Townies?
+              </h2>
+              <p className="text-charcoal/70 text-lg leading-relaxed">
+                The Townies were born out of a love for golf and a love for
+                Nashville. Their mission is simple: bring people together — from
+                all across the country — to enjoy a beautiful game in a beautiful
+                city, with friends new and old. The Townies believe in golf for
+                the betterment of the individual, and golf for the flourishing of
+                the community.
+              </p>
+            </div>
+            <div>
+              <h2 className="font-serif text-3xl text-charcoal mb-6">
+                What Is the Townies Open?
+              </h2>
+              <p className="text-charcoal/70 text-lg leading-relaxed">
+                The Townies Open is a two-day, two-person scramble tournament
+                open to golfers of all ages and skill levels. Whether you&apos;re a
+                seasoned player or just picking up the game, you&apos;re welcome at
+                the tee. The winner is awarded the coveted Golden Mailbox.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partnership */}
+      <section className="bg-olive/10">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <h2 className="font-serif text-3xl text-charcoal mb-6">
+            Partnering with Elizabeth&apos;s Gift
+          </h2>
+          <p className="text-charcoal/70 text-lg leading-relaxed">
+            A core Townies tenet is playing a role in making Nashville the best
+            it can be — for all people. That&apos;s why they&apos;ve partnered with
+            Elizabeth&apos;s Gift, supporting our mission to provide free assistive
+            and medical equipment to individuals with disabilities who need it
+            most.
+          </p>
+        </div>
+      </section>
+
+      {/* Event Details */}
+      <section className="bg-charcoal text-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="font-serif text-3xl text-cream mb-8">
+                Townies Open
+              </h2>
+              <div className="space-y-4 text-cream/80">
+                <p className="text-lg">
+                  <span className="text-gold font-semibold">Date:</span> April 25–26, 2026
+                </p>
+                <p className="text-lg">
+                  <span className="text-gold font-semibold">Location:</span> Ted Rhodes Golf Course, Nashville, TN
+                </p>
+                <p className="text-lg">
+                  <span className="text-gold font-semibold">Format:</span> 36-Hole, 2-Person Scramble
+                </p>
+                <div className="pt-4">
+                  <p className="font-semibold text-cream mb-2">Includes:</p>
+                  <ul className="list-disc list-inside space-y-1 text-cream/70">
+                    <li>Two rounds of golf</li>
+                    <li>Official Unofficial Townies Merch</li>
+                    <li>Free admission to Saturday night benefit dinner</li>
+                    <li>Opportunity to hoist the coveted Golden Mailbox</li>
+                    <li>Other prizes and more surprises</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <Image
+                src="/images/townies/2026-registration.png"
+                alt="Townies Open - 2026 Registration"
+                width={400}
+                height={500}
+                className="rounded-2xl shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <h2 className="font-serif text-3xl text-charcoal mb-6">
+            How to Get Involved
+          </h2>
+          <p className="text-charcoal/70 text-lg mb-10 max-w-xl mx-auto">
+            Whether you want to play, sponsor, or simply spread the word —
+            there&apos;s a place for you in the Townies community.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://towniesgolf.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full bg-olive px-8 py-3.5 font-semibold text-white hover:bg-olive-light transition-colors"
+            >
+              Register to Play
+            </a>
+            <a
+              href="https://towniesgolf.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border-2 border-charcoal/20 px-8 py-3.5 font-semibold text-charcoal hover:border-charcoal/40 transition-colors"
+            >
+              View Sponsorships
+            </a>
+          </div>
+          <div className="mt-8 flex justify-center">
+            <a
+              href="https://instagram.com/towniesgolf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-charcoal/60 hover:text-charcoal transition-colors"
+            >
+              <Instagram size={20} />
+              <span className="text-sm font-medium">@towniesgolf</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Closing */}
+      <section className="bg-olive/10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <p className="text-center text-charcoal/60 font-serif text-xl italic">
+            Every round played and every dollar raised brings us one step closer
+            to a world where all people are lifted up and living fully.
+          </p>
+        </div>
+      </section>
+    </>
+  );
+}
