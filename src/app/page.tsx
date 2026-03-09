@@ -17,7 +17,7 @@ export default function Home() {
             <img
               src="/images/wheelchair-sketch.svg"
               alt=""
-              className="h-full w-auto opacity-[0.08]"
+              className="h-full w-auto opacity-[0.20]"
               aria-hidden="true"
             />
           </div>
