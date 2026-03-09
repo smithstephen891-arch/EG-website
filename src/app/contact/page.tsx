@@ -145,7 +145,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-charcoal mb-1">Email</h3>
-                    <p className="text-charcoal/70">info@elizabethsgift.org</p>
+                    <p className="text-charcoal/70">info@elizabethsgift.com</p>
                     <p className="text-sm text-charcoal/50 mt-1">
                       We do our best to respond within 2–3 business days.
                     </p>

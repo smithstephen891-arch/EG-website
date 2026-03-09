@@ -106,8 +106,8 @@ export default function PrivacyPage() {
             </ul>
             <p className="mt-4">
               To make any of these requests, please contact us at{" "}
-              <a href="mailto:info@elizabethsgift.org" className="text-olive hover:underline">
-                info@elizabethsgift.org
+              <a href="mailto:info@elizabethsgift.com" className="text-olive hover:underline">
+                info@elizabethsgift.com
               </a>.
             </p>
           </div>
@@ -129,8 +129,8 @@ export default function PrivacyPage() {
             <p>
               If you have any questions about this Privacy Policy, please reach
               out to us at{" "}
-              <a href="mailto:info@elizabethsgift.org" className="text-olive hover:underline">
-                info@elizabethsgift.org
+              <a href="mailto:info@elizabethsgift.com" className="text-olive hover:underline">
+                info@elizabethsgift.com
               </a>.
             </p>
           </div>
