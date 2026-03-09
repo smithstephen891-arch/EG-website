@@ -50,21 +50,21 @@ export default function AboutPage() {
           </h2>
           <div className="prose prose-lg text-charcoal/80 leading-relaxed space-y-6">
             <p>
-              Born with cerebral palsy, Elizabeth could not walk or talk — but
-              those who knew her will tell you she spoke volumes. She lived with
-              a vibrancy and joy that filled every room she entered, and she left
-              a lasting mark on the hearts of everyone fortunate enough to be in
-              her life. She was deeply loved. She is deeply missed.
+              Born with Cerebral Palsy, Elizabeth could not walk or talk, but
+              those who knew her will tell you she spoke volumes. For 45 years,
+              she lived with a vibrancy and joy that filled every room she
+              entered, and she left a lasting mark on the hearts of everyone
+              fortunate enough to be in her life. She was deeply loved, and she
+              is deeply missed.
             </p>
             <p>
-              Elizabeth&apos;s Gift was founded in her memory by her family, who know
-              firsthand what it means to navigate life with a disability — and
-              how profoundly the right equipment can change everything. A
+              Elizabeth&apos;s Gift was founded in her memory, by her family, who
+              know firsthand what it means to navigate life with a disability —
+              and how profoundly the right equipment can change everything. A
               well-fitted wheelchair. An adaptive device. The tools that make
               daily life not just manageable, but meaningful. These things matter
               enormously. And far too often, they go uncovered by insurance,
-              leaving families and individuals to face impossible choices on
-              their own.
+              leaving families and individuals to accept the bare minimum.
             </p>
           </div>
         </div>
@@ -77,14 +77,14 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <div className="space-y-6 text-cream/80 text-lg leading-relaxed">
-            <p>That&apos;s why Elizabeth&apos;s Gift exists.</p>
+            <p>That&apos;s why Elizabeth&apos;s Gift was created.</p>
             <p>
               We are a nonprofit organization dedicated to providing mobility
-              and medical equipment to underserved individuals who need it but
-              cannot afford it. We believe that access to the tools that support
-              a full and dignified life should never be determined by income. We
-              believe every person — regardless of ability or financial means —
-              deserves to be lifted up and to live fully.
+              and medical equipment to those in need. We believe that access to
+              the tools that support a full and dignified life should never be
+              determined by income. We believe every person, regardless of
+              ability or financial means, deserves to be lifted up and to live
+              fully.
             </p>
             <p>
               Elizabeth showed us what it looks like to live joyfully in the face

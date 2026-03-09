@@ -35,9 +35,10 @@ export default function DonatePage() {
               Give the Gift of Possibility
             </h1>
             <p className="mt-6 text-lg text-charcoal/70 leading-relaxed">
-              Every donation to Elizabeth&apos;s Gift puts life-changing equipment in
-              the hands of someone who needs it — a wheelchair that fits, a
-              device that communicates, a tool that makes the difference between
+              Every donation to Elizabeth&apos;s Gift puts life-enhancing equipment
+              in the hands of someone who needs it: a new wheelchair that fits,
+              a device that helps communication, a lift system that makes
+              transportation easier. Tools that make the difference between
               getting through the day and truly living it.
             </p>
           </div>
