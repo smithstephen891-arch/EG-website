@@ -66,6 +66,7 @@ export default function AboutPage() {
               enormously. And far too often, they go uncovered by insurance,
               leaving families and individuals to accept the bare minimum.
             </p>
+            <p>That&apos;s why Elizabeth&apos;s Gift was created.</p>
           </div>
         </div>
       </section>
@@ -77,7 +78,6 @@ export default function AboutPage() {
             Our Mission
           </h2>
           <div className="space-y-6 text-cream/80 text-lg leading-relaxed">
-            <p>That&apos;s why Elizabeth&apos;s Gift was created.</p>
             <p>
               We are a nonprofit organization dedicated to providing mobility
               and medical equipment to those in need. We believe that access to
