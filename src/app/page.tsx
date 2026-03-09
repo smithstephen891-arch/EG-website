@@ -48,8 +48,8 @@ export default function Home() {
 
             {/* Description */}
             <p className="mt-8 text-lg md:text-xl text-charcoal/70 leading-relaxed max-w-2xl mx-auto">
-              Providing mobility and medical equipment to those in need — because
-              everyone deserves to live fully, regardless of income or ability.
+              Helping people with disabilities access the equipment they need to
+              move, heal, and live more independently, regardless of financial barriers.
             </p>
 
             {/* CTAs */}
@@ -79,9 +79,9 @@ export default function Home() {
               Her Life Was a Gift to All of Us
             </h2>
             <p className="mt-6 text-lg text-charcoal/70 leading-relaxed">
-              Elizabeth lived with cerebral palsy — she could not walk or talk —
+              Elizabeth lived with Cerebral Palsy — she could not walk or talk —
               but she lived with a joy and vibrancy that touched everyone around
-              her. She didn&apos;t just exist; she thrived. And she reminded us,
+              her. With her infectious laugh and gentle spirit, she reminded us,
               every single day, of what it means to live fully.
             </p>
             <Link
