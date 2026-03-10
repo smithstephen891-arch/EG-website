@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   title: "Elizabeth's Gift — Lifting Up and Living Fully",
   description:
     "Elizabeth's Gift is a nonprofit organization dedicated to providing mobility and medical equipment to underserved individuals who need it but cannot afford it.",
+  icons: {
+    icon: "/images/eg-logo.svg",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
