@@ -1,13 +1,17 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
   try {
     const data = await request.json();
     const { name, email, subject, message } = data;
 
+    if (!process.env.RESEND_API_KEY) {
+      console.log("Contact form submission (no email sent — RESEND_API_KEY not set):", data);
+      return NextResponse.json({ message: "Message received successfully" }, { status: 200 });
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
     await resend.emails.send({
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: "info@elizabethsgift.com",
