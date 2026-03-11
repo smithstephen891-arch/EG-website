@@ -40,9 +40,9 @@ export default function ContactPage() {
               Contact Us
             </h1>
             <p className="mt-6 text-lg text-charcoal/70 leading-relaxed">
-              We&apos;d love to hear from you. Whether you have a question about
-              applying for assistance, want to learn more about how to support
-              our mission, or simply want to connect — we&apos;re here.
+              Whether you have a question about applying for assistance, want to
+              learn more about how to support our mission, or simply want to
+              connect, we&apos;d love to hear from you!
             </p>
           </div>
         </div>

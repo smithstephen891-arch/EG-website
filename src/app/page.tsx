@@ -48,8 +48,9 @@ export default function Home() {
 
             {/* Description */}
             <p className="mt-8 text-lg md:text-xl text-charcoal/70 leading-relaxed max-w-2xl mx-auto">
-              Helping people with disabilities access the equipment they need to
-              move, heal, and live more independently, regardless of financial barriers.
+              We provide medical and adaptive equipment to people with disabilities
+              at no cost, helping individuals gain independence, improve their
+              health, and live fuller lives.
             </p>
 
             {/* CTAs */}

@@ -156,14 +156,15 @@ export default function DonatePage() {
           <div className="text-cream/80 text-lg leading-relaxed space-y-6">
             <p>
               Elizabeth lived fully and joyfully despite the many challenges her
-              disabilities presented — in part because she had access to the
+              disabilities presented, in part because she had access to the
               equipment and support she needed. We started Elizabeth&apos;s Gift
               because we know not everyone is so fortunate.
             </p>
             <p>
-              Too many people are waiting for a wheelchair that fits. Too many
-              families are navigating systems that leave them behind. With your
-              donation, you help us close that gap — one person, one piece of
+              Too many people are waiting for a properly fitting wheelchair,
+              shower chairs, track systems, adaptive vehicles, and many, many
+              more items that are needed to make life a little easier. With your
+              donation, you help us close that gap: one person, one piece of
               equipment at a time.
             </p>
             <p className="font-serif text-xl italic text-gold">
