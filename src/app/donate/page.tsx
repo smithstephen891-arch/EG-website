@@ -76,31 +76,26 @@ export default function DonatePage() {
           {/* Tier Cards */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             {tiers.map((tier) => (
-              <button
-                key={tier.amount}
-                onClick={() => {
-                  setSelectedAmount(tier.amount);
-                  setCustomAmount("");
-                }}
-                className={`rounded-2xl p-6 text-center transition-all border-2 ${
-                  selectedAmount === tier.amount
-                    ? "border-olive bg-olive/10"
-                    : "border-charcoal/10 bg-white hover:border-olive/30"
-                }`}
-              >
-                <p className="font-serif text-2xl md:text-3xl text-charcoal">
-                  ${tier.amount.toLocaleString()}
+              <div key={tier.amount} className="flex flex-col gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedAmount(tier.amount);
+                    setCustomAmount("");
+                  }}
+                  className={`rounded-2xl p-6 text-center transition-all border-2 ${
+                    selectedAmount === tier.amount
+                      ? "border-olive bg-olive/10"
+                      : "border-charcoal/10 bg-white hover:border-olive/30"
+                  }`}
+                >
+                  <p className="font-serif text-2xl md:text-3xl text-charcoal">
+                    ${tier.amount.toLocaleString()}
+                  </p>
+                </button>
+                <p className="text-xs text-charcoal/50 text-center px-2">
+                  {tier.description}
                 </p>
-              </button>
-            ))}
-          </div>
-
-          {/* Impact Descriptions */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {tiers.map((tier) => (
-              <p key={tier.amount} className="text-xs text-charcoal/50 text-center px-2">
-                {tier.description}
-              </p>
+              </div>
             ))}
           </div>
 
