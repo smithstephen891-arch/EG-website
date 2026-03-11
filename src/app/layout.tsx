@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   description:
     "Elizabeth's Gift is a nonprofit organization dedicated to providing mobility and medical equipment to underserved individuals who need it but cannot afford it.",
   icons: {
-    icon: "/images/eg-logo.svg",
+    icon: "/icon.png",
     apple: "/apple-icon.png",
   },
 };
