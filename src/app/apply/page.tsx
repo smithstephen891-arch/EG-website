@@ -23,7 +23,7 @@ export default function ApplyPage() {
             few minutes to complete.
           </p>
           <a
-            href="https://docs.google.com/document/u/1/d/1UP9zc5mnnwxMGk9ntLCZO_bWPjz8l6FD9Kr-6mNy2Vs/mobilebasic"
+            href="https://forms.gle/ZervRoRTXx9YjL81A"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block rounded-full bg-olive px-10 py-3.5 font-semibold text-white hover:bg-olive-light transition-colors"
