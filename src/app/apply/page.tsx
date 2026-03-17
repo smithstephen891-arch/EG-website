@@ -91,13 +91,12 @@ export default function ApplyPage() {
 
               <div>
                 <label htmlFor="guardianName" className="block text-sm font-medium text-charcoal mb-2">
-                  Name of Guardian (if applicable) *
+                  Name of Guardian (if applicable)
                 </label>
                 <input
                   type="text"
                   id="guardianName"
                   name="guardianName"
-                  required
                   className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition"
                 />
               </div>
@@ -144,13 +143,12 @@ export default function ApplyPage() {
 
             <div className="max-w-xs">
               <label htmlFor="age" className="block text-sm font-medium text-charcoal mb-2">
-                Age of Applicant *
+                Age of Applicant
               </label>
               <input
                 type="text"
                 id="age"
                 name="age"
-                required
                 className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition"
               />
             </div>
@@ -184,12 +182,11 @@ export default function ApplyPage() {
 
             <div>
               <label htmlFor="doctor" className="block text-sm font-medium text-charcoal mb-2">
-                Name of PCP or Therapist *
+                Name of PCP or Therapist
               </label>
               <textarea
                 id="doctor"
                 name="doctor"
-                required
                 rows={2}
                 className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition resize-y"
               />
@@ -211,12 +208,11 @@ export default function ApplyPage() {
 
             <div>
               <label htmlFor="additional" className="block text-sm font-medium text-charcoal mb-2">
-                Anything else you would like to share? *
+                Anything else you would like to share?
               </label>
               <textarea
                 id="additional"
                 name="additional"
-                required
                 rows={3}
                 className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition resize-y"
               />
