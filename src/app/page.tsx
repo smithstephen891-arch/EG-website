@@ -223,7 +223,10 @@ export default function Home() {
       <section className="bg-olive/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
           <p className="text-center text-charcoal/60 font-serif text-xl italic">
-            In memory of Elizabeth — whose joy was a gift to everyone she met.
+            "And the King will answer them, 'Truly, I say to you, as you did it to one of the least of these my brothers, you did it to me.'"
+          </p>
+          <p className="text-center text-charcoal/40 font-serif text-base mt-3">
+            Matthew 25:40
           </p>
         </div>
       </section>
