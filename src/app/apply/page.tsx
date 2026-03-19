@@ -1,30 +1,22 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import type { Metadata } from "next";
-
-const metadata = {
-  title: "Apply for Assistance — Elizabeth's Gift",
-  description:
-    "Apply for mobility and medical equipment assistance from Elizabeth's Gift.",
-};
 
 export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [fileNames, setFileNames] = useState<string[]>([]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const data = Object.fromEntries(formData);
 
     try {
       const res = await fetch("/api/apply", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       if (res.ok) {
@@ -203,6 +195,57 @@ export default function ApplyPage() {
                 required
                 rows={3}
                 className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition resize-y"
+              />
+            </div>
+
+            {/* Note + Document Upload */}
+            <div className="rounded-xl border border-olive/30 bg-olive/5 px-6 py-5 space-y-5">
+              <p className="text-sm text-charcoal/70 italic leading-relaxed">
+                In order to best serve you, it is helpful to have a specific piece
+                of equipment listed and, if possible, a letter of medical necessity.
+              </p>
+
+              <div>
+                <label className="block text-sm font-medium text-charcoal mb-2">
+                  Upload Documents (optional)
+                </label>
+                <label className="flex flex-col items-center justify-center w-full rounded-lg border-2 border-dashed border-charcoal/20 bg-white px-4 py-8 cursor-pointer hover:border-olive hover:bg-olive/5 transition">
+                  <svg className="w-8 h-8 text-charcoal/30 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                  </svg>
+                  {fileNames.length > 0 ? (
+                    <ul className="text-sm text-charcoal/70 text-center space-y-1">
+                      {fileNames.map((name, i) => (
+                        <li key={i}>{name}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <span className="text-sm text-charcoal/40">Click to upload or drag and drop</span>
+                  )}
+                  <input
+                    type="file"
+                    name="documents"
+                    multiple
+                    className="hidden"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files ?? []);
+                      setFileNames(files.map((f) => f.name));
+                    }}
+                  />
+                </label>
+                <p className="mt-2 text-xs text-charcoal/40">PDF, JPG, PNG, or Word documents accepted</p>
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="howHeard" className="block text-sm font-medium text-charcoal mb-2">
+                How did you hear about us?
+              </label>
+              <input
+                type="text"
+                id="howHeard"
+                name="howHeard"
+                className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition"
               />
             </div>
 
