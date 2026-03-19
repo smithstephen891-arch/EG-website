@@ -170,6 +170,10 @@ export default function ApplyPage() {
                 rows={4}
                 className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition resize-y"
               />
+              <p className="mt-3 text-sm text-charcoal/60 italic leading-relaxed">
+                In order to best serve you, it is helpful to have a specific piece
+                of equipment listed and, if possible, a letter of medical necessity.
+              </p>
             </div>
 
             <div>
@@ -198,13 +202,8 @@ export default function ApplyPage() {
               />
             </div>
 
-            {/* Note + Document Upload */}
+            {/* Document Upload */}
             <div className="rounded-xl border border-olive/30 bg-olive/5 px-6 py-5 space-y-5">
-              <p className="text-sm text-charcoal/70 italic leading-relaxed">
-                In order to best serve you, it is helpful to have a specific piece
-                of equipment listed and, if possible, a letter of medical necessity.
-              </p>
-
               <div>
                 <label className="block text-sm font-medium text-charcoal mb-2">
                   Upload Documents (optional)
