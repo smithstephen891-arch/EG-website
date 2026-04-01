@@ -112,7 +112,7 @@ export default function EventsPage() {
                   Register to Play
                 </a>
                 <a
-                  href="https://towniesgolf.com"
+                  href="https://towniesgolf.com/pages/additional-sponsorships"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block rounded-full border-2 border-cream/20 px-8 py-3.5 font-semibold text-cream hover:border-cream/40 transition-colors text-center"
