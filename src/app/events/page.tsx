@@ -40,17 +40,20 @@ export default function EventsPage() {
               Elizabeth&apos;s Gift Benefit Dinner
             </h2>
             <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
-              We are hosting an evening to celebrate the mission of
-              Elizabeth&apos;s Gift — and everyone is invited. Come enjoy a
-              wonderful dinner and drinks, take part in a silent auction, and
-              experience some other fun surprises. Most importantly, you will
-              get to hear more about Elizabeth&apos;s Gift, the people we serve,
-              and the work we are doing together.
+              We are hosting an evening to celebrate the mission of Elizabeth&apos;s
+              Gift, and we&apos;d love to have you join us! Come enjoy all you can eat
+              dinner and drinks, and get ready to bid on some exciting silent auction
+              items. Most importantly, you will get to hear more about Elizabeth&apos;s
+              Gift, the people we serve, and the work we are doing together.
+            </p>
+            <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
+              This event is open to anyone who wants to join us. Whether you are a
+              longtime supporter or are just hearing about us for the first time, we
+              would love to have you at the table.
             </p>
             <p className="text-charcoal/70 text-lg leading-relaxed mb-8">
-              This event is open to anyone who wants to join us. Whether you
-              have been a part of this journey or are just hearing about us
-              for the first time, we would love to have you at the table.
+              Children are welcome. Ages 0–5 eat free and we have reduced tickets
+              available for 5–12 year olds.
             </p>
             <div className="space-y-3 mb-10 text-charcoal/80">
               <p className="text-lg">
