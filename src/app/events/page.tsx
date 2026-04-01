@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   title: "Events — Elizabeth's Gift",
   description:
     "Upcoming events benefiting Elizabeth's Gift, including the April 25 Benefit Dinner and the Townies Open golf tournament.",
+  openGraph: {
+    title: "Events — Elizabeth's Gift",
+    description:
+      "Upcoming events benefiting Elizabeth's Gift, including the April 25 Benefit Dinner and the Townies Open golf tournament.",
+    images: [{ url: "/icon.png", width: 512, height: 512, alt: "Elizabeth's Gift" }],
+  },
 };
 
 export default function EventsPage() {
