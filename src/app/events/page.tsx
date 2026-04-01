@@ -79,22 +79,6 @@ export default function EventsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
             {/* Left: Details */}
             <div className="space-y-10">
-              <div>
-                <p className="font-semibold text-cream/60 text-sm uppercase tracking-wide mb-4">About the Event</p>
-                <p className="text-cream/80 text-lg leading-relaxed mb-4">
-                  The Townies Open is a two-day, two-person scramble tournament
-                  open to golfers of all ages and skill levels. Whether you&apos;re a
-                  seasoned player or just picking up the game, you&apos;re welcome at
-                  the tee. The winner is awarded the coveted Golden Mailbox.
-                </p>
-                <p className="text-cream/80 text-lg leading-relaxed">
-                  A core Townies tenet is playing a role in making Nashville the
-                  best it can be — for all people. That&apos;s why they&apos;ve partnered
-                  with Elizabeth&apos;s Gift, supporting our mission to provide free
-                  assistive and medical equipment to those who need it most.
-                </p>
-              </div>
-
               <div className="space-y-3 text-cream/80">
                 <p className="text-lg">
                   <span className="text-gold font-semibold">Date:</span> April 25–26, 2026
@@ -162,15 +146,54 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* Closing */}
+      {/* About the Townies */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+            <div>
+              <h2 className="font-serif text-3xl text-charcoal mb-6">
+                Who Are the Townies?
+              </h2>
+              <p className="text-charcoal/70 text-lg leading-relaxed">
+                The Townies were born out of a love for golf and a love for
+                Nashville. Their mission is simple: bring people together — from
+                all across the country — to enjoy a beautiful game in a beautiful
+                city, with friends new and old. The Townies believe in golf for
+                the betterment of the individual, and golf for the flourishing of
+                the community.
+              </p>
+            </div>
+            <div>
+              <h2 className="font-serif text-3xl text-charcoal mb-6">
+                What Is the Townies Open?
+              </h2>
+              <p className="text-charcoal/70 text-lg leading-relaxed">
+                The Townies Open is a two-day, two-person scramble tournament
+                open to golfers of all ages and skill levels. Whether you&apos;re a
+                seasoned player or just picking up the game, you&apos;re welcome at
+                the tee. The winner is awarded the coveted Golden Mailbox.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partnership */}
       <section className="bg-olive/10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
-          <p className="text-center text-charcoal/60 font-serif text-xl italic">
-            Every round played and every dollar raised brings us one step closer
-            to a world where all people are lifted up and living fully.
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20 text-center">
+          <h2 className="font-serif text-3xl text-charcoal mb-6">
+            Partnering with Elizabeth&apos;s Gift
+          </h2>
+          <p className="text-charcoal/70 text-lg leading-relaxed">
+            A core Townies tenet is playing a role in making Nashville the best
+            it can be — for all people. That&apos;s why they&apos;ve partnered with
+            Elizabeth&apos;s Gift, supporting our mission to provide free assistive
+            and medical equipment to individuals with disabilities who need it
+            most.
           </p>
         </div>
       </section>
+
     </>
   );
 }
