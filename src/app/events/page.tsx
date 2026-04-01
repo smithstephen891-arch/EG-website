@@ -49,8 +49,8 @@ export default function EventsPage() {
             </p>
             <p className="text-charcoal/70 text-lg leading-relaxed mb-8">
               This event is open to anyone who wants to join us. Whether you
-              are a longtime supporter or are just hearing about us for the
-              first time, we would love to have you at the table.
+              have been a part of this journey or are just hearing about us
+              for the first time, we would love to have you at the table.
             </p>
             <div className="space-y-3 mb-10 text-charcoal/80">
               <p className="text-lg">
