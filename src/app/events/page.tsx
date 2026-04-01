@@ -18,13 +18,88 @@ export default function EventsPage() {
             Events
           </p>
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-cream">
-            Townies Open
+            Upcoming Events
           </h1>
           <p className="mt-4 font-serif text-xl text-gold">
-            Golf for Good
+            Join us — everyone is welcome.
           </p>
         </div>
       </section>
+
+      {/* Benefit Dinner */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <div>
+              <p className="text-olive font-semibold text-sm uppercase tracking-wide mb-3">
+                April 25, 2026
+              </p>
+              <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-6">
+                Elizabeth&apos;s Gift Benefit Dinner
+              </h2>
+              <p className="text-charcoal/70 text-lg leading-relaxed mb-6">
+                We are hosting an evening to celebrate the mission of
+                Elizabeth&apos;s Gift — and everyone is invited. Come enjoy a
+                wonderful dinner and drinks, take part in a silent auction, and
+                experience some other fun surprises. Most importantly, you will
+                get to hear more about Elizabeth&apos;s Gift, the people we serve,
+                and the work we are doing together.
+              </p>
+              <p className="text-charcoal/70 text-lg leading-relaxed mb-8">
+                This event is open to anyone who wants to join us. Whether you
+                are a longtime supporter or are just hearing about us for the
+                first time, we would love to have you at the table.
+              </p>
+              <div className="space-y-3 mb-10 text-charcoal/80">
+                <p className="text-lg">
+                  <span className="text-olive font-semibold">Date:</span> Saturday, April 25, 2026
+                </p>
+                <p className="text-lg">
+                  <span className="text-olive font-semibold">Includes:</span> Dinner, drinks, silent auction &amp; more
+                </p>
+              </div>
+              <a
+                href="https://towniesgolf.com/pages/benefit-dinner"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block rounded-full bg-olive px-8 py-3.5 font-semibold text-white hover:bg-olive-light transition-colors"
+              >
+                Get Your Tickets
+              </a>
+            </div>
+            <div className="bg-olive/10 rounded-2xl p-10 flex flex-col gap-6">
+              <h3 className="font-serif text-2xl text-charcoal">What to Expect</h3>
+              <ul className="space-y-4 text-charcoal/70 text-lg">
+                <li className="flex items-start gap-3">
+                  <span className="text-olive font-bold mt-0.5">—</span>
+                  <span>A delicious dinner and drinks provided for all guests</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-olive font-bold mt-0.5">—</span>
+                  <span>A silent auction featuring unique items and experiences</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-olive font-bold mt-0.5">—</span>
+                  <span>Other fun activities and surprises throughout the evening</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-olive font-bold mt-0.5">—</span>
+                  <span>An opportunity to learn about Elizabeth&apos;s Gift and the lives we are changing</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-olive font-bold mt-0.5">—</span>
+                  <span>A warm, welcoming community of people who care</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <hr className="border-charcoal/10" />
+      </div>
 
       {/* About Townies */}
       <section className="bg-cream">
