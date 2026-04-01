@@ -20,16 +20,13 @@ export default function EventsPage() {
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-cream">
             Upcoming Events
           </h1>
-          <p className="mt-4 font-serif text-xl text-gold">
-            Join us — everyone is welcome.
-          </p>
         </div>
       </section>
 
       {/* Benefit Dinner */}
       <section className="bg-cream">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+          <div className="max-w-3xl">
             <div>
               <p className="text-olive font-semibold text-sm uppercase tracking-wide mb-3">
                 April 25, 2026
@@ -66,31 +63,6 @@ export default function EventsPage() {
               >
                 Get Your Tickets
               </a>
-            </div>
-            <div className="bg-olive/10 rounded-2xl p-10 flex flex-col gap-6">
-              <h3 className="font-serif text-2xl text-charcoal">What to Expect</h3>
-              <ul className="space-y-4 text-charcoal/70 text-lg">
-                <li className="flex items-start gap-3">
-                  <span className="text-olive font-bold mt-0.5">—</span>
-                  <span>A delicious dinner and drinks provided for all guests</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-olive font-bold mt-0.5">—</span>
-                  <span>A silent auction featuring unique items and experiences</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-olive font-bold mt-0.5">—</span>
-                  <span>Other fun activities and surprises throughout the evening</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-olive font-bold mt-0.5">—</span>
-                  <span>An opportunity to learn about Elizabeth&apos;s Gift and the lives we are changing</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-olive font-bold mt-0.5">—</span>
-                  <span>A warm, welcoming community of people who care</span>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
