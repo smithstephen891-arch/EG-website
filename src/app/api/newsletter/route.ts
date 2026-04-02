@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     // Notify admin of new subscriber (always runs first)
     await resend.emails.send({
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
-      to: "smithstephen891@gmail.com",
+      to: "info@elizabethsgift.com",
       subject: `New Newsletter Signup — ${email}`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
