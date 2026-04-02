@@ -46,19 +46,16 @@ export async function POST(request: Request) {
       `,
     });
 
-    // Add contact to Resend audience (runs independently — won't break the signup if it fails)
-    if (process.env.RESEND_AUDIENCE_ID) {
-      try {
-        await resend.contacts.create({
-          email,
-          firstName: name?.split(" ")[0] ?? "",
-          lastName: name?.split(" ").slice(1).join(" ") ?? "",
-          audienceId: process.env.RESEND_AUDIENCE_ID,
-          unsubscribed: false,
-        });
-      } catch (audienceError) {
-        console.error("Resend audience add failed (non-critical):", audienceError);
-      }
+    // Add contact to Resend (runs independently — won't break the signup if it fails)
+    try {
+      await resend.contacts.create({
+        email,
+        firstName: name?.split(" ")[0] ?? "",
+        lastName: name?.split(" ").slice(1).join(" ") ?? "",
+        unsubscribed: false,
+      });
+    } catch (contactError) {
+      console.error("Resend contact add failed (non-critical):", contactError);
     }
 
     return NextResponse.json({ message: "Signed up successfully" }, { status: 200 });
