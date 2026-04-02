@@ -87,7 +87,7 @@ export default function Home() {
               Her Life Was a Gift to All of Us
             </h2>
             <p className="mt-6 text-lg text-charcoal/70 leading-relaxed">
-              Elizabeth lived with Cerebral Palsy — she could not walk or talk —
+              Elizabeth lived with cerebral palsy — she could not walk or talk —
               but she lived with a joy and vibrancy that touched everyone around
               her. With her infectious laugh and gentle spirit, she reminded us,
               every single day, of what it means to live fully.

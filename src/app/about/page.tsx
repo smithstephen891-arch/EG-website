@@ -51,7 +51,7 @@ export default function AboutPage() {
           </h2>
           <div className="prose prose-lg text-charcoal/80 leading-relaxed space-y-6">
             <p>
-              Born with Cerebral Palsy, Elizabeth could not walk or talk, but
+              Born with cerebral palsy, Elizabeth could not walk or talk, but
               those who knew her will tell you she spoke volumes. For 45 years,
               she lived with a vibrancy and joy that filled every room she
               entered, and she left a lasting mark on the hearts of everyone
