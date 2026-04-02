@@ -79,6 +79,12 @@ export default function Header() {
               </Link>
             ))}
             <Link
+              href="/apply"
+              className="rounded-full border border-olive px-6 py-2.5 text-sm font-semibold text-olive hover:bg-olive/10 transition-colors"
+            >
+              Apply
+            </Link>
+            <Link
               href="/donate"
               className="rounded-full bg-olive px-6 py-2.5 text-sm font-semibold text-white hover:bg-olive-light transition-colors"
             >
@@ -110,8 +116,15 @@ export default function Header() {
               </Link>
             ))}
             <Link
+              href="/apply"
+              className="mt-2 rounded-full border border-olive px-6 py-2.5 text-sm font-semibold text-olive text-center hover:bg-olive/10 transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              Apply
+            </Link>
+            <Link
               href="/donate"
-              className="mt-2 rounded-full bg-olive px-6 py-2.5 text-sm font-semibold text-white text-center hover:bg-olive-light transition-colors"
+              className="mt-1 rounded-full bg-olive px-6 py-2.5 text-sm font-semibold text-white text-center hover:bg-olive-light transition-colors"
               onClick={() => setMobileOpen(false)}
             >
               Donate Now

@@ -57,10 +57,16 @@ export default function Home() {
             {/* CTAs */}
             <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
               <Link
-                href="/donate"
+                href="/apply"
                 className="rounded-full bg-olive px-8 py-3.5 text-center font-semibold text-white hover:bg-olive-light transition-colors"
               >
-                Donate Now
+                Apply for Assistance
+              </Link>
+              <Link
+                href="/donate"
+                className="rounded-full border-2 border-charcoal/20 px-8 py-3.5 text-center font-semibold text-charcoal hover:border-charcoal/40 transition-colors"
+              >
+                Donate
               </Link>
               <Link
                 href="/about"
