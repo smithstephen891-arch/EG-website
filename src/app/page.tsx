@@ -163,59 +163,77 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Events / Townies Open */}
+      {/* Events */}
       <section className="bg-charcoal text-cream">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <p className="text-olive-muted font-semibold text-sm uppercase tracking-wide mb-4">
-                Events
+          <p className="text-olive-muted font-semibold text-sm uppercase tracking-wide mb-10">
+            Upcoming Events
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+            {/* Benefit Dinner */}
+            <div className="bg-charcoal-light rounded-2xl p-8 flex flex-col">
+              <p className="text-olive font-semibold text-sm uppercase tracking-wide mb-3">
+                April 25, 2026
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl text-cream mb-6">
+              <h2 className="font-serif text-2xl text-cream mb-4">
+                Elizabeth&apos;s Gift Benefit Dinner
+              </h2>
+              <p className="text-cream/70 leading-relaxed mb-6 flex-1">
+                Join us for an evening of dinner, drinks, and a silent auction
+                in celebration of our mission. You&apos;ll get to hear more about
+                Elizabeth&apos;s Gift and the people we serve. Open to everyone —
+                we&apos;d love to have you at the table.
+              </p>
+              <div className="text-cream/60 text-sm mb-6 space-y-1">
+                <p>📍 Nashville, Tennessee</p>
+              </div>
+              <a
+                href="https://towniesgolf.com/pages/benefit-dinner"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="self-start rounded-full bg-olive px-6 py-2.5 text-sm font-semibold text-white hover:bg-olive-light transition-colors"
+              >
+                Get Tickets
+              </a>
+            </div>
+
+            {/* Townies Open */}
+            <div className="bg-charcoal-light rounded-2xl p-8 flex flex-col">
+              <p className="text-olive font-semibold text-sm uppercase tracking-wide mb-3">
+                April 25–26, 2026
+              </p>
+              <h2 className="font-serif text-2xl text-cream mb-4">
                 Townies Open
               </h2>
-              <p className="text-cream/70 text-lg leading-relaxed mb-4">
-                Elizabeth&apos;s Gift is proud to be the benefiting nonprofit of the
-                Townies Open — an annual golf tournament rooted in a love for the
-                game and a deep commitment to the city of Nashville.
+              <p className="text-cream/70 leading-relaxed mb-6 flex-1">
+                Elizabeth&apos;s Gift is the benefiting nonprofit of the Townies
+                Open — a two-day, two-person scramble golf tournament open to
+                players of all ages and skill levels at Ted Rhodes Golf Course
+                in Nashville.
               </p>
-              <p className="text-cream/70 leading-relaxed mb-8">
-                A two-day, two-person scramble open to golfers of all ages and
-                skill levels. Every round played and every dollar raised brings
-                us closer to a world where all people are lifted up and living
-                fully.
-              </p>
-              <Link
-                href="/events"
-                className="inline-block rounded-full bg-olive px-8 py-3 font-semibold text-white hover:bg-olive-light transition-colors"
-              >
-                Learn More
-              </Link>
-            </div>
-            <div className="flex justify-center">
-              <div className="bg-charcoal-light rounded-2xl p-8 w-full max-w-sm text-center">
-                <p className="font-serif text-2xl text-gold mb-2">
-                  Townies Open
-                </p>
-                <p className="text-cream/70 mb-1">36-Hole, 2-Person Scramble</p>
-                <p className="text-cream font-semibold text-lg mt-4">
-                  April 25–26, 2026
-                </p>
-                <p className="text-cream/60 text-sm">
-                  Ted Rhodes Golf Course
-                  <br />
-                  Nashville, Tennessee
-                </p>
-                <a
-                  href="https://towniesgolf.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-block rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-charcoal hover:bg-gold/80 transition-colors"
-                >
-                  Register to Play
-                </a>
+              <div className="text-cream/60 text-sm mb-6 space-y-1">
+                <p>📍 Ted Rhodes Golf Course, Nashville, Tennessee</p>
+                <p>⛳ 36-Hole, 2-Person Scramble</p>
               </div>
+              <a
+                href="https://towniesgolf.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="self-start rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-charcoal hover:bg-gold/80 transition-colors"
+              >
+                Register to Play
+              </a>
             </div>
+
+          </div>
+          <div className="mt-10">
+            <Link
+              href="/events"
+              className="inline-block rounded-full border border-cream/30 px-8 py-3 text-sm font-semibold text-cream/70 hover:text-cream hover:border-cream/60 transition-colors"
+            >
+              View All Events
+            </Link>
           </div>
         </div>
       </section>
