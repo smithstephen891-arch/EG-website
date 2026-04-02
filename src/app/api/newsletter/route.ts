@@ -17,18 +17,7 @@ export async function POST(request: Request) {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // Add contact to Resend audience if audience ID is configured
-    if (process.env.RESEND_AUDIENCE_ID) {
-      await resend.contacts.create({
-        email,
-        firstName: name?.split(" ")[0] ?? "",
-        lastName: name?.split(" ").slice(1).join(" ") ?? "",
-        audienceId: process.env.RESEND_AUDIENCE_ID,
-        unsubscribed: false,
-      });
-    }
-
-    // Notify admin of new subscriber
+    // Notify admin of new subscriber (always runs first)
     await resend.emails.send({
       from: "Elizabeth's Gift <onboarding@resend.dev>",
       to: "smithstephen891@gmail.com",
@@ -56,6 +45,21 @@ export async function POST(request: Request) {
         </div>
       `,
     });
+
+    // Add contact to Resend audience (runs independently — won't break the signup if it fails)
+    if (process.env.RESEND_AUDIENCE_ID) {
+      try {
+        await resend.contacts.create({
+          email,
+          firstName: name?.split(" ")[0] ?? "",
+          lastName: name?.split(" ").slice(1).join(" ") ?? "",
+          audienceId: process.env.RESEND_AUDIENCE_ID,
+          unsubscribed: false,
+        });
+      } catch (audienceError) {
+        console.error("Resend audience add failed (non-critical):", audienceError);
+      }
+    }
 
     return NextResponse.json({ message: "Signed up successfully" }, { status: 200 });
   } catch (error) {
