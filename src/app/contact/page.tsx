@@ -22,6 +22,13 @@ export default function ContactPage() {
       });
 
       if (res.ok) {
+        if (data.newsletterOptIn === "on") {
+          await fetch("/api/newsletter", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: data.email, name: data.name, source: "Contact Form" }),
+          });
+        }
         setSubmitted(true);
       }
     } catch {

@@ -19,9 +19,12 @@ export default function DonatePage() {
     setLoading(true);
     try {
       const form = e.currentTarget;
+      const name = (form.elements.namedItem("name") as HTMLInputElement).value;
+      const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+      const newsletterOptIn = (form.elements.namedItem("newsletterOptIn") as HTMLInputElement).checked;
       const data = {
-        name: (form.elements.namedItem("name") as HTMLInputElement).value,
-        email: (form.elements.namedItem("email") as HTMLInputElement).value,
+        name,
+        email,
         pledgeType,
         amount: currentAmount,
         message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
@@ -31,6 +34,13 @@ export default function DonatePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      if (newsletterOptIn) {
+        await fetch("/api/newsletter", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, source: "Pledge Form" }),
+        });
+      }
       setSubmitted(true);
     } catch {
       alert("Something went wrong. Please try again.");

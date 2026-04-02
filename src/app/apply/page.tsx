@@ -20,6 +20,17 @@ export default function ApplyPage() {
       });
 
       if (res.ok) {
+        if (formData.get("newsletterOptIn") === "on") {
+          await fetch("/api/newsletter", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: formData.get("email"),
+              name: formData.get("recipientName"),
+              source: "Apply Form",
+            }),
+          });
+        }
         setSubmitted(true);
       }
     } catch {
