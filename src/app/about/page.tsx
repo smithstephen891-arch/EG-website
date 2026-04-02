@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import NewsletterSection from "@/components/NewsletterSection";
 
 export const metadata: Metadata = {
   title: "About — Elizabeth's Gift",
@@ -111,6 +112,13 @@ export default function AboutPage() {
           >
             Apply for Assistance
           </Link>
+        </div>
+      </section>
+
+      {/* Newsletter */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 border-t border-charcoal/10">
+          <NewsletterSection source="About Page" />
         </div>
       </section>
     </>

@@ -179,6 +179,19 @@ export default function DonatePage() {
                 />
               </div>
 
+              <div className="flex items-start gap-3 pt-1">
+                <input
+                  type="checkbox"
+                  id="newsletterOptIn"
+                  name="newsletterOptIn"
+                  className="mt-0.5 h-4 w-4 rounded border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
+                />
+                <label htmlFor="newsletterOptIn" className="text-sm text-charcoal/60 leading-snug cursor-pointer">
+                  Sign me up to receive updates from Elizabeth&apos;s Gift. You can
+                  unsubscribe at any time.
+                </label>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading || currentAmount <= 0}

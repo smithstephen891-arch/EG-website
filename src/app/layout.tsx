@@ -3,6 +3,7 @@ import { Inter, Corben } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import NewsletterPopup from "@/components/NewsletterPopup";
 import { DonationProvider } from "@/context/DonationContext";
 
 const inter = Inter({
@@ -38,6 +39,7 @@ export default function RootLayout({
           <Header />
           <main className="pt-20">{children}</main>
           <Footer />
+          <NewsletterPopup />
         </DonationProvider>
       </body>
     </html>
