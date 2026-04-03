@@ -10,35 +10,47 @@ export default function DonatePage() {
   const [customAmount, setCustomAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [pendingData, setPendingData] = useState<{
+    name: string; email: string; message: string; newsletterOptIn: boolean;
+  } | null>(null);
 
   const currentAmount = selectedAmount || Number(customAmount) || 0;
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (currentAmount <= 0) return;
+    const form = e.currentTarget;
+    setPendingData({
+      name: (form.elements.namedItem("name") as HTMLInputElement).value,
+      email: (form.elements.namedItem("email") as HTMLInputElement).value,
+      message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
+      newsletterOptIn: (form.elements.namedItem("newsletterOptIn") as HTMLInputElement).checked,
+    });
+    setShowConfirm(true);
+  }
+
+  async function handleConfirm() {
+    if (!pendingData) return;
     setLoading(true);
+    setShowConfirm(false);
     try {
-      const form = e.currentTarget;
-      const name = (form.elements.namedItem("name") as HTMLInputElement).value;
-      const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-      const newsletterOptIn = (form.elements.namedItem("newsletterOptIn") as HTMLInputElement).checked;
-      const data = {
-        name,
-        email,
-        pledgeType,
-        amount: currentAmount,
-        message: (form.elements.namedItem("message") as HTMLTextAreaElement).value,
-      };
       await fetch("/api/pledge", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: pendingData.name,
+          email: pendingData.email,
+          pledgeType,
+          amount: currentAmount,
+          message: pendingData.message,
+        }),
       });
-      if (newsletterOptIn) {
+      if (pendingData.newsletterOptIn) {
         await fetch("/api/newsletter", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, name, source: "Pledge Form" }),
+          body: JSON.stringify({ email: pendingData.email, name: pendingData.name, source: "Pledge Form" }),
         });
       }
       setSubmitted(true);
@@ -189,11 +201,13 @@ export default function DonatePage() {
                 />
               </div>
 
+              {/* Newsletter opt-out (pre-checked) */}
               <div className="flex items-start gap-3 pt-1">
                 <input
                   type="checkbox"
                   id="newsletterOptIn"
                   name="newsletterOptIn"
+                  defaultChecked
                   className="mt-0.5 h-4 w-4 rounded border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
                 />
                 <label htmlFor="newsletterOptIn" className="text-sm text-charcoal/60 leading-snug cursor-pointer">
@@ -211,6 +225,21 @@ export default function DonatePage() {
               </button>
             </form>
           )}
+        </div>
+      </section>
+
+      {/* Mail a Check */}
+      <section className="bg-olive/10">
+        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 py-14 text-center">
+          <h2 className="font-serif text-2xl text-charcoal mb-3">Prefer to Mail a Check?</h2>
+          <p className="text-charcoal/70 text-lg mb-5">
+            You are also welcome to make a donation by sending a check to:
+          </p>
+          <address className="not-italic text-charcoal font-medium text-lg leading-relaxed">
+            Elizabeth&apos;s Gift<br />
+            188 Front St. Ste 116-44<br />
+            Franklin, TN 37064
+          </address>
         </div>
       </section>
 
@@ -242,6 +271,40 @@ export default function DonatePage() {
           </div>
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      {showConfirm && pendingData && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-8 space-y-6">
+            <h2 className="font-serif text-2xl text-charcoal">Confirm Your Pledge</h2>
+            <p className="text-charcoal/70 leading-relaxed">
+              You are submitting a <strong>{pledgeType === "monthly" ? "monthly" : "one-time"} pledge
+              of ${currentAmount.toLocaleString()}</strong>. This is not a charge — it is a pledge of intent.
+              We will reach out to you at <strong>{pendingData.email}</strong> as soon as we are ready
+              to accept donations.
+            </p>
+            <div className="bg-olive/10 rounded-xl px-5 py-4 text-sm text-charcoal/70 space-y-1">
+              <p><span className="font-semibold text-charcoal">Name:</span> {pendingData.name}</p>
+              <p><span className="font-semibold text-charcoal">Email:</span> {pendingData.email}</p>
+              <p><span className="font-semibold text-charcoal">Pledge:</span> ${currentAmount.toLocaleString()} {pledgeType === "monthly" ? "/ month" : "one-time"}</p>
+            </div>
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={handleConfirm}
+                className="flex-1 rounded-full bg-olive px-6 py-3 font-semibold text-white hover:bg-olive-light transition-colors"
+              >
+                Yes, Submit Pledge
+              </button>
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="flex-1 rounded-full border border-charcoal/20 px-6 py-3 font-semibold text-charcoal/70 hover:bg-charcoal/5 transition-colors"
+              >
+                Go Back
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
