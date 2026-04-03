@@ -172,6 +172,20 @@ export default function ContactPage() {
                   </div>
                 </div>
 
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-olive/10 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-olive"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-charcoal mb-1">Mailing Address</h3>
+                    <address className="not-italic text-charcoal/70 leading-relaxed">
+                      Elizabeth&apos;s Gift<br />
+                      188 Front St. Ste 116-44<br />
+                      Franklin, TN 37064
+                    </address>
+                  </div>
+                </div>
+
                 <div>
                   <h3 className="font-semibold text-charcoal mb-4">
                     Find Us on Social Media
