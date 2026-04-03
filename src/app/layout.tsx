@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NewsletterPopup from "@/components/NewsletterPopup";
 import { DonationProvider } from "@/context/DonationContext";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -40,6 +41,7 @@ export default function RootLayout({
           <main className="pt-20">{children}</main>
           <Footer />
           <NewsletterPopup />
+          <Analytics />
         </DonationProvider>
       </body>
     </html>
