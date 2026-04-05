@@ -12,11 +12,11 @@ export default function Home() {
           {/* Sentinel for scroll-based header */}
           <div id="hero-sentinel" className="absolute top-0 left-0" />
 
-          {/* Wheelchair sketch as background watermark — spans from title to buttons */}
+          {/* Steamboat Willie as background watermark */}
           <div className="absolute left-0 right-0 pointer-events-none flex justify-center" style={{ top: '36%', bottom: '24%' }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/wheelchair-sketch.svg"
+              src="/images/steamboat-willie-mickey-mouse.webp"
               alt=""
               className="h-full w-auto opacity-[0.20]"
               aria-hidden="true"
