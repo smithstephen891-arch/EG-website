@@ -43,6 +43,7 @@ export async function POST(request: Request) {
       replyTo: email,
       subject: `New Assistance Application — ${recipientName}`,
       attachments,
+      text: `New Assistance Application\n\nRecipient Name: ${recipientName}\nGuardian Name: ${guardianName || "—"}\nAge: ${age || "—"}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\nTheir Story:\n${story}\n\nRequested Equipment:\n${equipment}\n\nPCP / Therapist: ${doctor || "—"}\n\nLetter of Medical Necessity:\n${medicalLetter}\n\nHow They Heard About Us: ${howHeard || "—"}\n\nAdditional Information:\n${additional || "—"}\n\n---\nSubmitted via elizabethsgift.com assistance application`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">New Assistance Application</h2>

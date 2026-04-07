@@ -19,6 +19,7 @@ export async function POST(request: Request) {
       to: "info@elizabethsgift.com",
       replyTo: email,
       subject: `New Pledge — ${name} (${pledgeType}, $${amount})`,
+      text: `New Donation Pledge\n\nName: ${name}\nEmail: ${email}\nPledge Type: ${pledgeType === "monthly" ? "Monthly" : "One-time"}\nAmount: $${Number(amount).toLocaleString()}${message ? `\n\nMessage:\n${message}` : ""}\n\n---\nSubmitted via elizabethsgift.com donation pledge form`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">New Donation Pledge</h2>
@@ -56,6 +57,7 @@ export async function POST(request: Request) {
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: email,
       subject: "Your Pledge to Elizabeth's Gift — Thank You!",
+      text: `Thank you, ${name}!\n\nWe have received your pledge and are so grateful for your support of Elizabeth's Gift.\n\nThis is a pledge of intent, not a charge. We are not yet set up to accept donations, but we will reach out to you as soon as we are ready.\n\nPledge Type: ${pledgeType === "monthly" ? "Monthly" : "One-time"}\nAmount: $${Number(amount).toLocaleString()}\n\nIf you have any questions, feel free to reply to this email or reach us at info@elizabethsgift.com.\n\nWith gratitude,\nThe Elizabeth's Gift Team\n\n---\nElizabeth's Gift — Lifting Up and Living Fully`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">Thank You, ${name}!</h2>

@@ -22,6 +22,7 @@ export async function POST(request: Request) {
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: "info@elizabethsgift.com",
       subject: `New Newsletter Signup — ${email}`,
+      text: `New Newsletter Subscriber\n\nEmail: ${email}${name ? `\nName: ${name}` : ""}\nSource: ${source ?? "Website"}\n\n---\nSubmitted via elizabethsgift.com`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">New Newsletter Subscriber</h2>

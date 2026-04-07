@@ -17,6 +17,7 @@ export async function POST(request: Request) {
       to: "info@elizabethsgift.com",
       replyTo: email,
       subject: `New Message: ${subject}`,
+      text: `New Contact Form Submission\n\nName: ${name}\nEmail: ${email}\nSubject: ${subject}\nNewsletter: ${newsletterOptIn === "on" ? "Opted in" : "No"}\n\nMessage:\n${message}\n\n---\nSent via elizabethsgift.com contact form`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">New Contact Form Submission</h2>
