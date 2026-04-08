@@ -67,6 +67,10 @@ export default function Footer() {
               Elizabeth&apos;s Gift is a registered nonprofit organization.
               <br />
               All donations are tax-deductible to the extent allowed by law.
+              <br />
+              FEIN: 41-5162363
+              <br />
+              188 Front St. Ste 116-44, Franklin, TN 37064
             </p>
           </div>
         </div>
