@@ -43,6 +43,7 @@ export default function RootLayout({
           <NewsletterPopup />
           <Analytics />
         </DonationProvider>
+        <Analytics />
       </body>
     </html>
   );
