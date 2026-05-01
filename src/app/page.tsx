@@ -92,9 +92,43 @@ export default function Home() {
               her. With her infectious laugh and gentle spirit, she reminded us,
               every single day, of what it means to live fully.
             </p>
+          </div>
+
+          {/* Photo Strip */}
+          <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm">
+              <Image
+                src="/images/home/elizabeth-pool.jpg"
+                alt="Elizabeth as a child with her father floating in a pool"
+                fill
+                sizes="(max-width: 640px) 100vw, 33vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm">
+              <Image
+                src="/images/home/elizabeth-capitol.jpg"
+                alt="Elizabeth with her siblings at the U.S. Capitol"
+                fill
+                sizes="(max-width: 640px) 100vw, 33vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm">
+              <Image
+                src="/images/home/elizabeth-bowling.jpg"
+                alt="Elizabeth at a bowling alley with two young girls"
+                fill
+                sizes="(max-width: 640px) 100vw, 33vw"
+                className="object-cover"
+              />
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
             <Link
               href="/about"
-              className="mt-8 inline-block rounded-full bg-charcoal px-8 py-3 font-semibold text-cream hover:bg-charcoal-light transition-colors"
+              className="inline-block rounded-full bg-charcoal px-8 py-3 font-semibold text-cream hover:bg-charcoal-light transition-colors"
             >
               Read Our Full Story
             </Link>
