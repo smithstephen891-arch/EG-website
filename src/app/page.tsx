@@ -49,9 +49,9 @@ export default function Home() {
 
             {/* Description */}
             <p className="mt-8 text-lg md:text-xl text-charcoal/70 leading-relaxed max-w-2xl mx-auto">
-              We provide medical and adaptive equipment to people with disabilities
-              at no cost, helping individuals gain independence, improve their
-              health, and live fuller lives.
+              We provide mobility, medical, and adaptive equipment to people with
+              disabilities at no cost, helping individuals gain independence, the
+              ability to participate, and live fuller lives.
             </p>
 
             {/* CTAs */}
@@ -117,7 +117,7 @@ export default function Home() {
                 Donate
               </h3>
               <p className="text-charcoal/70 leading-relaxed mb-6">
-                Your gift provides life-changing mobility and medical equipment
+                Your gift provides life-changing mobility and adaptive equipment
                 to individuals who need it most. Every dollar makes a difference.
               </p>
               <Link
@@ -136,7 +136,7 @@ export default function Home() {
                 Apply for Assistance
               </h3>
               <p className="text-charcoal/70 leading-relaxed mb-6">
-                Are you or someone you know in need of mobility or medical
+                Are you or someone you know in need of mobility or adaptive
                 equipment that isn&apos;t covered by insurance? We&apos;re here to help.
               </p>
               <Link

@@ -67,9 +67,19 @@ export default function ApplyPage() {
               Apply for Assistance
             </h1>
             <p className="mt-6 text-lg text-charcoal/70 leading-relaxed">
-              If you or someone you know is in need of mobility or medical
-              equipment, please fill out the application below. We are honored to
-              help.
+              We exist so everyone has the opportunity to move, participate, and
+              thrive!
+            </p>
+            <p className="mt-4 text-lg text-charcoal/70 leading-relaxed">
+              We invite you to dream big about what would allow you and your
+              family to live fully — Tumble Forms that make traveling easier,
+              adaptive bikes, special wheelchairs, a swing for your backyard or
+              neighborhood, a communication device, etc.
+            </p>
+            <p className="mt-4 text-lg text-charcoal/70 leading-relaxed">
+              If you or someone you know is in need of mobility or adaptive
+              equipment, please fill out the application below. We are honored
+              to help.
             </p>
           </div>
         </div>
