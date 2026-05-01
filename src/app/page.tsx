@@ -214,56 +214,52 @@ export default function Home() {
             {/* Benefit Dinner */}
             <div className="bg-charcoal-light rounded-2xl p-8 flex flex-col">
               <p className="text-olive font-semibold text-sm uppercase tracking-wide mb-3">
-                April 25, 2026
+                Annual Event · Next: April 2027
               </p>
               <h2 className="font-serif text-2xl text-cream mb-4">
                 Elizabeth&apos;s Gift Benefit Dinner
               </h2>
               <p className="text-cream/70 leading-relaxed mb-6 flex-1">
-                Join us for an evening of dinner, drinks, and a silent auction
-                in celebration of our mission. You&apos;ll get to hear more about
-                Elizabeth&apos;s Gift and the people we serve. Open to everyone —
-                we&apos;d love to have you at the table.
+                Each year, we host an evening of dinner, drinks, and a silent
+                auction in celebration of our mission. You&apos;ll get to hear
+                more about Elizabeth&apos;s Gift and the people we serve. Open
+                to everyone — we&apos;d love to have you at the table.
               </p>
               <div className="text-cream/60 text-sm mb-6 space-y-1">
                 <p>📍 Nashville, Tennessee</p>
               </div>
-              <a
-                href="https://towniesgolf.com/pages/benefit-dinner"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/events"
                 className="self-start rounded-full bg-olive px-6 py-2.5 text-sm font-semibold text-white hover:bg-olive-light transition-colors"
               >
-                Get Tickets
-              </a>
+                Learn More
+              </Link>
             </div>
 
             {/* Townies Open */}
             <div className="bg-charcoal-light rounded-2xl p-8 flex flex-col">
               <p className="text-olive font-semibold text-sm uppercase tracking-wide mb-3">
-                April 25–26, 2026
+                Annual Event · Next: April 2027
               </p>
               <h2 className="font-serif text-2xl text-cream mb-4">
                 Townies Open
               </h2>
               <p className="text-cream/70 leading-relaxed mb-6 flex-1">
                 Elizabeth&apos;s Gift is the benefiting nonprofit of the Townies
-                Open — a two-day, two-person scramble golf tournament open to
-                players of all ages and skill levels at Ted Rhodes Golf Course
-                in Nashville.
+                Open — an annual two-day, two-person scramble golf tournament
+                open to players of all ages and skill levels at Ted Rhodes Golf
+                Course in Nashville.
               </p>
               <div className="text-cream/60 text-sm mb-6 space-y-1">
                 <p>📍 Ted Rhodes Golf Course, Nashville, Tennessee</p>
                 <p>⛳ 36-Hole, 2-Person Scramble</p>
               </div>
-              <a
-                href="https://towniesgolf.com"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/events"
                 className="self-start rounded-full bg-gold px-6 py-2.5 text-sm font-semibold text-charcoal hover:bg-gold/80 transition-colors"
               >
-                Register to Play
-              </a>
+                Learn More
+              </Link>
             </div>
 
           </div>
