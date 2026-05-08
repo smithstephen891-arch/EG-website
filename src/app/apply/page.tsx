@@ -6,6 +6,7 @@ export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
+  const [showMediaRelease, setShowMediaRelease] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -424,72 +425,18 @@ export default function ApplyPage() {
             </div>
 
             {/* ── Media & Publicity Release (Optional) ── */}
-            <div className="rounded-xl border border-charcoal/20 bg-white px-6 py-5 space-y-4">
-              <h3 className="font-semibold text-charcoal text-base">
-                Media and Publicity Release <span className="text-charcoal/40 font-normal">(Optional)</span>
+            <div className="rounded-xl border border-charcoal/20 bg-olive/5 px-6 py-5 space-y-3">
+              <h3 className="font-serif text-lg text-charcoal">
+                Can We Share Your Story to Help More People?
               </h3>
-              <div className="max-h-64 overflow-y-auto border border-charcoal/10 rounded-lg px-4 py-3 text-sm text-charcoal/70 leading-relaxed space-y-3 bg-charcoal/[0.02]">
-                <p>
-                  By checking the box below, I, the undersigned applicant (or the
-                  authorized parent, legal guardian, or representative of the
-                  individual identified in this application), hereby grant to
-                  Elizabeth&apos;s Gift, its successors, assigns, and authorized
-                  representatives, the irrevocable, royalty-free, worldwide right
-                  and permission to use, reproduce, publish, display, distribute,
-                  and create derivative works of the following, in any form or media
-                  now known or hereafter developed:
-                </p>
-                <ul className="list-disc list-inside space-y-1 pl-2">
-                  <li>Name of the recipient (or the individual on whose behalf this application is submitted)</li>
-                  <li>Photograph, image, and likeness</li>
-                  <li>Voice and recorded statements</li>
-                  <li>Personal story, testimonial, and biographical information</li>
-                </ul>
-                <p>
-                  This grant of rights extends to use in any and all publications
-                  and media, including but not limited to: the Elizabeth&apos;s Gift
-                  website, social media accounts, print and digital materials,
-                  newsletters, press releases, presentations, video and audio
-                  recordings, and fundraising campaigns, for purposes related to the
-                  charitable mission and activities of Elizabeth&apos;s Gift.
-                </p>
-                <p>I acknowledge and agree to the following:</p>
-                <p>
-                  <strong className="text-charcoal">1. No Compensation.</strong>{" "}
-                  I will receive no monetary compensation or other consideration for
-                  the use of the above materials.
-                </p>
-                <p>
-                  <strong className="text-charcoal">2. No Approval Right.</strong>{" "}
-                  I waive any right to inspect, review, or approve any finished
-                  materials, publications, or other works that may include the above.
-                </p>
-                <p>
-                  <strong className="text-charcoal">3. Respectful Use.</strong>{" "}
-                  Elizabeth&apos;s Gift will endeavor to portray the recipient
-                  respectfully and in a manner consistent with its charitable mission.
-                </p>
-                <p>
-                  <strong className="text-charcoal">4. Authority to Consent.</strong>{" "}
-                  If I am authorizing this release on behalf of a minor child or an
-                  individual under my legal guardianship or care, I confirm that I
-                  have full legal authority to grant this consent on their behalf.
-                </p>
-                <p>
-                  <strong className="text-charcoal">5. Revocation.</strong>{" "}
-                  This release shall remain in effect unless I provide written notice
-                  of revocation to Elizabeth&apos;s Gift at{" "}
-                  <a href="mailto:info@elizabethsgift.com" className="text-olive underline">info@elizabethsgift.com</a>.
-                  Any such revocation shall apply only on a going-forward basis and
-                  shall not apply to materials already published, distributed, or in
-                  production at the time of revocation.
-                </p>
-                <p>
-                  <strong className="text-charcoal">6. Governing Law.</strong>{" "}
-                  This release shall be governed by and construed in accordance with
-                  the laws of the State of Tennessee.
-                </p>
-              </div>
+              <p className="text-sm text-charcoal/60 leading-relaxed">
+                One of the most powerful ways to grow our mission is by sharing
+                the stories of the people we serve. If you&apos;re comfortable, we&apos;d
+                love the opportunity to share your story — on our website, social
+                media, or in other materials — to inspire others and help us
+                reach more people who need support. This is completely optional,
+                and you can change your mind at any time.
+              </p>
               <div className="flex items-start gap-3 pt-1">
                 <input
                   type="checkbox"
@@ -498,8 +445,17 @@ export default function ApplyPage() {
                   className="mt-0.5 h-4 w-4 rounded border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
                 />
                 <label htmlFor="mediaRelease" className="text-sm text-charcoal leading-snug cursor-pointer">
-                  I have read, understand, and agree to the Media and Publicity
-                  Release above. <span className="text-charcoal/40">(Optional)</span>
+                  Yes, Elizabeth&apos;s Gift may use my name, image, and story to
+                  help spread the word.{" "}
+                  <button
+                    type="button"
+                    onClick={() => setShowMediaRelease(true)}
+                    className="text-olive underline hover:text-olive-light transition-colors"
+                  >
+                    Read the full media release
+                  </button>
+                  {" "}
+                  <span className="text-charcoal/40">(Optional)</span>
                 </label>
               </div>
             </div>
@@ -514,6 +470,101 @@ export default function ApplyPage() {
           </form>
         </div>
       </section>
+
+      {/* Media Release Modal */}
+      {showMediaRelease && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full max-h-[85vh] flex flex-col">
+            <div className="px-6 pt-6 pb-4 border-b border-charcoal/10 flex items-center justify-between">
+              <h2 className="font-serif text-xl text-charcoal">Media and Publicity Release</h2>
+              <button
+                type="button"
+                onClick={() => setShowMediaRelease(false)}
+                className="text-charcoal/40 hover:text-charcoal transition-colors"
+                aria-label="Close"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="px-6 py-5 overflow-y-auto text-sm text-charcoal/70 leading-relaxed space-y-3">
+              <p>
+                By checking the box on the application form, I, the undersigned
+                applicant (or the authorized parent, legal guardian, or
+                representative of the individual identified in this application),
+                hereby grant to Elizabeth&apos;s Gift, its successors, assigns,
+                and authorized representatives, the irrevocable, royalty-free,
+                worldwide right and permission to use, reproduce, publish,
+                display, distribute, and create derivative works of the
+                following, in any form or media now known or hereafter developed:
+              </p>
+              <ul className="list-disc list-inside space-y-1 pl-2">
+                <li>Name of the recipient (or the individual on whose behalf this application is submitted)</li>
+                <li>Photograph, image, and likeness</li>
+                <li>Voice and recorded statements</li>
+                <li>Personal story, testimonial, and biographical information</li>
+              </ul>
+              <p>
+                This grant of rights extends to use in any and all publications
+                and media, including but not limited to: the Elizabeth&apos;s Gift
+                website, social media accounts, print and digital materials,
+                newsletters, press releases, presentations, video and audio
+                recordings, and fundraising campaigns, for purposes related to
+                the charitable mission and activities of Elizabeth&apos;s Gift.
+              </p>
+              <p className="font-semibold text-charcoal">I acknowledge and agree to the following:</p>
+              <p>
+                <strong className="text-charcoal">1. No Compensation.</strong>{" "}
+                I will receive no monetary compensation or other consideration
+                for the use of the above materials.
+              </p>
+              <p>
+                <strong className="text-charcoal">2. No Approval Right.</strong>{" "}
+                I waive any right to inspect, review, or approve any finished
+                materials, publications, or other works that may include the
+                above.
+              </p>
+              <p>
+                <strong className="text-charcoal">3. Respectful Use.</strong>{" "}
+                Elizabeth&apos;s Gift will endeavor to portray the recipient
+                respectfully and in a manner consistent with its charitable
+                mission.
+              </p>
+              <p>
+                <strong className="text-charcoal">4. Authority to Consent.</strong>{" "}
+                If I am authorizing this release on behalf of a minor child or
+                an individual under my legal guardianship or care, I confirm
+                that I have full legal authority to grant this consent on their
+                behalf.
+              </p>
+              <p>
+                <strong className="text-charcoal">5. Revocation.</strong>{" "}
+                This release shall remain in effect unless I provide written
+                notice of revocation to Elizabeth&apos;s Gift at{" "}
+                <a href="mailto:info@elizabethsgift.com" className="text-olive underline">info@elizabethsgift.com</a>.
+                Any such revocation shall apply only on a going-forward basis
+                and shall not apply to materials already published, distributed,
+                or in production at the time of revocation.
+              </p>
+              <p>
+                <strong className="text-charcoal">6. Governing Law.</strong>{" "}
+                This release shall be governed by and construed in accordance
+                with the laws of the State of Tennessee.
+              </p>
+            </div>
+            <div className="px-6 py-4 border-t border-charcoal/10">
+              <button
+                type="button"
+                onClick={() => setShowMediaRelease(false)}
+                className="w-full rounded-full bg-olive px-6 py-3 font-semibold text-white hover:bg-olive-light transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
