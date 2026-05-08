@@ -17,6 +17,8 @@ export async function POST(request: Request) {
     const medicalLetter = formData.get("medicalLetter") as string;
     const howHeard = formData.get("howHeard") as string;
     const additional = formData.get("additional") as string;
+    const liabilityWaiver = formData.get("liabilityWaiver") === "on" ? "Yes" : "No";
+    const mediaRelease = formData.get("mediaRelease") === "on" ? "Yes" : "No";
     const documentFiles = formData.getAll("documents") as File[];
 
     if (!process.env.RESEND_API_KEY) {
@@ -43,7 +45,7 @@ export async function POST(request: Request) {
       replyTo: email,
       subject: `New Assistance Application — ${recipientName}`,
       attachments,
-      text: `New Assistance Application\n\nRecipient Name: ${recipientName}\nGuardian Name: ${guardianName || "—"}\nAge: ${age || "—"}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\nTheir Story:\n${story}\n\nRequested Equipment:\n${equipment}\n\nPCP / Therapist: ${doctor || "—"}\n\nLetter of Medical Necessity:\n${medicalLetter}\n\nHow They Heard About Us: ${howHeard || "—"}\n\nAdditional Information:\n${additional || "—"}\n\n---\nSubmitted via elizabethsgift.com assistance application`,
+      text: `New Assistance Application\n\nRecipient Name: ${recipientName}\nGuardian Name: ${guardianName || "—"}\nAge: ${age || "—"}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\nTheir Story:\n${story}\n\nRequested Equipment:\n${equipment}\n\nPCP / Therapist: ${doctor || "—"}\n\nLetter of Medical Necessity:\n${medicalLetter}\n\nHow They Heard About Us: ${howHeard || "—"}\n\nAdditional Information:\n${additional || "—"}\n\n--- WAIVERS ---\nLiability Waiver Accepted: ${liabilityWaiver}\nMedia Release Accepted: ${mediaRelease}\n\n---\nSubmitted via elizabethsgift.com assistance application`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">New Assistance Application</h2>
@@ -100,6 +102,20 @@ export async function POST(request: Request) {
 
           <h3 style="color: #352e24;">Additional Information</h3>
           <p style="color: #555; line-height: 1.6; white-space: pre-wrap;">${additional || "—"}</p>
+
+          <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
+
+          <h3 style="color: #352e24;">Waiver Consent</h3>
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px 0; color: #666; width: 220px;"><strong>Liability Waiver Accepted</strong></td>
+              <td style="padding: 8px 0; color: ${liabilityWaiver === "Yes" ? "#16a34a" : "#dc2626"}; font-weight: bold;">${liabilityWaiver}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; color: #666;"><strong>Media Release Accepted</strong></td>
+              <td style="padding: 8px 0; color: ${mediaRelease === "Yes" ? "#16a34a" : "#666"}; font-weight: bold;">${mediaRelease}</td>
+            </tr>
+          </table>
 
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
           <p style="color: #999; font-size: 12px;">Submitted via elizabethsgift.com assistance application</p>

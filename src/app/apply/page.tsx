@@ -294,6 +294,216 @@ export default function ApplyPage() {
               </label>
             </div>
 
+            {/* ── Liability Waiver (Required) ── */}
+            <div className="rounded-xl border border-charcoal/20 bg-white px-6 py-5 space-y-4">
+              <h3 className="font-semibold text-charcoal text-base">
+                Release of Liability, Assumption of Risk, and Hold Harmless Agreement <span className="text-red-600">*</span>
+              </h3>
+              <div className="max-h-64 overflow-y-auto border border-charcoal/10 rounded-lg px-4 py-3 text-sm text-charcoal/70 leading-relaxed space-y-3 bg-charcoal/[0.02]">
+                <p>
+                  By checking the box below, I, the undersigned applicant (or the
+                  authorized parent, legal guardian, or representative of the
+                  equipment recipient), hereby acknowledge and voluntarily agree to
+                  the following:
+                </p>
+                <p>
+                  <strong className="text-charcoal">1. Nature of Services.</strong>{" "}
+                  Elizabeth&apos;s Gift is a Tennessee nonprofit organization that
+                  provides mobility, medical, and adaptive equipment to individuals
+                  with disabilities at no cost. I understand that Elizabeth&apos;s
+                  Gift does not manufacture, design, or warranty any equipment
+                  provided, and that equipment may be new, refurbished, or
+                  previously used.
+                </p>
+                <p>
+                  <strong className="text-charcoal">2. Assumption of Risk.</strong>{" "}
+                  I acknowledge that the receipt and use of mobility, medical, and
+                  adaptive equipment involves inherent risks, including but not
+                  limited to: equipment malfunction or failure, improper fit, skin
+                  irritation or pressure injury, falls, collision, and other bodily
+                  harm. I voluntarily accept and assume all such risks, both known
+                  and unknown, arising from the receipt, use, or possession of
+                  equipment provided by Elizabeth&apos;s Gift. I understand that it
+                  is my responsibility (or the responsibility of the recipient&apos;s
+                  guardian or healthcare provider) to evaluate the safety,
+                  suitability, and proper fit of any equipment received prior to use,
+                  and to consult with a qualified medical professional regarding
+                  appropriateness for the recipient&apos;s specific needs.
+                </p>
+                <p>
+                  <strong className="text-charcoal">3. Release and Waiver of Liability.</strong>{" "}
+                  In consideration of receiving equipment from Elizabeth&apos;s Gift
+                  at no cost, I, on behalf of myself, the equipment recipient (if
+                  different), and our respective heirs, executors, administrators,
+                  assigns, and personal representatives, hereby release, waive, and
+                  forever discharge Elizabeth&apos;s Gift, together with its
+                  officers, directors, board members, employees, volunteers, agents,
+                  contractors, and representatives (collectively, the &quot;Released
+                  Parties&quot;), from any and all claims, demands, actions, causes
+                  of action, suits, liabilities, damages, costs, losses, or
+                  expenses of any kind whatsoever, whether known or unknown, arising
+                  out of or in any way related to the provision, condition,
+                  selection, delivery, use, maintenance, modification, or
+                  suitability of any equipment provided, to the fullest extent
+                  permitted by the laws of the State of Tennessee. This release
+                  includes, but is not limited to, claims based on the negligence of
+                  the Released Parties. This release does not apply to claims arising
+                  from the gross negligence or willful misconduct of the Released
+                  Parties.
+                </p>
+                <p>
+                  <strong className="text-charcoal">4. Hold Harmless and Indemnification.</strong>{" "}
+                  I agree to indemnify, defend, and hold harmless the Released
+                  Parties from and against any and all claims, demands, damages,
+                  losses, liabilities, costs, and expenses (including reasonable
+                  attorneys&apos; fees and court costs) arising out of or resulting
+                  from the receipt, use, misuse, or possession of equipment provided
+                  by Elizabeth&apos;s Gift, to the fullest extent permitted by law.
+                </p>
+                <p>
+                  <strong className="text-charcoal">5. Equipment Disclaimer.</strong>{" "}
+                  I understand and acknowledge that Elizabeth&apos;s Gift makes no
+                  warranties or representations, express or implied, regarding any
+                  equipment provided, including but not limited to warranties of
+                  merchantability, fitness for a particular purpose, or suitability
+                  for the recipient&apos;s specific condition or needs. All equipment
+                  is provided &quot;as is.&quot;
+                </p>
+                <p>
+                  <strong className="text-charcoal">6. Authority to Agree.</strong>{" "}
+                  If I am executing this agreement on behalf of a minor child or an
+                  individual for whom I serve as parent, legal guardian, or
+                  authorized representative, I represent and warrant that I have full
+                  legal authority to enter into this agreement on their behalf, and I
+                  agree to be personally bound by its terms. I further agree that
+                  this release and waiver shall apply to any claims brought by or on
+                  behalf of such individual.
+                </p>
+                <p>
+                  <strong className="text-charcoal">7. Governing Law.</strong>{" "}
+                  This agreement shall be governed by and construed in accordance
+                  with the laws of the State of Tennessee, without regard to its
+                  conflict of laws principles. Any dispute arising under this
+                  agreement shall be subject to the exclusive jurisdiction of the
+                  courts of the State of Tennessee.
+                </p>
+                <p>
+                  <strong className="text-charcoal">8. Severability.</strong>{" "}
+                  If any provision of this agreement is held to be invalid,
+                  unenforceable, or void, the remaining provisions shall continue in
+                  full force and effect to the maximum extent permitted by law.
+                </p>
+                <p>
+                  <strong className="text-charcoal">9. Entire Agreement.</strong>{" "}
+                  This agreement constitutes the entire understanding between the
+                  parties with respect to the subject matter herein and supersedes
+                  all prior or contemporaneous agreements, whether written or oral.
+                </p>
+                <p>
+                  <strong className="text-charcoal">10. Acknowledgment.</strong>{" "}
+                  I have read this Release of Liability, Assumption of Risk, and
+                  Hold Harmless Agreement in its entirety. I fully understand its
+                  terms, and I check the box below voluntarily and with full
+                  knowledge of its legal significance.
+                </p>
+              </div>
+              <div className="flex items-start gap-3 pt-1">
+                <input
+                  type="checkbox"
+                  id="liabilityWaiver"
+                  name="liabilityWaiver"
+                  required
+                  className="mt-0.5 h-4 w-4 rounded border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
+                />
+                <label htmlFor="liabilityWaiver" className="text-sm text-charcoal leading-snug cursor-pointer">
+                  <strong>I have read, understand, and agree to the Release of
+                  Liability, Assumption of Risk, and Hold Harmless Agreement
+                  above.</strong> <span className="text-red-600">*</span>
+                </label>
+              </div>
+            </div>
+
+            {/* ── Media & Publicity Release (Optional) ── */}
+            <div className="rounded-xl border border-charcoal/20 bg-white px-6 py-5 space-y-4">
+              <h3 className="font-semibold text-charcoal text-base">
+                Media and Publicity Release <span className="text-charcoal/40 font-normal">(Optional)</span>
+              </h3>
+              <div className="max-h-64 overflow-y-auto border border-charcoal/10 rounded-lg px-4 py-3 text-sm text-charcoal/70 leading-relaxed space-y-3 bg-charcoal/[0.02]">
+                <p>
+                  By checking the box below, I, the undersigned applicant (or the
+                  authorized parent, legal guardian, or representative of the
+                  individual identified in this application), hereby grant to
+                  Elizabeth&apos;s Gift, its successors, assigns, and authorized
+                  representatives, the irrevocable, royalty-free, worldwide right
+                  and permission to use, reproduce, publish, display, distribute,
+                  and create derivative works of the following, in any form or media
+                  now known or hereafter developed:
+                </p>
+                <ul className="list-disc list-inside space-y-1 pl-2">
+                  <li>Name of the recipient (or the individual on whose behalf this application is submitted)</li>
+                  <li>Photograph, image, and likeness</li>
+                  <li>Voice and recorded statements</li>
+                  <li>Personal story, testimonial, and biographical information</li>
+                </ul>
+                <p>
+                  This grant of rights extends to use in any and all publications
+                  and media, including but not limited to: the Elizabeth&apos;s Gift
+                  website, social media accounts, print and digital materials,
+                  newsletters, press releases, presentations, video and audio
+                  recordings, and fundraising campaigns, for purposes related to the
+                  charitable mission and activities of Elizabeth&apos;s Gift.
+                </p>
+                <p>I acknowledge and agree to the following:</p>
+                <p>
+                  <strong className="text-charcoal">1. No Compensation.</strong>{" "}
+                  I will receive no monetary compensation or other consideration for
+                  the use of the above materials.
+                </p>
+                <p>
+                  <strong className="text-charcoal">2. No Approval Right.</strong>{" "}
+                  I waive any right to inspect, review, or approve any finished
+                  materials, publications, or other works that may include the above.
+                </p>
+                <p>
+                  <strong className="text-charcoal">3. Respectful Use.</strong>{" "}
+                  Elizabeth&apos;s Gift will endeavor to portray the recipient
+                  respectfully and in a manner consistent with its charitable mission.
+                </p>
+                <p>
+                  <strong className="text-charcoal">4. Authority to Consent.</strong>{" "}
+                  If I am authorizing this release on behalf of a minor child or an
+                  individual under my legal guardianship or care, I confirm that I
+                  have full legal authority to grant this consent on their behalf.
+                </p>
+                <p>
+                  <strong className="text-charcoal">5. Revocation.</strong>{" "}
+                  This release shall remain in effect unless I provide written notice
+                  of revocation to Elizabeth&apos;s Gift at{" "}
+                  <a href="mailto:info@elizabethsgift.com" className="text-olive underline">info@elizabethsgift.com</a>.
+                  Any such revocation shall apply only on a going-forward basis and
+                  shall not apply to materials already published, distributed, or in
+                  production at the time of revocation.
+                </p>
+                <p>
+                  <strong className="text-charcoal">6. Governing Law.</strong>{" "}
+                  This release shall be governed by and construed in accordance with
+                  the laws of the State of Tennessee.
+                </p>
+              </div>
+              <div className="flex items-start gap-3 pt-1">
+                <input
+                  type="checkbox"
+                  id="mediaRelease"
+                  name="mediaRelease"
+                  className="mt-0.5 h-4 w-4 rounded border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
+                />
+                <label htmlFor="mediaRelease" className="text-sm text-charcoal leading-snug cursor-pointer">
+                  I have read, understand, and agree to the Media and Publicity
+                  Release above. <span className="text-charcoal/40">(Optional)</span>
+                </label>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
