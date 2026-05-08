@@ -21,6 +21,14 @@ export async function POST(request: Request) {
     const mediaRelease = formData.get("mediaRelease") === "on" ? "Yes" : "No";
     const documentFiles = formData.getAll("documents") as File[];
 
+    // Consent record: timestamp + IP for proof of agreement
+    const submittedAt = new Date().toLocaleString("en-US", { timeZone: "America/Chicago", dateStyle: "full", timeStyle: "long" });
+    const submittedAtISO = new Date().toISOString();
+    const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
+      || request.headers.get("x-real-ip")
+      || "Unknown";
+    const signedBy = guardianName ? `${guardianName} (guardian for ${recipientName})` : recipientName;
+
     if (!process.env.RESEND_API_KEY) {
       console.log("Application submission (no email sent — RESEND_API_KEY not set):", {
         recipientName, guardianName, phone, email, address, age,
@@ -45,7 +53,7 @@ export async function POST(request: Request) {
       replyTo: email,
       subject: `New Assistance Application — ${recipientName}`,
       attachments,
-      text: `New Assistance Application\n\nRecipient Name: ${recipientName}\nGuardian Name: ${guardianName || "—"}\nAge: ${age || "—"}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\nTheir Story:\n${story}\n\nRequested Equipment:\n${equipment}\n\nPCP / Therapist: ${doctor || "—"}\n\nLetter of Medical Necessity:\n${medicalLetter}\n\nHow They Heard About Us: ${howHeard || "—"}\n\nAdditional Information:\n${additional || "—"}\n\n--- WAIVERS ---\nLiability Waiver Accepted: ${liabilityWaiver}\nMedia Release Accepted: ${mediaRelease}\n\n---\nSubmitted via elizabethsgift.com assistance application`,
+      text: `New Assistance Application\n\nRecipient Name: ${recipientName}\nGuardian Name: ${guardianName || "—"}\nAge: ${age || "—"}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\nTheir Story:\n${story}\n\nRequested Equipment:\n${equipment}\n\nPCP / Therapist: ${doctor || "—"}\n\nLetter of Medical Necessity:\n${medicalLetter}\n\nHow They Heard About Us: ${howHeard || "—"}\n\nAdditional Information:\n${additional || "—"}\n\n========== CONSENT RECORD ==========\nSigned By: ${signedBy}\nEmail: ${email}\nDate & Time: ${submittedAt}\nTimestamp (UTC): ${submittedAtISO}\nIP Address: ${ip}\n\nRelease of Liability, Assumption of Risk, and Hold Harmless Agreement: ${liabilityWaiver === "Yes" ? "ACCEPTED" : "NOT ACCEPTED"}\nMedia and Publicity Release: ${mediaRelease === "Yes" ? "ACCEPTED" : "DECLINED (optional)"}\n====================================\n\n---\nSubmitted via elizabethsgift.com assistance application`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">New Assistance Application</h2>
@@ -105,17 +113,43 @@ export async function POST(request: Request) {
 
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
 
-          <h3 style="color: #352e24;">Waiver Consent</h3>
-          <table style="width: 100%; border-collapse: collapse;">
-            <tr>
-              <td style="padding: 8px 0; color: #666; width: 220px;"><strong>Liability Waiver Accepted</strong></td>
-              <td style="padding: 8px 0; color: ${liabilityWaiver === "Yes" ? "#16a34a" : "#dc2626"}; font-weight: bold;">${liabilityWaiver}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 0; color: #666;"><strong>Media Release Accepted</strong></td>
-              <td style="padding: 8px 0; color: ${mediaRelease === "Yes" ? "#16a34a" : "#666"}; font-weight: bold;">${mediaRelease}</td>
-            </tr>
-          </table>
+          <div style="background: #f8f5f0; border: 1px solid #d4c9b8; border-radius: 8px; padding: 20px; margin-top: 24px;">
+            <h3 style="color: #352e24; margin-top: 0;">Consent Record</h3>
+            <p style="color: #999; font-size: 12px; margin-bottom: 12px;">Retain this record as proof of the applicant&rsquo;s agreement to each waiver.</p>
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 6px 0; color: #666; width: 200px;"><strong>Signed By</strong></td>
+                <td style="padding: 6px 0; color: #352e24;">${signedBy}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #666;"><strong>Email</strong></td>
+                <td style="padding: 6px 0; color: #352e24;">${email}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #666;"><strong>Date &amp; Time</strong></td>
+                <td style="padding: 6px 0; color: #352e24;">${submittedAt}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #666;"><strong>Timestamp (UTC)</strong></td>
+                <td style="padding: 6px 0; color: #352e24; font-family: monospace; font-size: 12px;">${submittedAtISO}</td>
+              </tr>
+              <tr>
+                <td style="padding: 6px 0; color: #666;"><strong>IP Address</strong></td>
+                <td style="padding: 6px 0; color: #352e24; font-family: monospace; font-size: 12px;">${ip}</td>
+              </tr>
+            </table>
+            <hr style="border: none; border-top: 1px solid #d4c9b8; margin: 14px 0;" />
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="padding: 8px 0; color: #666; width: 200px;"><strong>Liability Waiver</strong></td>
+                <td style="padding: 8px 0; color: ${liabilityWaiver === "Yes" ? "#16a34a" : "#dc2626"}; font-weight: bold; font-size: 15px;">${liabilityWaiver === "Yes" ? "✓ ACCEPTED" : "✗ NOT ACCEPTED"}</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #666;"><strong>Media Release</strong></td>
+                <td style="padding: 8px 0; color: ${mediaRelease === "Yes" ? "#16a34a" : "#666"}; font-weight: bold; font-size: 15px;">${mediaRelease === "Yes" ? "✓ ACCEPTED" : "— DECLINED (optional)"}</td>
+              </tr>
+            </table>
+          </div>
 
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
           <p style="color: #999; font-size: 12px;">Submitted via elizabethsgift.com assistance application</p>
