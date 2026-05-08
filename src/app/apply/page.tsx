@@ -434,8 +434,7 @@ export default function ApplyPage() {
                 the stories of the people we serve. If you&apos;re comfortable, we&apos;d
                 love the opportunity to share your story — on our website, social
                 media, or in other materials — to inspire others and help us
-                reach more people who need support. This is completely optional,
-                and you can change your mind at any time.
+                reach more people who need support. This is completely optional.
               </p>
               <div className="flex items-start gap-3 pt-1">
                 <input
