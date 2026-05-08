@@ -133,6 +133,7 @@ export default function ContactPage() {
                       type="checkbox"
                       id="newsletterOptIn"
                       name="newsletterOptIn"
+                      defaultChecked
                       className="mt-0.5 h-4 w-4 rounded border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
                     />
                     <label htmlFor="newsletterOptIn" className="text-sm text-charcoal/60 leading-snug cursor-pointer">
