@@ -196,17 +196,6 @@ export default function TheNeedPage() {
         </div>
       </section>
 
-      {/* Scripture */}
-      <section className="bg-cream">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 text-center">
-          <p className="font-serif text-xl md:text-2xl italic text-charcoal/70 leading-relaxed">
-            &ldquo;Truly, I say to you, as you did it to one of the least of these
-            my brothers, you did it to me.&rdquo;
-          </p>
-          <p className="font-serif text-base text-charcoal/40 mt-3">Matthew 25:40</p>
-        </div>
-      </section>
-
       {/* Why Insurance Isn't Enough */}
       <section className="bg-cream">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pb-4">
@@ -347,6 +336,19 @@ export default function TheNeedPage() {
       <section className="bg-cream">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 border-t border-charcoal/10">
           <NewsletterSection source="The Need Page" />
+        </div>
+      </section>
+
+      {/* Scripture */}
+      <section className="bg-olive/10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
+          <p className="text-center text-charcoal/60 font-serif text-xl italic">
+            &ldquo;Truly, I say to you, as you did it to one of the least of these
+            my brothers, you did it to me.&rdquo;
+          </p>
+          <p className="text-center text-charcoal/40 font-serif text-base mt-3">
+            Matthew 25:40
+          </p>
         </div>
       </section>
     </>
