@@ -6,7 +6,7 @@ import { Check } from "lucide-react";
 
 const pageTitle = "Free Wheelchair Accessible Van Giveaway — Elizabeth's Gift";
 const pageDescription =
-  "Elizabeth's Gift is giving away a free wheelchair accessible van, a 2017 Dodge Grand Caravan with a rear-entry ramp, to a U.S. resident who needs accessible transportation. Apply today.";
+  "Elizabeth's Gift is giving away a free wheelchair accessible van, a 2017 Dodge Grand Caravan with a rear-entry ramp, to someone who needs accessible transportation. Apply today.";
 
 // 1200×630 social share card generated from the side-profile photo of the van.
 const ogImage = "/images/van/og-van-giveaway.jpg";
@@ -65,7 +65,7 @@ const jsonLd = {
     {
       "@type": "SpecialAnnouncement",
       name: "Free Wheelchair Accessible Van Giveaway",
-      text: "Elizabeth's Gift is gifting a 2017 Dodge Grand Caravan with a rear-entry manual wheelchair ramp, free and as-is, to a U.S. resident in need of accessible transportation.",
+      text: "Elizabeth's Gift is gifting a 2017 Dodge Grand Caravan with a rear-entry manual wheelchair ramp, free and as-is, to someone in need of accessible transportation.",
       datePosted: "2026-08-07",
       url: "https://www.elizabethsgift.com/van-giveaway",
       announcementLocation: { "@id": "https://www.elizabethsgift.com/#org" },
