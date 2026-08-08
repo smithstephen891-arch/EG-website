@@ -204,6 +204,25 @@ export default function VideoStoryField({
     };
   }, []);
 
+  // Attach the camera stream to the preview once React has mounted the
+  // element. Doing this from startRecording raced the render and left mobile
+  // browsers showing a black rectangle while still recording fine.
+  useEffect(() => {
+    if (phase !== "recording" && phase !== "paused") return;
+    const el = liveVideoRef.current;
+    const stream = streamRef.current;
+    if (!el || !stream) return;
+    if (el.srcObject !== stream) el.srcObject = stream;
+    // iOS only autoplays a stream that is muted and inline, and it can reject
+    // play() until metadata arrives, so retry on loadedmetadata too.
+    const tryPlay = () => {
+      void el.play().catch(() => {});
+    };
+    tryPlay();
+    el.addEventListener("loadedmetadata", tryPlay);
+    return () => el.removeEventListener("loadedmetadata", tryPlay);
+  }, [phase]);
+
   function startTimer() {
     clearTimer();
     timerRef.current = setInterval(() => {
@@ -220,13 +239,28 @@ export default function VideoStoryField({
     recordedBlobRef.current = null;
     swapLocalUrl(null);
     try {
+      // Ask for the best the camera can do. These are "ideal", not "exact",
+      // so the browser quietly steps down to the highest mode the device
+      // actually supports rather than failing outright.
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+        video: {
+          width: { ideal: 3840 },
+          height: { ideal: 2160 },
+          frameRate: { ideal: 30 },
+          facingMode: "user",
+        },
         audio: true,
       });
       streamRef.current = stream;
       const mimeType = pickRecorderMimeType();
-      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      // Cap the bitrate so a high resolution stream still produces a file an
+      // applicant on mobile data can actually upload: ~8 Mbps puts 3 minutes
+      // near 180 MB, well inside the 500 MB limit.
+      const recorder = new MediaRecorder(stream, {
+        ...(mimeType ? { mimeType } : {}),
+        videoBitsPerSecond: 8_000_000,
+        audioBitsPerSecond: 128_000,
+      });
       chunksRef.current = [];
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) chunksRef.current.push(event.data);
@@ -247,15 +281,8 @@ export default function VideoStoryField({
       setElapsed(0);
       changePhase("recording");
       startTimer();
-
-      // Attach the stream after the phase flips so the preview element is
-      // actually rendered and visible when it starts playing.
-      requestAnimationFrame(() => {
-        if (liveVideoRef.current && streamRef.current) {
-          liveVideoRef.current.srcObject = streamRef.current;
-          void liveVideoRef.current.play().catch(() => {});
-        }
-      });
+      // The stream is attached in an effect below, once React has actually
+      // mounted the preview element.
     } catch (err) {
       console.error("Camera access failed:", err);
       stopTracks();
@@ -439,11 +466,14 @@ export default function VideoStoryField({
       {/* Live camera: recording or paused */}
       {isLive && (
         <div className="mt-4">
+          {/* autoPlay + muted + playsInline is the exact combination iOS
+              requires to render a live stream inline instead of a black box. */}
           <video
             ref={liveVideoRef}
+            autoPlay
             muted
             playsInline
-            className="w-full max-w-sm rounded-lg border border-charcoal/10 bg-charcoal"
+            className="aspect-[3/4] w-full max-w-sm rounded-lg border border-charcoal/10 bg-charcoal object-cover sm:aspect-video"
           />
           <p aria-live="polite" className="mt-2 text-sm font-medium text-charcoal">
             {phase === "paused" ? "Paused" : "Recording"} · {formatDuration(elapsed)} ·{" "}

@@ -716,6 +716,25 @@ export default function VanApplicationForm({
           Please remember that submitting an application is not a guarantee of
           receiving the vehicle.
         </p>
+        <div className="mt-6 rounded-lg border border-red-700/25 bg-red-700/5 px-4 py-3">
+          <p className="text-sm text-charcoal/80 leading-relaxed">
+            <strong className="font-semibold text-charcoal">
+              Beware of scams:
+            </strong>{" "}
+            Elizabeth&apos;s Gift will never ask you for money at any point in
+            this process, and we will never ask for your bank or payment
+            details. Our messages only come from an @elizabethsgift.com
+            address. If someone claiming to be us asks you for payment, please
+            report it to{" "}
+            <a
+              href="mailto:info@elizabethsgift.com"
+              className="font-semibold text-olive-dark underline underline-offset-2 hover:text-charcoal"
+            >
+              info@elizabethsgift.com
+            </a>
+            .
+          </p>
+        </div>
       </div>
     );
   }

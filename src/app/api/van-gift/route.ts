@@ -582,6 +582,11 @@ We've received your application for the wheelchair accessible van. Our team revi
 
 Please note: submitting an application is not a guarantee of receiving the vehicle. We will contact selected applicants directly.
 
+BEWARE OF SCAMS
+Elizabeth's Gift will never ask you for money at any point in this process. There is no fee to apply, no fee to be selected, and no payment of any kind required to receive the vehicle. We will never ask for your bank account, card, or payment information. If anyone contacts you claiming to be from Elizabeth's Gift and asks for money or payment details, it is not us. Please report it to us at info@elizabethsgift.com.
+
+Our messages will only ever come from an @elizabethsgift.com address.
+
 If you have any questions, reach us at info@elizabethsgift.com.
 
 With gratitude,
@@ -594,6 +599,21 @@ Elizabeth's Gift — Lifting Up and Living Fully`,
             <h2 style="color: #352e24;">Thank you, ${e(firstName)}!</h2>
             <p style="color: #555; line-height: 1.6;">We&rsquo;ve received your application for the wheelchair accessible van. Our team reviews every application carefully.</p>
             <p style="color: #555; line-height: 1.6;"><strong>Please note:</strong> submitting an application is not a guarantee of receiving the vehicle. We will contact selected applicants directly.</p>
+
+            <div style="background: #fdf6f6; border: 1px solid #e7b9b9; border-left: 4px solid #dc2626; border-radius: 8px; padding: 16px 20px; margin: 24px 0;">
+              <p style="color: #b91c1c; font-weight: bold; margin: 0 0 8px; font-size: 15px;">&#9888; Beware of scams</p>
+              <p style="color: #555; line-height: 1.6; margin: 0 0 10px;">
+                <strong>Elizabeth&rsquo;s Gift will never ask you for money at any point in this process.</strong>
+                There is no fee to apply, no fee to be selected, and no payment of any kind required to
+                receive the vehicle. We will never ask for your bank account, card, or payment information.
+              </p>
+              <p style="color: #555; line-height: 1.6; margin: 0;">
+                If anyone contacts you claiming to be from Elizabeth&rsquo;s Gift and asks for money or
+                payment details, it is not us. Please report it to
+                <a href="mailto:info@elizabethsgift.com" style="color: #7a7c3b;">info@elizabethsgift.com</a>.
+                Our messages will only ever come from an <strong>@elizabethsgift.com</strong> address.
+              </p>
+            </div>
             <p style="color: #555; line-height: 1.6;">If you have any questions, reach us at <a href="mailto:info@elizabethsgift.com" style="color: #7a7c3b;">info@elizabethsgift.com</a>.</p>
             <p style="color: #555; line-height: 1.6;">With gratitude,<br /><strong>The Elizabeth&rsquo;s Gift Team</strong></p>
             <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
