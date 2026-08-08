@@ -19,6 +19,7 @@ const corben = Corben({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.elizabethsgift.com"),
   title: "Elizabeth's Gift — Lifting Up and Living Fully",
   description:
     "Elizabeth's Gift is a nonprofit organization dedicated to providing mobility and medical equipment to underserved individuals who need it but cannot afford it.",
@@ -34,7 +35,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth motion-reduce:scroll-auto">
       <body className={`${inter.variable} ${corben.variable} antialiased`}>
         <DonationProvider>
           <Header />

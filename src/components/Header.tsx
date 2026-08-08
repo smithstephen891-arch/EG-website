@@ -11,8 +11,8 @@ const navLinks = [
   { href: "/about", label: "About" },
   { href: "/the-need", label: "The Need" },
   { href: "/apply", label: "Apply" },
+  { href: "/van-giveaway", label: "Van Giveaway" },
   { href: "/donate", label: "Donate" },
-  { href: "/events", label: "Events" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -69,16 +69,26 @@ export default function Header() {
             </span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="font-serif text-sm font-medium text-charcoal/70 hover:text-charcoal transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-8">
+            {navLinks.map((link) =>
+              link.href === "/van-giveaway" ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="rounded-full bg-gold px-4 py-2 font-serif text-sm font-semibold text-charcoal hover:bg-gold/80 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="font-serif text-sm font-medium text-charcoal/70 hover:text-charcoal transition-colors"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             <Link
               href="/apply"
               className="rounded-full border border-olive px-6 py-2.5 text-sm font-semibold text-olive hover:bg-olive/10 transition-colors"
@@ -94,7 +104,7 @@ export default function Header() {
           </nav>
 
           <button
-            className="md:hidden p-2 text-charcoal"
+            className="lg:hidden p-2 text-charcoal"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -104,18 +114,29 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-charcoal/10 bg-cream">
+        <div className="lg:hidden border-t border-charcoal/10 bg-cream">
           <nav className="flex flex-col px-4 py-4 gap-1">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="px-4 py-3 text-sm font-medium text-charcoal/70 hover:text-charcoal hover:bg-cream-dark rounded-lg transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) =>
+              link.href === "/van-giveaway" ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-4 py-3 text-sm font-semibold text-charcoal bg-gold hover:bg-gold/80 rounded-lg transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-4 py-3 text-sm font-medium text-charcoal/70 hover:text-charcoal hover:bg-cream-dark rounded-lg transition-colors"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
             <Link
               href="/apply"
               className="mt-2 rounded-full border border-olive px-6 py-2.5 text-sm font-semibold text-olive text-center hover:bg-olive/10 transition-colors"
