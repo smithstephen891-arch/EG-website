@@ -760,9 +760,14 @@ export default function VanApplicationForm({
       </noscript>
 
       {/* Honeypot: humans never see or reach this field; bots that fill it are
-          silently dropped server-side. Off-screen (not display:none) so naive
-          bots still fill it. */}
-      <div aria-hidden="true" className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden">
+          silently dropped server-side. Clipped to a 1px box rather than parked
+          at a large negative offset, which iOS Safari treats as real content
+          and lets the reader drag the whole page sideways to reach. Still not
+          display:none, so naive bots keep filling it. */}
+      <div
+        aria-hidden="true"
+        className="absolute h-px w-px overflow-hidden opacity-0 [clip-path:inset(50%)]"
+      >
         <label htmlFor="website">Website</label>
         <input
           ref={honeypotRef}

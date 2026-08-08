@@ -5,9 +5,15 @@ import NewsletterSection from "@/components/NewsletterSection";
 import VanApplicationForm from "@/components/VanApplicationForm";
 import { Check, ShieldAlert } from "lucide-react";
 
-const pageTitle = "A Wheelchair Accessible Van for Someone Who Needs It — Elizabeth's Gift";
+// Browser tab and search results. The share card uses shareTitle below, which
+// reads as a headline rather than a page name.
+const pageTitle = "Apply for a Wheelchair Accessible Van — Elizabeth's Gift";
 const pageDescription =
-  "Elizabeth's Gift is giving a wheelchair accessible van, a 2017 Dodge Grand Caravan with a rear-entry ramp, to someone who needs it. No cost, no catch. Tell us your story.";
+  "We're looking for a family or individual whose life could be changed by this van.";
+
+const shareTitle = "Apply for a Wheelchair Accessible Van";
+const shareDescription =
+  "We're looking for a family or individual whose life could be changed by this van.";
 
 // 1200×630 social share card generated from the side-profile photo of the van.
 const ogImage = "/images/van/og-van-gift.jpg";
@@ -20,8 +26,8 @@ export const metadata: Metadata = {
     type: "website",
     url: "/van-gift",
     siteName: "Elizabeth's Gift",
-    title: pageTitle,
-    description: pageDescription,
+    title: shareTitle,
+    description: shareDescription,
     images: [
       {
         url: ogImage,
@@ -33,8 +39,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: pageTitle,
-    description: pageDescription,
+    title: shareTitle,
+    description: shareDescription,
     images: [ogImage],
   },
 };

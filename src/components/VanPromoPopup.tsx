@@ -195,8 +195,8 @@ export default function VanPromoPopup() {
           {/* Visual */}
           <div className="relative min-h-56 md:min-h-full">
             {/* Two crops on purpose: the landscape shot fills the short, wide
-                banner on phones, while the portrait ramp shot suits the tall
-                column on desktop, where a landscape crop hid the ramp itself. */}
+                banner on phones, while a portrait shot suits the tall column
+                on desktop, where a landscape crop showed only a door panel. */}
             <Image
               src="/images/van/van-photo-3.jpg"
               alt="White 2017 Dodge Grand Caravan with its rear wheelchair ramp deployed"
@@ -205,8 +205,8 @@ export default function VanPromoPopup() {
               className="object-cover md:hidden"
             />
             <Image
-              src="/images/van/van-photo-2.jpg"
-              alt="The van's rear-entry wheelchair ramp lowered to the ground, with the rear hatch open"
+              src="/images/van/van-photo-1.jpg"
+              alt="Front three-quarter view of the white 2017 Dodge Grand Caravan"
               fill
               sizes="50vw"
               className="hidden object-cover md:block"

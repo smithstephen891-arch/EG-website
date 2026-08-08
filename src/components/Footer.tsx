@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Facebook, Instagram } from "lucide-react";
+import { SHOW_EVENTS } from "@/lib/features";
 
 export default function Footer() {
   return (
@@ -33,7 +34,10 @@ export default function Footer() {
               <Link href="/about" className="text-sm hover:text-cream transition-colors">About</Link>
               <Link href="/apply" className="text-sm hover:text-cream transition-colors">Apply for Assistance</Link>
               <Link href="/donate" className="text-sm hover:text-cream transition-colors">Donate</Link>
-              <Link href="/events" className="text-sm hover:text-cream transition-colors">Events</Link>
+              <Link href="/van-gift" className="text-sm hover:text-cream transition-colors">Accessible Van</Link>
+              {SHOW_EVENTS && (
+                <Link href="/events" className="text-sm hover:text-cream transition-colors">Events</Link>
+              )}
               <Link href="/contact" className="text-sm hover:text-cream transition-colors">Contact</Link>
               <Link href="/privacy" className="text-sm hover:text-cream transition-colors">Privacy Policy</Link>
             </nav>

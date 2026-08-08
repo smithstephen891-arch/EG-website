@@ -16,6 +16,18 @@
   --font-serif: var(--font-corben);
 }
 
+/* Lock the page to its own left and right edges. Without this, a single
+   overflowing element anywhere lets mobile browsers drag the whole layout
+   sideways. `clip` is preferred over `hidden` because `hidden` would force
+   overflow-y to auto, turning these into scroll containers and breaking the
+   sticky summary on the checkout page. `hidden` stays first as a fallback
+   for browsers without `clip`. */
+html,
+body {
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
 body {
   background: var(--color-cream);
   color: var(--color-charcoal);
