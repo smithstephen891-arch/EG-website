@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
 import { AlertCircle, Info, X } from "lucide-react";
+import VideoStoryField, { type VideoStoryValue } from "./VideoStoryField";
 
 type YesNo = "" | "yes" | "no";
 
@@ -494,18 +495,100 @@ function LegalModal({ title, onClose, children }: LegalModalProps) {
 const waiverLinkClass =
   "mt-1.5 ml-8 block py-1.5 text-sm font-medium text-olive-dark underline underline-offset-2 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 rounded transition-colors";
 
-export default function VanApplicationForm() {
+// Cloudflare Turnstile. Deliberately not an image-puzzle CAPTCHA: this form is
+// for people with disabilities, and "pick the traffic lights" grids lock out
+// screen reader, low-vision, and motor-impaired applicants. Turnstile is
+// keyboard operable and usually passes with no interaction at all.
+// Renders nothing until NEXT_PUBLIC_TURNSTILE_SITE_KEY is set.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+const TURNSTILE_SCRIPT =
+  "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+      reset: (id?: string) => void;
+      remove: (id?: string) => void;
+    };
+  }
+}
+
+// Module scope keeps the clock read out of the component body, where the React
+// compiler's purity rule flags it.
+function msSince(start: number | null): number {
+  return start === null ? 0 : Date.now() - start;
+}
+
+export default function VanApplicationForm({
+  videoUploadEnabled = false,
+}: {
+  videoUploadEnabled?: boolean;
+}) {
   const [values, setValues] = useState<FormValues>(initialValues);
+  const [video, setVideo] = useState<VideoStoryValue | null>(null);
+  const [videoBusy, setVideoBusy] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [openWaiver, setOpenWaiver] = useState<"asIs" | "media" | null>(null);
   const honeypotRef = useRef<HTMLInputElement>(null);
   const mountedAt = useRef<number | null>(null);
   const successRef = useRef<HTMLDivElement>(null);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [verifyError, setVerifyError] = useState<string | null>(null);
+  const turnstileRef = useRef<HTMLDivElement>(null);
+  const widgetId = useRef<string | null>(null);
 
   // Record when the form became interactive, for the min-time-to-submit check.
   useEffect(() => {
     mountedAt.current = Date.now();
+  }, []);
+
+  // Load Turnstile and mount the widget. One effect, so no setState runs
+  // synchronously in the effect body. The widgetId guard keeps React's
+  // dev-mode double invocation from mounting two widgets.
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY) return;
+    let cancelled = false;
+
+    const mount = () => {
+      if (cancelled || widgetId.current) return;
+      if (!turnstileRef.current || !window.turnstile) return;
+      widgetId.current = window.turnstile.render(turnstileRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: (token: string) => {
+          setTurnstileToken(token);
+          setVerifyError(null);
+        },
+        "expired-callback": () => setTurnstileToken(""),
+        "error-callback": () => setTurnstileToken(""),
+      });
+    };
+
+    if (window.turnstile) {
+      mount();
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    // If the script fails to load, mount() never runs and widgetId stays null,
+    // which lets submission proceed rather than stranding the applicant.
+    const existing = document.querySelector<HTMLScriptElement>(
+      `script[src="${TURNSTILE_SCRIPT}"]`
+    );
+    const script = existing ?? document.createElement("script");
+    if (!existing) {
+      script.src = TURNSTILE_SCRIPT;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+    script.addEventListener("load", mount);
+    return () => {
+      cancelled = true;
+      script.removeEventListener("load", mount);
+    };
   }, []);
 
   useEffect(() => {
@@ -532,6 +615,25 @@ export default function VanApplicationForm() {
       return;
     }
 
+    // Don't submit mid-upload or the video would be orphaned.
+    if (videoBusy) {
+      setVerifyError(
+        "Your video is still uploading. Please wait for it to finish, then submit."
+      );
+      return;
+    }
+
+    // Only block when the widget is actually up and simply hasn't been
+    // completed. If the script never loaded, don't strand the applicant.
+    if (TURNSTILE_SITE_KEY && widgetId.current && !turnstileToken) {
+      setVerifyError(
+        "Please complete the verification below so we know you're not a robot."
+      );
+      turnstileRef.current?.scrollIntoView({ block: "center" });
+      return;
+    }
+    setVerifyError(null);
+
     setStatus("submitting");
     try {
       const res = await fetch("/api/van-giveaway", {
@@ -540,7 +642,10 @@ export default function VanApplicationForm() {
         body: JSON.stringify({
           ...values,
           website: honeypotRef.current?.value ?? "",
-          elapsedMs: mountedAt.current ? Date.now() - mountedAt.current : 0,
+          elapsedMs: msSince(mountedAt.current),
+          turnstileToken,
+          videoUrl: video?.url ?? "",
+          videoSeconds: video?.seconds ?? null,
         }),
       });
       if (res.ok) {
@@ -561,10 +666,20 @@ export default function VanApplicationForm() {
         }
         setStatus("success");
       } else {
+        // Turnstile tokens are single use, so hand back a fresh one for retry.
+        resetTurnstile();
         setStatus("error");
       }
     } catch {
+      resetTurnstile();
       setStatus("error");
+    }
+  }
+
+  function resetTurnstile() {
+    setTurnstileToken("");
+    if (widgetId.current && window.turnstile) {
+      window.turnstile.reset(widgetId.current);
     }
   }
 
@@ -828,6 +943,15 @@ export default function VanApplicationForm() {
         maxLength={1000}
       />
 
+      {videoUploadEnabled && (
+        <VideoStoryField
+          value={video}
+          onChange={setVideo}
+          onBusyChange={setVideoBusy}
+          disabled={status === "submitting"}
+        />
+      )}
+
       <h3 className={groupHeadingClass}>How You Found Us</h3>
 
       <SelectField
@@ -958,6 +1082,21 @@ export default function VanApplicationForm() {
             </a>
             .
           </p>
+        </div>
+      )}
+
+      {TURNSTILE_SITE_KEY && (
+        <div>
+          <div ref={turnstileRef} />
+          {verifyError && (
+            <p
+              role="alert"
+              className="mt-2 flex items-start gap-1.5 text-sm font-medium text-red-700"
+            >
+              <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 flex-shrink-0" />
+              {verifyError}
+            </p>
+          )}
         </div>
       )}
 

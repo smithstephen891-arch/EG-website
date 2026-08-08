@@ -54,11 +54,90 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
+// The video link is echoed into an email a human will click, so it must only
+// ever be able to point at our own Blob store. Without this, a crafted request
+// could plant an arbitrary link to a malware host in the notification.
+function safeVideoUrl(raw: unknown): string {
+  if (typeof raw !== "string" || raw === "") return "";
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "https:") return "";
+    if (!url.hostname.endsWith(".public.blob.vercel-storage.com")) return "";
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
 function accepted(): NextResponse {
   return NextResponse.json(
     { message: "Application received successfully" },
     { status: 200 }
   );
+}
+
+// Cloudflare Turnstile. Skipped entirely when TURNSTILE_SECRET_KEY is unset,
+// so the form keeps working (honeypot + timing only) before keys are added.
+async function verifyTurnstile(
+  token: string,
+  ip: string
+): Promise<{ ok: boolean; reason?: string }> {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return { ok: true };
+  if (!token) return { ok: false, reason: "no token supplied" };
+
+  try {
+    const body = new URLSearchParams({ secret, response: token });
+    if (ip && ip !== "Unknown") body.append("remoteip", ip);
+    const res = await fetch(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body,
+      }
+    );
+    const result = (await res.json()) as {
+      success?: boolean;
+      "error-codes"?: string[];
+    };
+    if (result.success) return { ok: true };
+    return { ok: false, reason: (result["error-codes"] ?? []).join(", ") };
+  } catch (error) {
+    // Cloudflare unreachable. Fail open: turning away a real applicant is worse
+    // than letting a submission through, since every one is reviewed by hand.
+    console.error("[van-giveaway] Turnstile unreachable, allowing:", error);
+    return { ok: true };
+  }
+}
+
+// Per-instance flood guard. Serverless instances don't share memory, so this
+// won't catch a distributed attack — it's a cheap brake on rapid-fire bursts
+// from one source, layered under Turnstile.
+const RATE_LIMIT_MAX = 5;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const recentByIp = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  if (!ip || ip === "Unknown") return false;
+  const now = Date.now();
+  const hits = (recentByIp.get(ip) ?? []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  if (hits.length >= RATE_LIMIT_MAX) {
+    recentByIp.set(ip, hits);
+    return true;
+  }
+  hits.push(now);
+  recentByIp.set(ip, hits);
+  if (recentByIp.size > 500) {
+    for (const [key, times] of recentByIp) {
+      if (times.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) {
+        recentByIp.delete(key);
+      }
+    }
+  }
+  return false;
 }
 
 export async function POST(request: Request) {
@@ -70,6 +149,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ message: "Invalid request" }, { status: 400 });
     }
 
+    const ip =
+      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      request.headers.get("x-real-ip") ||
+      "Unknown";
+
     // Spam checks. Both respond with a normal success so bots get no signal.
     const honeypot = typeof data.website === "string" ? data.website : "";
     const elapsedMs = typeof data.elapsedMs === "number" ? data.elapsedMs : NaN;
@@ -80,6 +164,26 @@ export async function POST(request: Request) {
     if (!Number.isFinite(elapsedMs) || elapsedMs < 5000) {
       console.log("[van-giveaway] Dropped submission: submitted too fast");
       return accepted();
+    }
+    if (isRateLimited(ip)) {
+      console.log("[van-giveaway] Dropped submission: rate limited", ip);
+      return accepted();
+    }
+
+    // Bot challenge. A real applicant whose challenge expired gets a clear
+    // retry message rather than a silent drop.
+    const turnstileToken =
+      typeof data.turnstileToken === "string" ? data.turnstileToken : "";
+    const verdict = await verifyTurnstile(turnstileToken, ip);
+    if (!verdict.ok) {
+      console.log("[van-giveaway] Turnstile rejected:", verdict.reason);
+      return NextResponse.json(
+        {
+          message:
+            "We couldn't verify that you're human. Please complete the verification and try again.",
+        },
+        { status: 400 }
+      );
     }
 
     const text = (value: unknown, max: number) =>
@@ -112,6 +216,14 @@ export async function POST(request: Request) {
     const asIsAcknowledgment = data.asIsAcknowledgment === true;
     const mediaRelease = data.mediaRelease === true;
     const newsletterOptIn = data.newsletterOptIn === true;
+    const videoUrl = safeVideoUrl(data.videoUrl);
+    const videoSeconds =
+      typeof data.videoSeconds === "number" && Number.isFinite(data.videoSeconds)
+        ? Math.round(data.videoSeconds)
+        : null;
+    const videoLabel = videoUrl
+      ? `Yes${videoSeconds ? ` (${Math.floor(videoSeconds / 60)}:${String(videoSeconds % 60).padStart(2, "0")})` : ""}`
+      : "No video submitted";
 
     // Server-side validation. Never trust the client.
     const errors: string[] = [];
@@ -204,10 +316,6 @@ export async function POST(request: Request) {
       timeStyle: "long",
     });
     const submittedAtISO = new Date().toISOString();
-    const ip =
-      request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-      request.headers.get("x-real-ip") ||
-      "Unknown";
 
     if (!process.env.RESEND_API_KEY) {
       console.log("Van application (no email sent, RESEND_API_KEY not set):", {
@@ -215,6 +323,7 @@ export async function POST(request: Request) {
         isAdult, hasLicense, canMaintain, isCaretaker, recipient: recipientLabel,
         whyNeed, hasAccessibleVehicle, currentTransport, howHeard: howHeardLabel,
         asIsAcknowledgment, mediaRelease, newsletterOptIn, eligibilityFlags: flags,
+        videoUrl: videoUrl || "(none)",
       });
       return accepted();
     }
@@ -273,6 +382,8 @@ ${whyNeed}
 
 Current method of transportation:
 ${currentTransport}
+
+Story video: ${videoLabel}${videoUrl ? `\nWatch: ${videoUrl}\nDownload: ${videoUrl}?download=1` : ""}
 
 How they heard about us: ${howHeardLabel}
 Newsletter opt-in: ${newsletterOptIn ? "Opted in" : "No"}
@@ -335,6 +446,20 @@ Submitted via elizabethsgift.com van giveaway application`,
 
           <h3 style="color: #352e24;">Current Method of Transportation</h3>
           <p style="color: #555; line-height: 1.6; white-space: pre-wrap;">${e(currentTransport)}</p>
+
+          <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 16px 0;" />
+
+          <h3 style="color: #352e24;">Story Video</h3>
+          ${
+            videoUrl
+              ? `<p style="color: #555; line-height: 1.6;">${e(videoLabel)}<br />
+                   <a href="${e(videoUrl)}" style="color: #5F6B2C; font-weight: bold;">Watch in browser</a>
+                   &nbsp;|&nbsp;
+                   <a href="${e(videoUrl)}?download=1" style="color: #5F6B2C; font-weight: bold;">Download</a>
+                 </p>
+                 <p style="color: #999; font-size: 12px;">Uploaded by the applicant. Stored on Elizabeth&rsquo;s Gift private Vercel Blob storage and served as a video file only.</p>`
+              : `<p style="color: #999;">No video submitted.</p>`
+          }
 
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 16px 0;" />
 

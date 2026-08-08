@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import NewsletterSection from "@/components/NewsletterSection";
 import VanApplicationForm from "@/components/VanApplicationForm";
 import { Check } from "lucide-react";
@@ -140,6 +141,18 @@ export default function VanGiveawayPage() {
               someone who needs accessible transportation. If that&apos;s you
               or someone you care for, we encourage you to apply below.
             </p>
+            <p className="mt-4 text-base md:text-lg text-charcoal/70 leading-relaxed">
+              Elizabeth&apos;s Gift is a registered 501(c)(3) nonprofit
+              providing mobility equipment to people with disabilities at no
+              cost, helping individuals live full lives.{" "}
+              <Link
+                href="/about"
+                className="font-semibold text-olive-dark underline underline-offset-4 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 rounded transition-colors"
+              >
+                Learn more about us
+              </Link>
+              .
+            </p>
             <div className="mt-10 flex flex-col sm:flex-row gap-4">
               <a
                 href="#apply"
@@ -250,7 +263,10 @@ export default function VanGiveawayPage() {
             Tell us about yourself and why you need this vehicle. We review
             every application.
           </p>
-          <VanApplicationForm />
+          {/* Video uploads light up once a Vercel Blob store is linked. */}
+          <VanApplicationForm
+            videoUploadEnabled={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
+          />
         </div>
       </section>
 
