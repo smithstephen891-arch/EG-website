@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { NEWSLETTER_SUBSCRIBED_EVENT } from "./VanPromoPopup";
 
 const STORAGE_KEY = "eg_newsletter";
 const DISMISS_DAYS = 14;
@@ -34,7 +35,16 @@ export default function NewsletterPopup() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ status: "dismissed", timestamp: Date.now() }));
     } catch { /* ignore */ }
+    closeAndContinue();
+  }
+
+  // Announce the subscription only as this modal closes, so the van promo
+  // never stacks on top of it.
+  function closeAndContinue() {
     setVisible(false);
+    if (submitted) {
+      window.dispatchEvent(new CustomEvent(NEWSLETTER_SUBSCRIBED_EVENT));
+    }
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -88,7 +98,7 @@ export default function NewsletterPopup() {
               Elizabeth&apos;s Gift and the work we&apos;re doing together.
             </p>
             <button
-              onClick={() => setVisible(false)}
+              onClick={closeAndContinue}
               className="mt-6 rounded-full bg-olive px-8 py-3 font-semibold text-white hover:bg-olive-light transition-colors"
             >
               Close
