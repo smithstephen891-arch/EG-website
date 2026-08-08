@@ -224,7 +224,7 @@ export default function VanPromoPopup() {
                 <p className="mt-4 text-charcoal/70 leading-relaxed">
                   We&apos;re gifting a wheelchair accessible van to someone who
                   needs it, at no cost. The hardest part is reaching the person
-                  it&apos;s meant for — and that&apos;s where you come in.
+                  it&apos;s meant for, and that&apos;s where you come in.
                 </p>
                 <p className="mt-3 font-semibold text-charcoal">
                   Help us spread the word.

@@ -14,7 +14,7 @@ export const VAN_PATH = "/van-gift";
 export const VAN_SHARE_URL = `https://www.elizabethsgift.com${VAN_PATH}`;
 
 /*
- * TODO — SOCIAL VIDEO LINKS
+ * TODO: SOCIAL VIDEO LINKS
  * Paste the real post URLs here once the videos are live. This is the only
  * place they need to go; both the popup and the van page read from here.
  * Leaving a value empty simply hides that share option, so nothing looks
