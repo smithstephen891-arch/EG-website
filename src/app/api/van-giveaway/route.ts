@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { issueSignedToken, presignUrl } from "@vercel/blob";
 
 const EMPLOYMENT_LABELS: Record<string, string> = {
   "full-time": "Yes, full time",
@@ -54,17 +55,55 @@ function escapeHtml(value: string): string {
     .replace(/'/g, "&#39;");
 }
 
-// The video link is echoed into an email a human will click, so it must only
-// ever be able to point at our own Blob store. Without this, a crafted request
-// could plant an arbitrary link to a malware host in the notification.
-function safeVideoUrl(raw: unknown): string {
+// The video store is private: a bare blob URL cannot be read without a
+// signed token, so nobody who intercepts the URL alone gets the file. We
+// still validate the URL the client sends before trusting it for anything,
+// so a crafted request can't make us sign and hand out a link to a pathname
+// we never issued an upload token for.
+// Keep SAFE_VIDEO_PATHNAME in sync with SAFE_PATHNAME in upload/route.ts.
+const SAFE_VIDEO_PATHNAME =
+  /^van-applications\/story-[a-z0-9]{6,32}\.(mp4|mov|webm|mkv|m4v|3gp)$/;
+
+function extractVideoPathname(raw: unknown): string {
   if (typeof raw !== "string" || raw === "") return "";
   try {
     const url = new URL(raw);
     if (url.protocol !== "https:") return "";
-    if (!url.hostname.endsWith(".public.blob.vercel-storage.com")) return "";
-    return url.toString();
+    if (!url.hostname.endsWith(".private.blob.vercel-storage.com")) return "";
+    const pathname = url.pathname.replace(/^\//, "");
+    return SAFE_VIDEO_PATHNAME.test(pathname) ? pathname : "";
   } catch {
+    return "";
+  }
+}
+
+// Just under Vercel's 7-day maximum: their API measures "now" when the
+// request arrives, a moment after we compute Date.now() here, and rejects a
+// validUntil that lands on or past the true 7-day boundary. The 10 minute
+// margin absorbs that gap. Reviewers are expected to act on an application
+// well within this window; if a link ever expires before review, the
+// application record (and video pathname) still exists, so a fresh link can
+// be reissued by hand if that ever comes up.
+const VIDEO_LINK_TTL_MS = 7 * 24 * 60 * 60 * 1000 - 10 * 60 * 1000;
+
+async function mintVideoLink(pathname: string): Promise<string> {
+  if (!pathname || !process.env.BLOB_READ_WRITE_TOKEN) return "";
+  try {
+    const validUntil = Date.now() + VIDEO_LINK_TTL_MS;
+    const token = await issueSignedToken({
+      pathname,
+      operations: ["get"],
+      validUntil,
+    });
+    const { presignedUrl } = await presignUrl(token, {
+      operation: "get",
+      pathname,
+      access: "private",
+      validUntil,
+    });
+    return presignedUrl;
+  } catch (error) {
+    console.error("[van-giveaway] Could not sign video URL:", error);
     return "";
   }
 }
@@ -216,12 +255,12 @@ export async function POST(request: Request) {
     const asIsAcknowledgment = data.asIsAcknowledgment === true;
     const mediaRelease = data.mediaRelease === true;
     const newsletterOptIn = data.newsletterOptIn === true;
-    const videoUrl = safeVideoUrl(data.videoUrl);
+    const videoPathname = extractVideoPathname(data.videoUrl);
     const videoSeconds =
       typeof data.videoSeconds === "number" && Number.isFinite(data.videoSeconds)
         ? Math.round(data.videoSeconds)
         : null;
-    const videoLabel = videoUrl
+    const videoLabel = videoPathname
       ? `Yes${videoSeconds ? ` (${Math.floor(videoSeconds / 60)}:${String(videoSeconds % 60).padStart(2, "0")})` : ""}`
       : "No video submitted";
 
@@ -323,10 +362,14 @@ export async function POST(request: Request) {
         isAdult, hasLicense, canMaintain, isCaretaker, recipient: recipientLabel,
         whyNeed, hasAccessibleVehicle, currentTransport, howHeard: howHeardLabel,
         asIsAcknowledgment, mediaRelease, newsletterOptIn, eligibilityFlags: flags,
-        videoUrl: videoUrl || "(none)",
+        videoPathname: videoPathname || "(none)",
       });
       return accepted();
     }
+
+    // Sign once here, right before sending, so the link's 7-day clock starts
+    // as close as possible to when the reviewer will actually open the email.
+    const videoUrl = await mintVideoLink(videoPathname);
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     const toAddress =
@@ -383,7 +426,13 @@ ${whyNeed}
 Current method of transportation:
 ${currentTransport}
 
-Story video: ${videoLabel}${videoUrl ? `\nWatch: ${videoUrl}\nDownload: ${videoUrl}?download=1` : ""}
+Story video: ${videoLabel}${
+  videoLabel !== "No video submitted"
+    ? videoUrl
+      ? `\nLink (expires in 7 days): ${videoUrl}`
+      : "\n(A video was submitted, but a link could not be generated. Check the server logs.)"
+    : ""
+}
 
 How they heard about us: ${howHeardLabel}
 Newsletter opt-in: ${newsletterOptIn ? "Opted in" : "No"}
@@ -451,13 +500,13 @@ Submitted via elizabethsgift.com van giveaway application`,
 
           <h3 style="color: #352e24;">Story Video</h3>
           ${
-            videoUrl
-              ? `<p style="color: #555; line-height: 1.6;">${e(videoLabel)}<br />
-                   <a href="${e(videoUrl)}" style="color: #5F6B2C; font-weight: bold;">Watch in browser</a>
-                   &nbsp;|&nbsp;
-                   <a href="${e(videoUrl)}?download=1" style="color: #5F6B2C; font-weight: bold;">Download</a>
-                 </p>
-                 <p style="color: #999; font-size: 12px;">Uploaded by the applicant. Stored on Elizabeth&rsquo;s Gift private Vercel Blob storage and served as a video file only.</p>`
+            videoLabel !== "No video submitted"
+              ? videoUrl
+                ? `<p style="color: #555; line-height: 1.6;">${e(videoLabel)}<br />
+                     <a href="${e(videoUrl)}" style="color: #5F6B2C; font-weight: bold;">Watch or download video</a>
+                   </p>
+                   <p style="color: #999; font-size: 12px;">Right-click the link and choose &ldquo;Save Link As&rdquo; to download. This link is private and expires 7 days after this email is sent &mdash; stored on Elizabeth&rsquo;s Gift private Vercel Blob storage, video files only.</p>`
+                : `<p style="color: #dc2626;">A video was submitted, but a viewable link could not be generated. Check the server logs.</p>`
               : `<p style="color: #999;">No video submitted.</p>`
           }
 

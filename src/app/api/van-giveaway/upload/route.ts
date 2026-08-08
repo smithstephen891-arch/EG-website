@@ -50,6 +50,11 @@ export async function POST(request: Request): Promise<NextResponse> {
         return {
           allowedContentTypes: ALLOWED_CONTENT_TYPES,
           maximumSizeInBytes: MAX_BYTES,
+          // Private: a bare blob URL cannot be read without a signed token.
+          // We mint a time-limited signed link server-side when the
+          // application is submitted, rather than relying on an unguessable
+          // public URL.
+          access: "private",
           // Random suffix means the stored name is never guessable and two
           // applicants can never overwrite each other.
           addRandomSuffix: true,

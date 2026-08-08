@@ -166,13 +166,15 @@ export default function VideoStoryField({
     setProgress(0);
     try {
       const result = await upload(pathname, blob, {
-        access: "public",
+        access: "private",
         handleUploadUrl: "/api/van-giveaway/upload",
         contentType: blob.type || "video/mp4",
         onUploadProgress: ({ percentage }) => setProgress(percentage),
       });
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(URL.createObjectURL(blob));
+      // result.url is a private.blob.vercel-storage.com URL; it is not
+      // fetchable without a signed token, which the server mints on submit.
       onChange({ url: result.url, seconds, bytes: blob.size });
     } catch (err) {
       console.error("Video upload failed:", err);
