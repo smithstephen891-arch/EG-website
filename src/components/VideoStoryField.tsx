@@ -2,14 +2,25 @@
 
 import { useEffect, useRef, useState } from "react";
 import { upload } from "@vercel/blob/client";
-import { AlertCircle, Check, Trash2, Upload, Video } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  Pause,
+  Play,
+  RotateCcw,
+  Square,
+  Trash2,
+  Upload,
+  Video,
+} from "lucide-react";
 
 export const MAX_VIDEO_SECONDS = 180;
 const MAX_VIDEO_BYTES = 500 * 1024 * 1024;
 const DURATION_GRACE_SECONDS = 5;
 
 const ACCEPTED_EXTENSIONS = ["mp4", "mov", "webm", "mkv", "m4v", "3gp"] as const;
-const ACCEPT_ATTR = "video/mp4,video/quicktime,video/webm,video/x-matroska,video/x-m4v,video/3gpp";
+const ACCEPT_ATTR =
+  "video/mp4,video/quicktime,video/webm,video/x-matroska,video/x-m4v,video/3gpp";
 
 export interface VideoStoryValue {
   url: string;
@@ -23,6 +34,8 @@ interface VideoStoryFieldProps {
   onBusyChange: (busy: boolean) => void;
   disabled?: boolean;
 }
+
+type Phase = "idle" | "recording" | "paused" | "review";
 
 function formatDuration(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -59,10 +72,19 @@ function readDuration(file: Blob): Promise<number | null> {
   });
 }
 
+// MediaRecorder hands back a type like "video/webm;codecs=vp9,opus". The server
+// allowlist matches bare MIME types, so the codecs parameter has to go or every
+// browser-recorded upload is rejected. Files picked from disk already have
+// clean types, which is why only recording hit this.
+function normalizeContentType(type: string): string {
+  const base = (type || "").split(";")[0].trim().toLowerCase();
+  return base.startsWith("video/") ? base : "video/mp4";
+}
+
 function extensionFor(file: Blob, fallbackName: string): string {
   const fromName = fallbackName.split(".").pop()?.toLowerCase() ?? "";
   if ((ACCEPTED_EXTENSIONS as readonly string[]).includes(fromName)) return fromName;
-  const type = file.type.toLowerCase();
+  const type = normalizeContentType(file.type);
   if (type.includes("quicktime")) return "mov";
   if (type.includes("webm")) return "webm";
   if (type.includes("matroska")) return "mkv";
@@ -87,6 +109,28 @@ function pickRecorderMimeType(): string | undefined {
   return candidates.find((type) => MediaRecorder.isTypeSupported(type));
 }
 
+function cameraErrorMessage(err: unknown): string {
+  const name = err instanceof Error ? err.name : "";
+  switch (name) {
+    case "NotAllowedError":
+    case "SecurityError":
+      return "Your browser blocked camera access. Allow camera and microphone for this site in your browser settings, then try again — or upload a video file instead.";
+    case "NotFoundError":
+    case "OverconstrainedError":
+      return "We couldn't find a camera on this device. You can upload a video file instead.";
+    case "NotReadableError":
+      return "Your camera seems to be in use by another app. Close it and try again, or upload a video file instead.";
+    default:
+      return "We couldn't start your camera. You can upload a video file instead.";
+  }
+}
+
+const secondaryButtonClass =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-charcoal/20 px-6 py-2.5 text-sm font-semibold text-charcoal hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors disabled:opacity-50";
+
+const primaryButtonClass =
+  "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-olive-dark px-6 py-2.5 text-sm font-semibold text-white hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors disabled:opacity-50";
+
 export default function VideoStoryField({
   value,
   onChange,
@@ -95,17 +139,22 @@ export default function VideoStoryField({
 }: VideoStoryFieldProps) {
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
-  const [recording, setRecording] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
   const [elapsed, setElapsed] = useState(0);
   const [canRecord, setCanRecord] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  // Object URL of whatever video is currently in hand, used both for the
+  // review player before upload and the confirmation player after it.
+  const [localUrl, setLocalUrl] = useState<string | null>(null);
 
   const liveVideoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const recordedBlobRef = useRef<Blob | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const elapsedRef = useRef(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const localUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
     setCanRecord(
@@ -115,6 +164,13 @@ export default function VideoStoryField({
         !!pickRecorderMimeType()
     );
   }, []);
+
+  // Keep a ref alongside the state so cleanup can revoke without re-running.
+  function swapLocalUrl(next: string | null) {
+    if (localUrlRef.current) URL.revokeObjectURL(localUrlRef.current);
+    localUrlRef.current = next;
+    setLocalUrl(next);
+  }
 
   const stopTracks = () => {
     streamRef.current?.getTracks().forEach((t) => t.stop());
@@ -133,16 +189,121 @@ export default function VideoStoryField({
     return () => {
       stopTracks();
       clearTimer();
+      if (localUrlRef.current) URL.revokeObjectURL(localUrlRef.current);
     };
   }, []);
 
-  useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
-  }, [previewUrl]);
+  function startTimer() {
+    clearTimer();
+    timerRef.current = setInterval(() => {
+      elapsedRef.current += 1;
+      setElapsed(elapsedRef.current);
+      // Called from the interval, not from inside a state updater, so this
+      // stays a plain event-driven update.
+      if (elapsedRef.current >= MAX_VIDEO_SECONDS) stopRecording();
+    }, 1000);
+  }
 
-  async function handleBlob(blob: Blob, originalName: string) {
+  async function startRecording() {
+    setError(null);
+    recordedBlobRef.current = null;
+    swapLocalUrl(null);
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 1280 }, height: { ideal: 720 } },
+        audio: true,
+      });
+      streamRef.current = stream;
+      const mimeType = pickRecorderMimeType();
+      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+      chunksRef.current = [];
+      recorder.ondataavailable = (event) => {
+        if (event.data.size > 0) chunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => {
+        const type = normalizeContentType(recorder.mimeType || "video/webm");
+        const blob = new Blob(chunksRef.current, { type });
+        chunksRef.current = [];
+        stopTracks();
+        recordedBlobRef.current = blob;
+        swapLocalUrl(URL.createObjectURL(blob));
+        setPhase("review");
+      };
+      recorderRef.current = recorder;
+      recorder.start();
+
+      elapsedRef.current = 0;
+      setElapsed(0);
+      setPhase("recording");
+      startTimer();
+
+      // Attach the stream after the phase flips so the preview element is
+      // actually rendered and visible when it starts playing.
+      requestAnimationFrame(() => {
+        if (liveVideoRef.current && streamRef.current) {
+          liveVideoRef.current.srcObject = streamRef.current;
+          void liveVideoRef.current.play().catch(() => {});
+        }
+      });
+    } catch (err) {
+      console.error("Camera access failed:", err);
+      stopTracks();
+      setPhase("idle");
+      setError(cameraErrorMessage(err));
+    }
+  }
+
+  function pauseRecording() {
+    if (recorderRef.current?.state === "recording") {
+      recorderRef.current.pause();
+      clearTimer();
+      setPhase("paused");
+    }
+  }
+
+  function resumeRecording() {
+    if (recorderRef.current?.state === "paused") {
+      recorderRef.current.resume();
+      setPhase("recording");
+      startTimer();
+    }
+  }
+
+  function stopRecording() {
+    clearTimer();
+    const recorder = recorderRef.current;
+    recorderRef.current = null;
+    if (recorder && recorder.state !== "inactive") {
+      // onstop moves us into the review phase.
+      recorder.stop();
+    } else {
+      stopTracks();
+      setPhase("idle");
+    }
+  }
+
+  function discardRecording() {
+    recordedBlobRef.current = null;
+    swapLocalUrl(null);
+    elapsedRef.current = 0;
+    setElapsed(0);
+    setPhase("idle");
+    setError(null);
+  }
+
+  // Not named use* — the hooks lint rule treats that prefix as a React Hook.
+  async function acceptRecording() {
+    const blob = recordedBlobRef.current;
+    if (!blob) return;
+    const ext = normalizeContentType(blob.type).includes("mp4") ? "mp4" : "webm";
+    await handleBlob(blob, `recording.${ext}`, { keepLocalUrl: true });
+  }
+
+  async function handleBlob(
+    blob: Blob,
+    originalName: string,
+    opts: { keepLocalUrl?: boolean } = {}
+  ) {
     setError(null);
 
     if (blob.size > MAX_VIDEO_BYTES) {
@@ -168,18 +329,22 @@ export default function VideoStoryField({
       const result = await upload(pathname, blob, {
         access: "private",
         handleUploadUrl: "/api/van-giveaway/upload",
-        contentType: blob.type || "video/mp4",
+        contentType: normalizeContentType(blob.type),
         onUploadProgress: ({ percentage }) => setProgress(percentage),
       });
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      setPreviewUrl(URL.createObjectURL(blob));
+      if (!opts.keepLocalUrl) {
+        swapLocalUrl(URL.createObjectURL(blob));
+      }
+      recordedBlobRef.current = null;
+      setPhase("idle");
       // result.url is a private.blob.vercel-storage.com URL; it is not
       // fetchable without a signed token, which the server mints on submit.
       onChange({ url: result.url, seconds, bytes: blob.size });
     } catch (err) {
       console.error("Video upload failed:", err);
+      const detail = err instanceof Error ? err.message : "";
       setError(
-        "We couldn't upload that video. You can try again, or submit your application without it — a video is optional."
+        `We couldn't upload that video${detail ? ` (${detail})` : ""}. You can try again, or submit your application without it — a video is optional.`
       );
       onChange(null);
     } finally {
@@ -199,69 +364,19 @@ export default function VideoStoryField({
     void handleBlob(file, file.name);
   }
 
-  async function startRecording() {
-    setError(null);
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: true,
-      });
-      streamRef.current = stream;
-      if (liveVideoRef.current) {
-        liveVideoRef.current.srcObject = stream;
-        await liveVideoRef.current.play().catch(() => {});
-      }
-      const mimeType = pickRecorderMimeType();
-      const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
-      chunksRef.current = [];
-      recorder.ondataavailable = (event) => {
-        if (event.data.size > 0) chunksRef.current.push(event.data);
-      };
-      recorder.onstop = () => {
-        const type = recorder.mimeType || "video/webm";
-        const blob = new Blob(chunksRef.current, { type });
-        chunksRef.current = [];
-        stopTracks();
-        void handleBlob(blob, `recording.${type.includes("mp4") ? "mp4" : "webm"}`);
-      };
-      recorderRef.current = recorder;
-      recorder.start();
-      setRecording(true);
-      setElapsed(0);
-      timerRef.current = setInterval(() => {
-        setElapsed((prev) => {
-          const next = prev + 1;
-          if (next >= MAX_VIDEO_SECONDS) stopRecording();
-          return next;
-        });
-      }, 1000);
-    } catch (err) {
-      console.error("Camera access failed:", err);
-      stopTracks();
-      setError(
-        "We couldn't access your camera. Check your browser's camera permission, or upload a video file instead."
-      );
-    }
-  }
-
-  function stopRecording() {
-    clearTimer();
-    setRecording(false);
-    if (recorderRef.current && recorderRef.current.state !== "inactive") {
-      recorderRef.current.stop();
-    }
-    recorderRef.current = null;
-  }
-
   function removeVideo() {
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(null);
+    swapLocalUrl(null);
+    recordedBlobRef.current = null;
+    elapsedRef.current = 0;
+    setElapsed(0);
+    setPhase("idle");
     onChange(null);
     setError(null);
   }
 
   const uploading = progress !== null;
-  const remaining = MAX_VIDEO_SECONDS - elapsed;
+  const remaining = Math.max(MAX_VIDEO_SECONDS - elapsed, 0);
+  const isLive = phase === "recording" || phase === "paused";
 
   return (
     <div className="rounded-xl border border-charcoal/20 bg-white px-6 py-5">
@@ -272,12 +387,13 @@ export default function VideoStoryField({
       <p className="mt-2 text-sm text-charcoal/70 leading-relaxed">
         This is optional, but we encourage it. A short video helps us understand
         your situation in your own words. Please keep it to{" "}
-        <strong className="font-semibold text-charcoal">3 minutes or less</strong>. You can
-        upload a video you already have, or record one right here.
+        <strong className="font-semibold text-charcoal">3 minutes or less</strong>. You
+        can upload a video you already have, or record one right here — you can
+        pause while recording, and watch it back before you send it.
       </p>
 
-      {/* Uploaded state */}
-      {value && !uploading && (
+      {/* Uploaded and attached */}
+      {value && !uploading && !isLive && phase !== "review" && (
         <div className="mt-4">
           <p className="flex items-center gap-2 text-sm font-medium text-olive-dark">
             <Check aria-hidden="true" className="h-4 w-4 flex-shrink-0" />
@@ -285,9 +401,9 @@ export default function VideoStoryField({
             {value.seconds !== null && ` (${formatDuration(value.seconds)})`} ·{" "}
             {formatBytes(value.bytes)}
           </p>
-          {previewUrl && (
+          {localUrl && (
             <video
-              src={previewUrl}
+              src={localUrl}
               controls
               playsInline
               className="mt-3 w-full max-w-sm rounded-lg border border-charcoal/10"
@@ -304,26 +420,86 @@ export default function VideoStoryField({
         </div>
       )}
 
-      {/* Live recording preview */}
-      <div className={recording ? "mt-4" : "hidden"}>
-        <video
-          ref={liveVideoRef}
-          muted
-          playsInline
-          className="w-full max-w-sm rounded-lg border border-charcoal/10 bg-charcoal"
-        />
-        <p aria-live="polite" className="mt-2 text-sm font-medium text-charcoal">
-          Recording… {formatDuration(elapsed)} · {formatDuration(Math.max(remaining, 0))}{" "}
-          remaining
-        </p>
-        <button
-          type="button"
-          onClick={stopRecording}
-          className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-full bg-charcoal px-6 py-2.5 text-sm font-semibold text-cream hover:bg-charcoal-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
-        >
-          Stop recording
-        </button>
-      </div>
+      {/* Live camera: recording or paused */}
+      {isLive && (
+        <div className="mt-4">
+          <video
+            ref={liveVideoRef}
+            muted
+            playsInline
+            className="w-full max-w-sm rounded-lg border border-charcoal/10 bg-charcoal"
+          />
+          <p aria-live="polite" className="mt-2 text-sm font-medium text-charcoal">
+            {phase === "paused" ? "Paused" : "Recording"} · {formatDuration(elapsed)} ·{" "}
+            {formatDuration(remaining)} remaining
+          </p>
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+            {phase === "recording" ? (
+              <button type="button" onClick={pauseRecording} className={secondaryButtonClass}>
+                <Pause aria-hidden="true" className="h-4 w-4" />
+                Pause
+              </button>
+            ) : (
+              <button type="button" onClick={resumeRecording} className={secondaryButtonClass}>
+                <Play aria-hidden="true" className="h-4 w-4" />
+                Resume
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={stopRecording}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-2.5 text-sm font-semibold text-cream hover:bg-charcoal-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
+            >
+              <Square aria-hidden="true" className="h-4 w-4" />
+              Finish recording
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Review before uploading */}
+      {phase === "review" && !uploading && (
+        <div className="mt-4">
+          <p className="text-sm font-medium text-charcoal">
+            Here&apos;s your recording ({formatDuration(elapsed)}). Watch it back,
+            then send it or record a new one.
+          </p>
+          {localUrl && (
+            <video
+              src={localUrl}
+              controls
+              playsInline
+              className="mt-3 w-full max-w-sm rounded-lg border border-charcoal/10"
+            />
+          )}
+          <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={() => void acceptRecording()}
+              className={primaryButtonClass}
+            >
+              <Check aria-hidden="true" className="h-4 w-4" />
+              Use this video
+            </button>
+            <button
+              type="button"
+              onClick={() => void startRecording()}
+              className={secondaryButtonClass}
+            >
+              <RotateCcw aria-hidden="true" className="h-4 w-4" />
+              Record again
+            </button>
+            <button
+              type="button"
+              onClick={discardRecording}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-charcoal/70 hover:bg-cream-dark hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
+            >
+              <Trash2 aria-hidden="true" className="h-4 w-4" />
+              Discard
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Upload progress */}
       {uploading && (
@@ -343,14 +519,14 @@ export default function VideoStoryField({
         </div>
       )}
 
-      {/* Actions */}
-      {!value && !recording && !uploading && (
+      {/* Starting actions */}
+      {!value && phase === "idle" && !uploading && (
         <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
             disabled={disabled}
             onClick={() => fileInputRef.current?.click()}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-charcoal/20 px-6 py-2.5 text-sm font-semibold text-charcoal hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors disabled:opacity-50"
+            className={secondaryButtonClass}
           >
             <Upload aria-hidden="true" className="h-4 w-4" />
             Upload a video
@@ -359,8 +535,8 @@ export default function VideoStoryField({
             <button
               type="button"
               disabled={disabled}
-              onClick={startRecording}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border-2 border-charcoal/20 px-6 py-2.5 text-sm font-semibold text-charcoal hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors disabled:opacity-50"
+              onClick={() => void startRecording()}
+              className={secondaryButtonClass}
             >
               <Video aria-hidden="true" className="h-4 w-4" />
               Record with your camera

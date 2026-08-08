@@ -657,7 +657,7 @@ export default function VanApplicationForm({
               body: JSON.stringify({
                 email: values.email,
                 name: `${values.firstName} ${values.lastName}`,
-                source: "Van Giveaway",
+                source: "Accessible Van Page",
               }),
             });
           } catch {
@@ -1029,8 +1029,8 @@ export default function VanApplicationForm({
             className={checkClass}
           />
           <span className="text-sm text-charcoal/80 leading-relaxed">
-            Elizabeth&apos;s Gift may use my name, photos, and video from this
-            giveaway in promotional materials.{" "}
+            Elizabeth&apos;s Gift may share my name, photos, and video in
+            promotional materials.{" "}
             <span className="text-charcoal/50">(Optional)</span>
           </span>
         </label>
@@ -1152,9 +1152,9 @@ export default function VanApplicationForm({
           <p>
             By checking the media release box, I grant Elizabeth&apos;s Gift
             permission to use my name, likeness, photographs, and video
-            recordings related to this giveaway in promotional and social media
-            materials, including the Elizabeth&apos;s Gift website, social
-            media accounts, and print and digital materials.
+            recordings related to this vehicle gift in promotional and social
+            media materials, including the Elizabeth&apos;s Gift website,
+            social media accounts, and print and digital materials.
           </p>
           <p>
             This release is optional. Declining does not affect my application

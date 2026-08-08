@@ -17,8 +17,9 @@ export async function POST(request: Request) {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // Notify admin of new subscriber (always runs first)
-    await resend.emails.send({
+    // Notify admin of new subscriber (always runs first).
+    // Resend reports failures in the response body rather than throwing.
+    const { error: sendError } = await resend.emails.send({
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: "info@elizabethsgift.com",
       subject: `New Newsletter Signup — ${email}`,
@@ -46,6 +47,13 @@ export async function POST(request: Request) {
         </div>
       `,
     });
+
+    if (sendError) {
+      // Deliberately not a 500: the actual subscription is the contacts.create
+      // below, so failing here would tell someone their signup failed when they
+      // are in fact subscribed. Log it so a broken key is still visible.
+      console.error("Newsletter: admin notification was rejected:", sendError);
+    }
 
     // Add contact to Resend (runs independently — won't break the signup if it fails)
     try {

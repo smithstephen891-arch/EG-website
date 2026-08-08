@@ -5,9 +5,9 @@ import NewsletterSection from "@/components/NewsletterSection";
 import VanApplicationForm from "@/components/VanApplicationForm";
 import { Check } from "lucide-react";
 
-const pageTitle = "Free Wheelchair Accessible Van Giveaway — Elizabeth's Gift";
+const pageTitle = "A Wheelchair Accessible Van for Someone Who Needs It — Elizabeth's Gift";
 const pageDescription =
-  "Elizabeth's Gift is giving away a free wheelchair accessible van, a 2017 Dodge Grand Caravan with a rear-entry ramp, to someone who needs accessible transportation. Apply today.";
+  "Elizabeth's Gift is giving a wheelchair accessible van, a 2017 Dodge Grand Caravan with a rear-entry ramp, to someone who needs it. No cost, no catch. Tell us your story.";
 
 // 1200×630 social share card generated from the side-profile photo of the van.
 const ogImage = "/images/van/og-van-giveaway.jpg";
@@ -65,8 +65,8 @@ const jsonLd = {
     },
     {
       "@type": "SpecialAnnouncement",
-      name: "Free Wheelchair Accessible Van Giveaway",
-      text: "Elizabeth's Gift is gifting a 2017 Dodge Grand Caravan with a rear-entry manual wheelchair ramp, free and as-is, to someone in need of accessible transportation.",
+      name: "A Wheelchair Accessible Van for Someone Who Needs It",
+      text: "Elizabeth's Gift is gifting a 2017 Dodge Grand Caravan with a rear-entry manual wheelchair ramp, at no cost and as-is, to someone in need of accessible transportation.",
       datePosted: "2026-08-07",
       url: "https://www.elizabethsgift.com/van-giveaway",
       announcementLocation: { "@id": "https://www.elizabethsgift.com/#org" },
@@ -134,12 +134,12 @@ export default function VanGiveawayPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           <div className="max-w-3xl">
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-charcoal">
-              We&apos;re Giving Away a Wheelchair Accessible Van
+              This Van Could Change Someone&apos;s Life
             </h1>
             <p className="mt-6 text-lg md:text-xl text-charcoal/70 leading-relaxed">
-              Elizabeth&apos;s Gift is gifting this van, completely free, to
-              someone who needs accessible transportation. If that&apos;s you
-              or someone you care for, we encourage you to apply below.
+              We&apos;re giving this wheelchair accessible van to someone who
+              needs it, at no cost. If that&apos;s you or someone you care for,
+              we&apos;d be honored to hear your story.
             </p>
             <p className="mt-4 text-base md:text-lg text-charcoal/70 leading-relaxed">
               Elizabeth&apos;s Gift is a registered 501(c)(3) nonprofit
@@ -273,7 +273,7 @@ export default function VanGiveawayPage() {
       {/* Newsletter */}
       <section className="bg-cream">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 border-t border-charcoal/10">
-          <NewsletterSection source="Van Giveaway Page" />
+          <NewsletterSection source="Accessible Van Page" />
         </div>
       </section>
     </>

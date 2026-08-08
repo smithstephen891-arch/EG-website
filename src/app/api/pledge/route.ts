@@ -13,8 +13,10 @@ export async function POST(request: Request) {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // Notify Elizabeth's Gift
-    await resend.emails.send({
+    // Notify Elizabeth's Gift.
+    // Resend reports failures in the response body rather than throwing, so a
+    // bare await would let a rejected send look like success to the donor.
+    const { error: sendError } = await resend.emails.send({
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: "info@elizabethsgift.com",
       replyTo: email,
@@ -52,8 +54,17 @@ export async function POST(request: Request) {
       `,
     });
 
-    // Confirmation to donor
-    await resend.emails.send({
+    if (sendError) {
+      console.error("Pledge: Resend rejected the notification:", sendError);
+      return NextResponse.json(
+        { message: "Something went wrong" },
+        { status: 500 }
+      );
+    }
+
+    // Confirmation to donor. Secondary: the pledge is already recorded above,
+    // so a failure here is logged rather than failing the whole request.
+    const { error: confirmationError } = await resend.emails.send({
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: email,
       subject: "Your Pledge to Elizabeth's Gift — Thank You!",
@@ -92,6 +103,13 @@ export async function POST(request: Request) {
         </div>
       `,
     });
+
+    if (confirmationError) {
+      console.error(
+        "Pledge: confirmation email was rejected (notification already sent):",
+        confirmationError
+      );
+    }
 
     return NextResponse.json({ message: "Pledge received successfully" }, { status: 200 });
   } catch (error) {

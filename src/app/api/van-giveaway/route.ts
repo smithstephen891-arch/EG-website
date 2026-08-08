@@ -394,13 +394,15 @@ export async function POST(request: Request) {
         ? `!! ELIGIBILITY FLAGS: REVIEW CAREFULLY !!\n${flags.map((flag) => `- ${flag}`).join("\n")}`
         : "No eligibility flags. Meets all stated requirements.";
 
-    // Admin notification must succeed, or the outer catch returns 500.
-    await resend.emails.send({
+    // Admin notification must succeed, or we return 500. Resend reports
+    // failures in the response body rather than throwing, so a bare await
+    // would let a rejected send look like success to the applicant.
+    const { error: sendError } = await resend.emails.send({
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: toAddress,
       replyTo: email,
       subject: `[VAN APPLICATION] ${fullName}`,
-      text: `New Van Giveaway Application
+      text: `New Accessible Van Application
 
 ${flagsText}
 
@@ -449,10 +451,10 @@ Media and Publicity Release: ${mediaRelease ? "ACCEPTED" : "DECLINED (optional)"
 ====================================
 
 ---
-Submitted via elizabethsgift.com van giveaway application`,
+Submitted via elizabethsgift.com accessible van application`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #352e24;">New Van Giveaway Application</h2>
+          <h2 style="color: #352e24;">New Accessible Van Application</h2>
 
           ${flagsHtml}
 
@@ -541,21 +543,29 @@ Submitted via elizabethsgift.com van giveaway application`,
           </div>
 
           <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 24px 0;" />
-          <p style="color: #999; font-size: 12px;">Submitted via elizabethsgift.com van giveaway application</p>
+          <p style="color: #999; font-size: 12px;">Submitted via elizabethsgift.com accessible van application</p>
         </div>
       `,
     });
 
+    if (sendError) {
+      console.error("[van-giveaway] Resend rejected the application:", sendError);
+      return NextResponse.json(
+        { message: "Something went wrong" },
+        { status: 500 }
+      );
+    }
+
     // Confirmation to the applicant is best-effort and must never fail the request
     // (the admin notification above already sent).
     try {
-      await resend.emails.send({
+      const { error: confirmationError } = await resend.emails.send({
         from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
         to: email,
-        subject: "We received your van giveaway application — Elizabeth's Gift",
+        subject: "We received your application — Elizabeth's Gift",
         text: `Thank you, ${firstName}!
 
-We've received your application for the wheelchair accessible van giveaway. Our team reviews every application carefully.
+We've received your application for the wheelchair accessible van. Our team reviews every application carefully.
 
 Please note: submitting an application is not a guarantee of receiving the vehicle. We will contact selected applicants directly.
 
@@ -569,7 +579,7 @@ Elizabeth's Gift — Lifting Up and Living Fully`,
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #352e24;">Thank you, ${e(firstName)}!</h2>
-            <p style="color: #555; line-height: 1.6;">We&rsquo;ve received your application for the wheelchair accessible van giveaway. Our team reviews every application carefully.</p>
+            <p style="color: #555; line-height: 1.6;">We&rsquo;ve received your application for the wheelchair accessible van. Our team reviews every application carefully.</p>
             <p style="color: #555; line-height: 1.6;"><strong>Please note:</strong> submitting an application is not a guarantee of receiving the vehicle. We will contact selected applicants directly.</p>
             <p style="color: #555; line-height: 1.6;">If you have any questions, reach us at <a href="mailto:info@elizabethsgift.com" style="color: #7a7c3b;">info@elizabethsgift.com</a>.</p>
             <p style="color: #555; line-height: 1.6;">With gratitude,<br /><strong>The Elizabeth&rsquo;s Gift Team</strong></p>
@@ -578,6 +588,12 @@ Elizabeth's Gift — Lifting Up and Living Fully`,
           </div>
         `,
       });
+      if (confirmationError) {
+        console.error(
+          "[van-giveaway] Confirmation email was rejected (application email already sent):",
+          confirmationError
+        );
+      }
     } catch (confirmationError) {
       console.error(
         "[van-giveaway] Confirmation email failed (application email already sent):",

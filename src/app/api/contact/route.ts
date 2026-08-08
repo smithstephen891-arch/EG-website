@@ -12,7 +12,9 @@ export async function POST(request: Request) {
     }
 
     const resend = new Resend(process.env.RESEND_API_KEY);
-    await resend.emails.send({
+    // Resend reports failures in the response body rather than throwing, so a
+    // bare await would let a rejected send look like success to the sender.
+    const { error: sendError } = await resend.emails.send({
       from: "Elizabeth's Gift <noreply@elizabethsgift.com>",
       to: "info@elizabethsgift.com",
       replyTo: email,
@@ -47,6 +49,14 @@ export async function POST(request: Request) {
         </div>
       `,
     });
+
+    if (sendError) {
+      console.error("Contact form: Resend rejected the message:", sendError);
+      return NextResponse.json(
+        { message: "Something went wrong" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json(
       { message: "Message received successfully" },
