@@ -9,32 +9,31 @@ import {
   Check,
   Copy,
   Heart,
+  Info,
   Mail,
   MessageSquare,
   Play,
   Share2,
   X,
 } from "lucide-react";
+import {
+  INSTAGRAM_REEL_URL,
+  TIKTOK_VIDEO_URL,
+  VAN_PATH,
+  buildMailHref,
+  buildSmsHref,
+  canNativeShare,
+  VAN_SHARE_URL,
+  nativeShare,
+} from "@/lib/van-share";
 
-// Fired by the newsletter forms once someone has actually subscribed.
-export const NEWSLETTER_SUBSCRIBED_EVENT = "eg:newsletter-subscribed";
+// Fired once the newsletter prompt has been resolved in any way at all:
+// subscribed, declined, or closed. Reaching the person who needs the van
+// matters more than whether the reader wanted our emails.
+export const NEWSLETTER_RESOLVED_EVENT = "eg:newsletter-resolved";
 
 const SEEN_KEY = "eg_van_promo_seen";
-const VAN_PATH = "/van-gift";
 const SHOW_DELAY_MS = 900;
-
-/*
- * TODO — SOCIAL VIDEO LINKS
- * Paste the real post URLs here once the videos are live. Leaving a value
- * empty simply hides that share option and the play overlay, so the popup
- * still looks finished until then.
- */
-const TIKTOK_VIDEO_URL = "";
-const INSTAGRAM_REEL_URL = "";
-
-const SHARE_TITLE = "Elizabeth's Gift is giving away a wheelchair accessible van";
-const SHARE_BODY =
-  "Elizabeth's Gift is giving a wheelchair accessible van to someone who needs it, at no cost. If you know someone who could use it, here's the application:";
 
 function markSeen() {
   try {
@@ -52,14 +51,8 @@ export default function VanPromoPopup() {
   // Lazy initialisers rather than effects: this component renders nothing
   // until a user action opens it, so touching browser globals here cannot
   // cause a hydration mismatch.
-  const [shareUrl] = useState(() =>
-    typeof window === "undefined"
-      ? `https://www.elizabethsgift.com${VAN_PATH}`
-      : `${window.location.origin}${VAN_PATH}`
-  );
-  const [canNativeShare] = useState(
-    () => typeof navigator !== "undefined" && typeof navigator.share === "function"
-  );
+  const shareUrl = VAN_SHARE_URL;
+  const [showNativeShare] = useState(canNativeShare);
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const restoreFocusRef = useRef<Element | null>(null);
@@ -70,9 +63,8 @@ export default function VanPromoPopup() {
   // render guard below still keeps it away while they are on that page.
 
   useEffect(() => {
-    function onSubscribed() {
-      // Never on the van page itself, never for someone who has already been
-      // there, and never twice.
+    function onNewsletterResolved() {
+      // Two rules only: never on the van page itself, and never twice.
       if (window.location.pathname === VAN_PATH) return;
       try {
         if (localStorage.getItem(SEEN_KEY)) return;
@@ -85,8 +77,9 @@ export default function VanPromoPopup() {
         markSeen();
       }, SHOW_DELAY_MS);
     }
-    window.addEventListener(NEWSLETTER_SUBSCRIBED_EVENT, onSubscribed);
-    return () => window.removeEventListener(NEWSLETTER_SUBSCRIBED_EVENT, onSubscribed);
+    window.addEventListener(NEWSLETTER_RESOLVED_EVENT, onNewsletterResolved);
+    return () =>
+      window.removeEventListener(NEWSLETTER_RESOLVED_EVENT, onNewsletterResolved);
   }, []);
 
   const close = useCallback(() => {
@@ -134,14 +127,6 @@ export default function VanPromoPopup() {
     };
   }, [visible, close]);
 
-  async function handleNativeShare() {
-    try {
-      await navigator.share({ title: SHARE_TITLE, text: SHARE_BODY, url: shareUrl });
-    } catch {
-      // Cancelled or unsupported: the explicit options below still work.
-    }
-  }
-
   async function copyLink() {
     try {
       await navigator.clipboard.writeText(shareUrl);
@@ -154,8 +139,8 @@ export default function VanPromoPopup() {
 
   if (!visible || pathname === VAN_PATH) return null;
 
-  const mailHref = `mailto:?subject=${encodeURIComponent(SHARE_TITLE)}&body=${encodeURIComponent(`${SHARE_BODY}\n\n${shareUrl}`)}`;
-  const smsHref = `sms:?&body=${encodeURIComponent(`${SHARE_BODY} ${shareUrl}`)}`;
+  const mailHref = buildMailHref(shareUrl);
+  const smsHref = buildSmsHref(shareUrl);
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6">
@@ -245,36 +230,50 @@ export default function VanPromoPopup() {
                   Help us spread the word.
                 </p>
 
+                {/* Sharing leads: reaching the right person matters more than
+                    any single visitor applying or giving. */}
                 <div className="mt-7 space-y-3">
-                  <Link
-                    href={VAN_PATH}
-                    onClick={close}
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-olive-dark px-6 py-3.5 font-semibold text-white transition-colors hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
-                  >
-                    Apply for the van
-                  </Link>
                   <button
                     type="button"
                     onClick={() => setView("share")}
-                    className="flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-3.5 font-semibold text-charcoal transition-colors hover:bg-gold/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
+                    className="flex w-full items-center justify-center gap-2 rounded-full bg-olive-dark px-6 py-4 text-lg font-semibold text-white shadow-sm transition-colors hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
                   >
-                    <Share2 aria-hidden="true" className="h-4 w-4" />
+                    <Share2 aria-hidden="true" className="h-5 w-5" />
                     Share with someone
                   </button>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <Link
+                      href={`${VAN_PATH}#apply`}
+                      onClick={close}
+                      className="flex items-center justify-center gap-2 rounded-full bg-gold px-4 py-3 font-semibold text-charcoal transition-colors hover:bg-gold/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
+                    >
+                      Apply
+                    </Link>
+                    <Link
+                      href="/donate"
+                      onClick={close}
+                      className="flex items-center justify-center gap-2 rounded-full border-2 border-charcoal/20 px-4 py-3 font-semibold text-charcoal transition-colors hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
+                    >
+                      <Heart aria-hidden="true" className="h-4 w-4" />
+                      Donate
+                    </Link>
+                  </div>
+
                   <Link
-                    href="/donate"
+                    href={VAN_PATH}
                     onClick={close}
-                    className="flex w-full items-center justify-center gap-2 rounded-full border-2 border-charcoal/20 px-6 py-3.5 font-semibold text-charcoal transition-colors hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium text-olive-dark underline underline-offset-4 transition-colors hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark"
                   >
-                    <Heart aria-hidden="true" className="h-4 w-4" />
-                    Donate
+                    <Info aria-hidden="true" className="h-4 w-4" />
+                    More information about the van
                   </Link>
                 </div>
 
                 <button
                   type="button"
                   onClick={close}
-                  className="mt-4 w-full rounded-lg py-2 text-sm text-charcoal/50 transition-colors hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark"
+                  className="mt-3 w-full rounded-lg py-2 text-sm text-charcoal/50 transition-colors hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark"
                 >
                   Maybe later
                 </button>
@@ -302,10 +301,10 @@ export default function VanPromoPopup() {
                 </p>
 
                 <div className="mt-6 space-y-2.5">
-                  {canNativeShare && (
+                  {showNativeShare && (
                     <button
                       type="button"
-                      onClick={handleNativeShare}
+                      onClick={() => void nativeShare(shareUrl)}
                       className="flex w-full items-center gap-3 rounded-xl bg-olive-dark px-4 py-3.5 text-left font-semibold text-white transition-colors hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
                     >
                       <Share2 aria-hidden="true" className="h-5 w-5 flex-shrink-0" />

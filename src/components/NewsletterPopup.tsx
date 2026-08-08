@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { NEWSLETTER_SUBSCRIBED_EVENT } from "./VanPromoPopup";
+import { NEWSLETTER_RESOLVED_EVENT } from "./VanPromoPopup";
 
 const STORAGE_KEY = "eg_newsletter";
 const DISMISS_DAYS = 14;
@@ -38,13 +38,13 @@ export default function NewsletterPopup() {
     closeAndContinue();
   }
 
-  // Announce the subscription only as this modal closes, so the van promo
-  // never stacks on top of it.
+  // Announce as this modal closes, so the van promo never stacks on top of
+  // it. Fires however the reader responded: subscribing, declining, or just
+  // closing. Someone who does not want our emails may still know the person
+  // who needs the van.
   function closeAndContinue() {
     setVisible(false);
-    if (submitted) {
-      window.dispatchEvent(new CustomEvent(NEWSLETTER_SUBSCRIBED_EVENT));
-    }
+    window.dispatchEvent(new CustomEvent(NEWSLETTER_RESOLVED_EVENT));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

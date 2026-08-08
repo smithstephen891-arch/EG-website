@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import NewsletterSection from "@/components/NewsletterSection";
 import VanApplicationForm from "@/components/VanApplicationForm";
+import VanShareSection from "@/components/VanShareSection";
 import { Check, ShieldAlert } from "lucide-react";
 
 // Browser tab and search results. The share card uses shareTitle below, which
@@ -304,6 +305,13 @@ export default function VanGiveawayPage() {
           <VanApplicationForm
             videoUploadEnabled={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
           />
+        </div>
+      </section>
+
+      {/* Share */}
+      <section className="bg-olive/10">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+          <VanShareSection />
         </div>
       </section>
 
