@@ -20,7 +20,6 @@ import {
 export const NEWSLETTER_SUBSCRIBED_EVENT = "eg:newsletter-subscribed";
 
 const SEEN_KEY = "eg_van_promo_seen";
-const VISITED_KEY = "eg_van_visited";
 const VAN_PATH = "/van-gift";
 const SHOW_DELAY_MS = 900;
 
@@ -65,17 +64,10 @@ export default function VanPromoPopup() {
   const closeRef = useRef<HTMLButtonElement>(null);
   const restoreFocusRef = useRef<Element | null>(null);
 
-  // Anyone who lands on the van page already knows about it, so remember that
-  // and never interrupt them with the promo later. The render guard below
-  // also hides it outright while they are on that page.
-  useEffect(() => {
-    if (pathname !== VAN_PATH) return;
-    try {
-      localStorage.setItem(VISITED_KEY, String(Date.now()));
-    } catch {
-      /* ignore */
-    }
-  }, [pathname]);
+  // Deliberately no "has visited the van page" rule. Most traffic arrives on
+  // the van page first from social, so suppressing on a past visit would hide
+  // the share prompt from exactly the people most likely to pass it on. The
+  // render guard below still keeps it away while they are on that page.
 
   useEffect(() => {
     function onSubscribed() {
@@ -84,7 +76,6 @@ export default function VanPromoPopup() {
       if (window.location.pathname === VAN_PATH) return;
       try {
         if (localStorage.getItem(SEEN_KEY)) return;
-        if (localStorage.getItem(VISITED_KEY)) return;
       } catch {
         /* ignore */
       }
