@@ -66,7 +66,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     });
     return NextResponse.json(result);
   } catch (error) {
-    console.error("[van-giveaway] Upload token error:", error);
+    console.error("[van-gift] Upload token error:", error);
     return NextResponse.json(
       { error: "Upload could not be started." },
       { status: 400 }

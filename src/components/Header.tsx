@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/about", label: "About" },
   { href: "/the-need", label: "The Need" },
   { href: "/apply", label: "Apply" },
-  { href: "/van-giveaway", label: "Accessible Van" },
+  { href: "/van-gift", label: "Accessible Van" },
   { href: "/donate", label: "Donate" },
   { href: "/contact", label: "Contact" },
 ];
@@ -71,7 +71,7 @@ export default function Header() {
 
           <nav className="hidden lg:flex items-center gap-8">
             {navLinks.map((link) =>
-              link.href === "/van-giveaway" ? (
+              link.href === "/van-gift" ? (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -117,7 +117,7 @@ export default function Header() {
         <div className="lg:hidden border-t border-charcoal/10 bg-cream">
           <nav className="flex flex-col px-4 py-4 gap-1">
             {navLinks.map((link) =>
-              link.href === "/van-giveaway" ? (
+              link.href === "/van-gift" ? (
                 <Link
                   key={link.href}
                   href={link.href}

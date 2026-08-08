@@ -60,18 +60,31 @@ function escapeHtml(value: string): string {
 // still validate the URL the client sends before trusting it for anything,
 // so a crafted request can't make us sign and hand out a link to a pathname
 // we never issued an upload token for.
-// Keep SAFE_VIDEO_PATHNAME in sync with SAFE_PATHNAME in upload/route.ts.
+// Mirrors SAFE_PATHNAME in upload/route.ts, but must also tolerate the random
+// suffix Vercel appends because that route sets addRandomSuffix: true. The
+// stored name comes back as story-<our id>-<vercel suffix>.<ext>, so matching
+// only our own id silently threw away every real upload. Still no dots beyond
+// the extension and no slashes, so traversal and double extensions stay out.
 const SAFE_VIDEO_PATHNAME =
-  /^van-applications\/story-[a-z0-9]{6,32}\.(mp4|mov|webm|mkv|m4v|3gp)$/;
+  /^van-applications\/story-[A-Za-z0-9_-]{6,80}\.(mp4|mov|webm|mkv|m4v|3gp)$/;
 
 function extractVideoPathname(raw: unknown): string {
   if (typeof raw !== "string" || raw === "") return "";
   try {
     const url = new URL(raw);
     if (url.protocol !== "https:") return "";
-    if (!url.hostname.endsWith(".private.blob.vercel-storage.com")) return "";
-    const pathname = url.pathname.replace(/^\//, "");
-    return SAFE_VIDEO_PATHNAME.test(pathname) ? pathname : "";
+    if (!url.hostname.endsWith(".private.blob.vercel-storage.com")) {
+      console.error("[van-gift] Video URL rejected, unexpected host:", url.hostname);
+      return "";
+    }
+    const pathname = decodeURIComponent(url.pathname).replace(/^\//, "");
+    if (!SAFE_VIDEO_PATHNAME.test(pathname)) {
+      // Loud on purpose: a mismatch here means a real applicant's video is
+      // dropped while the page tells them it was attached.
+      console.error("[van-gift] Video URL rejected, unexpected path:", pathname);
+      return "";
+    }
+    return pathname;
   } catch {
     return "";
   }
@@ -103,7 +116,7 @@ async function mintVideoLink(pathname: string): Promise<string> {
     });
     return presignedUrl;
   } catch (error) {
-    console.error("[van-giveaway] Could not sign video URL:", error);
+    console.error("[van-gift] Could not sign video URL:", error);
     return "";
   }
 }
@@ -145,7 +158,7 @@ async function verifyTurnstile(
   } catch (error) {
     // Cloudflare unreachable. Fail open: turning away a real applicant is worse
     // than letting a submission through, since every one is reviewed by hand.
-    console.error("[van-giveaway] Turnstile unreachable, allowing:", error);
+    console.error("[van-gift] Turnstile unreachable, allowing:", error);
     return { ok: true };
   }
 }
@@ -197,15 +210,15 @@ export async function POST(request: Request) {
     const honeypot = typeof data.website === "string" ? data.website : "";
     const elapsedMs = typeof data.elapsedMs === "number" ? data.elapsedMs : NaN;
     if (honeypot.trim() !== "") {
-      console.log("[van-giveaway] Dropped submission: honeypot filled");
+      console.log("[van-gift] Dropped submission: honeypot filled");
       return accepted();
     }
     if (!Number.isFinite(elapsedMs) || elapsedMs < 5000) {
-      console.log("[van-giveaway] Dropped submission: submitted too fast");
+      console.log("[van-gift] Dropped submission: submitted too fast");
       return accepted();
     }
     if (isRateLimited(ip)) {
-      console.log("[van-giveaway] Dropped submission: rate limited", ip);
+      console.log("[van-gift] Dropped submission: rate limited", ip);
       return accepted();
     }
 
@@ -215,7 +228,7 @@ export async function POST(request: Request) {
       typeof data.turnstileToken === "string" ? data.turnstileToken : "";
     const verdict = await verifyTurnstile(turnstileToken, ip);
     if (!verdict.ok) {
-      console.log("[van-giveaway] Turnstile rejected:", verdict.reason);
+      console.log("[van-gift] Turnstile rejected:", verdict.reason);
       return NextResponse.json(
         {
           message:
@@ -319,7 +332,7 @@ export async function POST(request: Request) {
     }
 
     if (errors.length > 0) {
-      console.log("[van-giveaway] Validation failed:", errors);
+      console.log("[van-gift] Validation failed:", errors);
       return NextResponse.json(
         { message: "Please check the form and try again." },
         { status: 400 }
@@ -549,7 +562,7 @@ Submitted via elizabethsgift.com accessible van application`,
     });
 
     if (sendError) {
-      console.error("[van-giveaway] Resend rejected the application:", sendError);
+      console.error("[van-gift] Resend rejected the application:", sendError);
       return NextResponse.json(
         { message: "Something went wrong" },
         { status: 500 }
@@ -590,13 +603,13 @@ Elizabeth's Gift — Lifting Up and Living Fully`,
       });
       if (confirmationError) {
         console.error(
-          "[van-giveaway] Confirmation email was rejected (application email already sent):",
+          "[van-gift] Confirmation email was rejected (application email already sent):",
           confirmationError
         );
       }
     } catch (confirmationError) {
       console.error(
-        "[van-giveaway] Confirmation email failed (application email already sent):",
+        "[van-gift] Confirmation email failed (application email already sent):",
         confirmationError
       );
     }

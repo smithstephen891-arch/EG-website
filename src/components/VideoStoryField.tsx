@@ -32,6 +32,9 @@ interface VideoStoryFieldProps {
   value: VideoStoryValue | null;
   onChange: (value: VideoStoryValue | null) => void;
   onBusyChange: (busy: boolean) => void;
+  // True whenever there is a recording in hand that has not been added to the
+  // application or thrown away yet, so the form can refuse to submit and lose it.
+  onPendingChange: (pending: boolean) => void;
   disabled?: boolean;
 }
 
@@ -135,6 +138,7 @@ export default function VideoStoryField({
   value,
   onChange,
   onBusyChange,
+  onPendingChange,
   disabled,
 }: VideoStoryFieldProps) {
   const [error, setError] = useState<string | null>(null);
@@ -164,6 +168,13 @@ export default function VideoStoryField({
         !!pickRecorderMimeType()
     );
   }, []);
+
+  // Every phase change goes through here so the parent's "unresolved video"
+  // flag can never drift out of sync with what is actually on screen.
+  function changePhase(next: Phase) {
+    setPhase(next);
+    onPendingChange(next !== "idle");
+  }
 
   // Keep a ref alongside the state so cleanup can revoke without re-running.
   function swapLocalUrl(next: string | null) {
@@ -227,14 +238,14 @@ export default function VideoStoryField({
         stopTracks();
         recordedBlobRef.current = blob;
         swapLocalUrl(URL.createObjectURL(blob));
-        setPhase("review");
+        changePhase("review");
       };
       recorderRef.current = recorder;
       recorder.start();
 
       elapsedRef.current = 0;
       setElapsed(0);
-      setPhase("recording");
+      changePhase("recording");
       startTimer();
 
       // Attach the stream after the phase flips so the preview element is
@@ -248,7 +259,7 @@ export default function VideoStoryField({
     } catch (err) {
       console.error("Camera access failed:", err);
       stopTracks();
-      setPhase("idle");
+      changePhase("idle");
       setError(cameraErrorMessage(err));
     }
   }
@@ -257,14 +268,14 @@ export default function VideoStoryField({
     if (recorderRef.current?.state === "recording") {
       recorderRef.current.pause();
       clearTimer();
-      setPhase("paused");
+      changePhase("paused");
     }
   }
 
   function resumeRecording() {
     if (recorderRef.current?.state === "paused") {
       recorderRef.current.resume();
-      setPhase("recording");
+      changePhase("recording");
       startTimer();
     }
   }
@@ -278,7 +289,7 @@ export default function VideoStoryField({
       recorder.stop();
     } else {
       stopTracks();
-      setPhase("idle");
+      changePhase("idle");
     }
   }
 
@@ -287,7 +298,7 @@ export default function VideoStoryField({
     swapLocalUrl(null);
     elapsedRef.current = 0;
     setElapsed(0);
-    setPhase("idle");
+    changePhase("idle");
     setError(null);
   }
 
@@ -328,7 +339,7 @@ export default function VideoStoryField({
     try {
       const result = await upload(pathname, blob, {
         access: "private",
-        handleUploadUrl: "/api/van-giveaway/upload",
+        handleUploadUrl: "/api/van-gift/upload",
         contentType: normalizeContentType(blob.type),
         onUploadProgress: ({ percentage }) => setProgress(percentage),
       });
@@ -336,15 +347,17 @@ export default function VideoStoryField({
         swapLocalUrl(URL.createObjectURL(blob));
       }
       recordedBlobRef.current = null;
-      setPhase("idle");
+      changePhase("idle");
       // result.url is a private.blob.vercel-storage.com URL; it is not
       // fetchable without a signed token, which the server mints on submit.
       onChange({ url: result.url, seconds, bytes: blob.size });
     } catch (err) {
       console.error("Video upload failed:", err);
       const detail = err instanceof Error ? err.message : "";
+      // Don't say "just submit without it" here: an unsent recording blocks
+      // submission by design, so point at the button that actually clears it.
       setError(
-        `We couldn't upload that video${detail ? ` (${detail})` : ""}. You can try again, or submit your application without it — a video is optional.`
+        `We couldn't upload that video${detail ? ` (${detail})` : ""}. You can try again, or choose “Discard” to submit your application without a video.`
       );
       onChange(null);
     } finally {
@@ -369,7 +382,7 @@ export default function VideoStoryField({
     recordedBlobRef.current = null;
     elapsedRef.current = 0;
     setElapsed(0);
-    setPhase("idle");
+    changePhase("idle");
     onChange(null);
     setError(null);
   }
@@ -379,7 +392,10 @@ export default function VideoStoryField({
   const isLive = phase === "recording" || phase === "paused";
 
   return (
-    <div className="rounded-xl border border-charcoal/20 bg-white px-6 py-5">
+    <div
+      id="video-story"
+      className="scroll-mt-24 rounded-xl border border-charcoal/20 bg-white px-6 py-5"
+    >
       <h4 className="font-serif text-lg text-charcoal">
         Tell us your story on video{" "}
         <span className="font-sans text-sm font-normal text-charcoal/50">(Optional)</span>

@@ -528,6 +528,7 @@ export default function VanApplicationForm({
   const [values, setValues] = useState<FormValues>(initialValues);
   const [video, setVideo] = useState<VideoStoryValue | null>(null);
   const [videoBusy, setVideoBusy] = useState(false);
+  const [videoPending, setVideoPending] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [openWaiver, setOpenWaiver] = useState<"asIs" | "media" | null>(null);
@@ -623,6 +624,18 @@ export default function VanApplicationForm({
       return;
     }
 
+    // A recording that was never added or discarded would be silently lost,
+    // and the applicant would believe they had sent it.
+    if (videoPending) {
+      setVerifyError(
+        "You have a video that hasn't been added to your application yet. Choose “Use this video” to include it, or “Discard” to leave it out, then submit."
+      );
+      document
+        .getElementById("video-story")
+        ?.scrollIntoView({ block: "center" });
+      return;
+    }
+
     // Only block when the widget is actually up and simply hasn't been
     // completed. If the script never loaded, don't strand the applicant.
     if (TURNSTILE_SITE_KEY && widgetId.current && !turnstileToken) {
@@ -636,7 +649,7 @@ export default function VanApplicationForm({
 
     setStatus("submitting");
     try {
-      const res = await fetch("/api/van-giveaway", {
+      const res = await fetch("/api/van-gift", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -947,6 +960,7 @@ export default function VanApplicationForm({
         <VideoStoryField
           value={video}
           onChange={setVideo}
+          onPendingChange={setVideoPending}
           onBusyChange={setVideoBusy}
           disabled={status === "submitting"}
         />
@@ -1085,19 +1099,19 @@ export default function VanApplicationForm({
         </div>
       )}
 
-      {TURNSTILE_SITE_KEY && (
-        <div>
-          <div ref={turnstileRef} />
-          {verifyError && (
-            <p
-              role="alert"
-              className="mt-2 flex items-start gap-1.5 text-sm font-medium text-red-700"
-            >
-              <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 flex-shrink-0" />
-              {verifyError}
-            </p>
-          )}
-        </div>
+      {TURNSTILE_SITE_KEY && <div ref={turnstileRef} />}
+
+      {/* Rendered outside the Turnstile block on purpose: it also carries the
+          "video still uploading" and "unresolved recording" messages, which
+          must show whether or not the bot challenge is configured. */}
+      {verifyError && (
+        <p
+          role="alert"
+          className="flex items-start gap-1.5 text-sm font-medium text-red-700"
+        >
+          <AlertCircle aria-hidden="true" className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          {verifyError}
+        </p>
       )}
 
       <button

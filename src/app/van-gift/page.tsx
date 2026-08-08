@@ -10,15 +10,15 @@ const pageDescription =
   "Elizabeth's Gift is giving a wheelchair accessible van, a 2017 Dodge Grand Caravan with a rear-entry ramp, to someone who needs it. No cost, no catch. Tell us your story.";
 
 // 1200×630 social share card generated from the side-profile photo of the van.
-const ogImage = "/images/van/og-van-giveaway.jpg";
+const ogImage = "/images/van/og-van-gift.jpg";
 
 export const metadata: Metadata = {
   title: pageTitle,
   description: pageDescription,
-  alternates: { canonical: "/van-giveaway" },
+  alternates: { canonical: "/van-gift" },
   openGraph: {
     type: "website",
-    url: "/van-giveaway",
+    url: "/van-gift",
     siteName: "Elizabeth's Gift",
     title: pageTitle,
     description: pageDescription,
@@ -68,7 +68,7 @@ const jsonLd = {
       name: "A Wheelchair Accessible Van for Someone Who Needs It",
       text: "Elizabeth's Gift is gifting a 2017 Dodge Grand Caravan with a rear-entry manual wheelchair ramp, at no cost and as-is, to someone in need of accessible transportation.",
       datePosted: "2026-08-07",
-      url: "https://www.elizabethsgift.com/van-giveaway",
+      url: "https://www.elizabethsgift.com/van-gift",
       announcementLocation: { "@id": "https://www.elizabethsgift.com/#org" },
       spatialCoverage: { "@type": "Country", name: "United States" },
       about: {
@@ -94,21 +94,19 @@ const vanSpecs = [
   { label: "Seating", value: "Seats 4" },
 ];
 
-const galleryImages = [
-  {
-    src: "/images/van/van-photo-3.jpg",
-    alt: "White 2017 Dodge Grand Caravan parked on a shaded drive with its rear wheelchair ramp deployed",
-    wide: true,
-  },
+const leadImage = {
+  src: "/images/van/van-photo-3.jpg",
+  alt: "White 2017 Dodge Grand Caravan parked on a shaded drive with its rear wheelchair ramp deployed",
+};
+
+const supportingImages = [
   {
     src: "/images/van/van-photo-1.jpg",
     alt: "Front three-quarter view of the white 2017 Dodge Grand Caravan",
-    wide: false,
   },
   {
     src: "/images/van/van-photo-2.jpg",
     alt: "View up the rear-entry wheelchair ramp into the van's open interior, showing the wheelchair area and tie-downs",
-    wide: false,
   },
 ];
 
@@ -171,49 +169,49 @@ export default function VanGiveawayPage() {
         </div>
       </section>
 
-      {/* About the van */}
+      {/* About the van: lead photo sits beside the spec sheet */}
       <section className="bg-cream">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
           <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-10">
             2017 Dodge Grand Caravan
           </h2>
-          <dl className="max-w-2xl rounded-2xl bg-white shadow-sm divide-y divide-charcoal/10 overflow-hidden">
-            {vanSpecs.map((spec) => (
-              <div
-                key={spec.label}
-                className="flex items-center justify-between gap-6 px-6 py-4 sm:px-8"
-              >
-                <dt className="text-sm font-medium uppercase tracking-wide text-charcoal/50">
-                  {spec.label}
-                </dt>
-                <dd className="font-semibold text-charcoal text-right">{spec.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start">
+            <div className="relative aspect-[3/2] overflow-hidden rounded-2xl shadow-sm">
+              <Image
+                src={leadImage.src}
+                alt={leadImage.alt}
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+                priority
+              />
+            </div>
+            <dl className="rounded-2xl bg-white shadow-sm divide-y divide-charcoal/10 overflow-hidden">
+              {vanSpecs.map((spec) => (
+                <div
+                  key={spec.label}
+                  className="flex items-center justify-between gap-6 px-6 py-4 sm:px-8"
+                >
+                  <dt className="text-sm font-medium uppercase tracking-wide text-charcoal/50">
+                    {spec.label}
+                  </dt>
+                  <dd className="font-semibold text-charcoal text-right">{spec.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
 
-      {/* Photo gallery */}
-      <section className="bg-cream">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-20 md:pb-24">
-          <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-10">
-            Photo Gallery
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {galleryImages.map((image) => (
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {supportingImages.map((image) => (
               <div
                 key={image.src}
-                className={
-                  image.wide
-                    ? "relative aspect-[3/2] overflow-hidden rounded-2xl shadow-sm sm:col-span-2"
-                    : "relative aspect-[3/4] overflow-hidden rounded-2xl shadow-sm"
-                }
+                className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-sm"
               >
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
-                  sizes={image.wide ? "100vw" : "(max-width: 640px) 100vw, 50vw"}
+                  sizes="(max-width: 640px) 100vw, 50vw"
                   className="object-cover"
                 />
               </div>
