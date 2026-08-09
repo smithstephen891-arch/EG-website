@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import Link from "next/link";
+import { Info } from "lucide-react";
 import VideoStoryField, { type VideoStoryValue } from "@/components/VideoStoryField";
+import { VAN_PATH } from "@/lib/van-share";
 
 export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -116,6 +119,31 @@ export default function ApplyPage() {
 
       <section className="bg-cream">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16">
+          {/* The van has its own application. Without this, van hopefuls file
+              here and their request never reaches the van selection process. */}
+          <div
+            role="note"
+            className="mb-10 flex items-start gap-3 rounded-xl bg-gold/20 px-6 py-5"
+          >
+            <Info aria-hidden="true" className="mt-0.5 h-5 w-5 flex-shrink-0 text-charcoal/70" />
+            <div>
+              <p className="font-semibold text-charcoal">
+                This is the application for general equipment needs.
+              </p>
+              <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
+                If you are applying for the wheelchair accessible van, it has a
+                separate application. Please{" "}
+                <Link
+                  href={VAN_PATH}
+                  className="font-semibold text-olive-dark underline underline-offset-2 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 rounded-sm"
+                >
+                  apply for the van here
+                </Link>{" "}
+                so your request reaches the right place.
+              </p>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="space-y-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
