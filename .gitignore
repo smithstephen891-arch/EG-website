@@ -43,3 +43,10 @@ next-env.d.ts
 
 # local dev
 .claude/
+
+# generated projector slides. Rebuild the .svg/.html with
+# scripts/generate-projector-slide*.mjs; the .png are exports from those.
+# projector-photo.jpg is the source photo and stays tracked.
+/projector-slide*.svg
+/projector-slide*.html
+/projector-slide*.png
