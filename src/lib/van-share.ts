@@ -14,13 +14,15 @@ export const VAN_PATH = "/van-gift";
 export const VAN_SHARE_URL = `https://www.elizabethsgift.com${VAN_PATH}`;
 
 /*
- * TODO: SOCIAL VIDEO LINKS
- * Paste the real post URLs here once the videos are live. This is the only
- * place they need to go; both the popup and the van page read from here.
- * Leaving a value empty simply hides that share option, so nothing looks
- * broken or half-finished until then.
+ * Social posts. This is the only place these links need to go; the popup, the
+ * on-page share section, and the hero preview all read from here. Leaving a
+ * value empty hides that option rather than showing anything broken.
+ *
+ * TODO: add INSTAGRAM_REEL_URL once the reel is posted.
  */
-export const TIKTOK_VIDEO_URL = "";
+export const TIKTOK_VIDEO_URL =
+  "https://www.tiktok.com/@elizabethsgift/video/7671851728903359757";
+export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@elizabethsgift";
 export const INSTAGRAM_REEL_URL = "";
 
 export const SHARE_TITLE = "Apply for a Wheelchair Accessible Van";

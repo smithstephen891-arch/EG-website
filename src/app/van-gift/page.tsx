@@ -4,6 +4,7 @@ import Link from "next/link";
 import NewsletterSection from "@/components/NewsletterSection";
 import VanApplicationForm from "@/components/VanApplicationForm";
 import VanShareSection from "@/components/VanShareSection";
+import VanVideoPreview from "@/components/VanVideoPreview";
 import { Check, ShieldAlert } from "lucide-react";
 
 // Browser tab and search results. The share card uses shareTitle below, which
@@ -138,6 +139,9 @@ export default function VanGiveawayPage() {
       {/* Hero */}
       <section className="bg-olive/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          {/* Fixed track for the video card: an `auto` track sized to a
+              `w-full` child collapses to zero width. */}
+          <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
           <div className="max-w-3xl">
             <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-charcoal">
               This Van Could Change Someone&apos;s Life
@@ -173,6 +177,9 @@ export default function VanGiveawayPage() {
                 Who Can Apply
               </a>
             </div>
+          </div>
+
+            <VanVideoPreview />
           </div>
         </div>
       </section>
