@@ -8,6 +8,9 @@ import VideoStoryField, { type VideoStoryValue } from "./VideoStoryField";
 type YesNo = "" | "yes" | "no";
 
 interface FormValues {
+  // First in the form, so first here: applicants should learn what the van is
+  // and isn't before spending time on the rest.
+  passengerAcknowledgment: boolean;
   firstName: string;
   lastName: string;
   email: string;
@@ -44,6 +47,7 @@ type FieldName = keyof FormValues;
 type Errors = Partial<Record<FieldName, string>>;
 
 const initialValues: FormValues = {
+  passengerAcknowledgment: false,
   firstName: "",
   lastName: "",
   email: "",
@@ -69,7 +73,10 @@ const initialValues: FormValues = {
   newsletterOptIn: true,
 };
 
+// Drives which field gets focus when submission fails, so it has to match the
+// order things appear on screen.
 const FIELD_ORDER: FieldName[] = [
+  "passengerAcknowledgment",
   "firstName",
   "lastName",
   "email",
@@ -122,6 +129,11 @@ function computeAge(dob: string): number | null {
 
 function validate(values: FormValues): Errors {
   const errors: Errors = {};
+
+  if (!values.passengerAcknowledgment) {
+    errors.passengerAcknowledgment =
+      "Please confirm you understand how this van is set up.";
+  }
 
   if (!values.firstName.trim()) errors.firstName = "Please enter your first name.";
   if (!values.lastName.trim()) errors.lastName = "Please enter your last name.";
@@ -779,6 +791,56 @@ export default function VanApplicationForm({
         />
       </div>
 
+      {/* Up front on purpose. Someone who needs adaptive driving controls
+          should find that out before filling in seventeen fields, not after. */}
+      <div
+        className={`rounded-xl border bg-gold/15 px-6 py-5 ${
+          errors.passengerAcknowledgment ? "border-red-700" : "border-charcoal/20"
+        }`}
+      >
+        <div className="flex items-start gap-2.5">
+          <Info aria-hidden="true" className="mt-0.5 h-5 w-5 flex-shrink-0 text-charcoal/70" />
+          <div>
+            <p className="font-semibold text-charcoal">How this van is set up</p>
+            <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
+              This van is set up for a wheelchair user to ride as a passenger
+              and stay seated in their own wheelchair. It is not fitted with
+              adaptive driving controls, so it is driven the same way as any
+              standard vehicle.
+            </p>
+          </div>
+        </div>
+        <label
+          htmlFor="passengerAcknowledgment"
+          className="mt-4 flex min-h-11 cursor-pointer items-start gap-3"
+        >
+          <input
+            type="checkbox"
+            id="passengerAcknowledgment"
+            name="passengerAcknowledgment"
+            checked={values.passengerAcknowledgment}
+            onChange={(e) => setValue("passengerAcknowledgment", e.target.checked)}
+            required
+            aria-invalid={errors.passengerAcknowledgment ? true : undefined}
+            aria-describedby={describedBy(
+              errors.passengerAcknowledgment && "passengerAcknowledgment-error"
+            )}
+            className={checkClass}
+          />
+          <span className="text-sm text-charcoal leading-relaxed">
+            <strong className="font-semibold">
+              I understand this van is for a wheelchair user riding as a
+              passenger, and that it does not have adaptive driving controls.
+            </strong>{" "}
+            <span aria-hidden="true">*</span>
+          </span>
+        </label>
+        <FieldError
+          id="passengerAcknowledgment-error"
+          message={errors.passengerAcknowledgment}
+        />
+      </div>
+
       <h3 className={groupHeadingClass}>About You</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -1059,6 +1121,16 @@ export default function VanApplicationForm({
       </div>
 
       <div className="rounded-xl border border-charcoal/20 bg-white px-6 py-5">
+        <h4 className="font-serif text-lg text-charcoal">
+          Can We Share Your Story to Help More People?
+        </h4>
+        <p className="mt-2 mb-4 text-sm text-charcoal/60 leading-relaxed">
+          One of the most powerful ways to grow our mission is by sharing the
+          stories of the people we serve. If you&apos;re comfortable, we&apos;d
+          love the opportunity to share your story, on our website, social
+          media, or in other materials, to inspire others and help us reach
+          more people who need support. This is completely optional.
+        </p>
         <label htmlFor="mediaRelease" className="flex min-h-11 cursor-pointer items-start gap-3">
           <input
             type="checkbox"

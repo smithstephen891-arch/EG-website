@@ -203,6 +203,7 @@ export async function POST(request: Request) {
     const currentTransport = text(data.currentTransport, 1000);
     const howHeard = line(data.howHeard, 20);
     const howHeardOther = line(data.howHeardOther, 200);
+    const passengerAcknowledgment = data.passengerAcknowledgment === true;
     const asIsAcknowledgment = data.asIsAcknowledgment === true;
     const mediaRelease = data.mediaRelease === true;
     const newsletterOptIn = data.newsletterOptIn === true;
@@ -260,6 +261,9 @@ export async function POST(request: Request) {
     if (howHeard === "other" && !howHeardOther) {
       errors.push("How-heard detail is required when Other is selected");
     }
+    if (!passengerAcknowledgment) {
+      errors.push("Passenger-use acknowledgment must be accepted");
+    }
     if (!asIsAcknowledgment) errors.push("As-is acknowledgment must be accepted");
 
     // Stated 18+ answer must agree with the date of birth.
@@ -316,7 +320,8 @@ export async function POST(request: Request) {
         fullName, email, phone, dob, age, fullAddress, employment: employmentLabel,
         isAdult, hasLicense, canMaintain, isCaretaker, recipient: recipientLabel,
         whyNeed, hasAccessibleVehicle, currentTransport, howHeard: howHeardLabel,
-        asIsAcknowledgment, mediaRelease, newsletterOptIn, eligibilityFlags: flags,
+        passengerAcknowledgment, asIsAcknowledgment, mediaRelease,
+        newsletterOptIn, eligibilityFlags: flags,
         videoPathname: videoPathname || "(none)",
       });
       return accepted();
@@ -401,6 +406,7 @@ Date & Time: ${submittedAt}
 Timestamp (UTC): ${submittedAtISO}
 IP Address: ${ip}
 
+Passenger Use and No Adaptive Controls: ACCEPTED
 Vehicle As-Is Acknowledgment and Release: ACCEPTED
 Media and Publicity Release: ${mediaRelease ? "ACCEPTED" : "DECLINED (optional)"}
 ====================================
@@ -487,7 +493,11 @@ Submitted via elizabethsgift.com accessible van application`,
             <hr style="border: none; border-top: 1px solid #d4c9b8; margin: 14px 0;" />
             <table style="width: 100%; border-collapse: collapse;">
               <tr>
-                <td style="padding: 8px 0; color: #666; width: 200px;"><strong>As-Is Acknowledgment</strong></td>
+                <td style="padding: 8px 0; color: #666; width: 200px;"><strong>Passenger Use / No Adaptive Controls</strong></td>
+                <td style="padding: 8px 0; color: #16a34a; font-weight: bold; font-size: 15px;">&#10003; ACCEPTED</td>
+              </tr>
+              <tr>
+                <td style="padding: 8px 0; color: #666;"><strong>As-Is Acknowledgment</strong></td>
                 <td style="padding: 8px 0; color: #16a34a; font-weight: bold; font-size: 15px;">&#10003; ACCEPTED</td>
               </tr>
               <tr>
