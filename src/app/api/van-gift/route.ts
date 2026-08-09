@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { issueSignedToken, presignUrl } from "@vercel/blob";
+import {
+  VAN_VIDEO_PREFIX,
+  extractVideoPathname,
+  mintVideoLink,
+} from "@/lib/video-storage";
 
 const EMPLOYMENT_LABELS: Record<string, string> = {
   "full-time": "Yes, full time",
@@ -53,72 +57,6 @@ function escapeHtml(value: string): string {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
-}
-
-// The video store is private: a bare blob URL cannot be read without a
-// signed token, so nobody who intercepts the URL alone gets the file. We
-// still validate the URL the client sends before trusting it for anything,
-// so a crafted request can't make us sign and hand out a link to a pathname
-// we never issued an upload token for.
-// Mirrors SAFE_PATHNAME in upload/route.ts, but must also tolerate the random
-// suffix Vercel appends because that route sets addRandomSuffix: true. The
-// stored name comes back as story-<our id>-<vercel suffix>.<ext>, so matching
-// only our own id silently threw away every real upload. Still no dots beyond
-// the extension and no slashes, so traversal and double extensions stay out.
-const SAFE_VIDEO_PATHNAME =
-  /^van-applications\/story-[A-Za-z0-9_-]{6,80}\.(mp4|mov|webm|mkv|m4v|3gp)$/;
-
-function extractVideoPathname(raw: unknown): string {
-  if (typeof raw !== "string" || raw === "") return "";
-  try {
-    const url = new URL(raw);
-    if (url.protocol !== "https:") return "";
-    if (!url.hostname.endsWith(".private.blob.vercel-storage.com")) {
-      console.error("[van-gift] Video URL rejected, unexpected host:", url.hostname);
-      return "";
-    }
-    const pathname = decodeURIComponent(url.pathname).replace(/^\//, "");
-    if (!SAFE_VIDEO_PATHNAME.test(pathname)) {
-      // Loud on purpose: a mismatch here means a real applicant's video is
-      // dropped while the page tells them it was attached.
-      console.error("[van-gift] Video URL rejected, unexpected path:", pathname);
-      return "";
-    }
-    return pathname;
-  } catch {
-    return "";
-  }
-}
-
-// Just under Vercel's 7-day maximum: their API measures "now" when the
-// request arrives, a moment after we compute Date.now() here, and rejects a
-// validUntil that lands on or past the true 7-day boundary. The 10 minute
-// margin absorbs that gap. Reviewers are expected to act on an application
-// well within this window; if a link ever expires before review, the
-// application record (and video pathname) still exists, so a fresh link can
-// be reissued by hand if that ever comes up.
-const VIDEO_LINK_TTL_MS = 7 * 24 * 60 * 60 * 1000 - 10 * 60 * 1000;
-
-async function mintVideoLink(pathname: string): Promise<string> {
-  if (!pathname || !process.env.BLOB_READ_WRITE_TOKEN) return "";
-  try {
-    const validUntil = Date.now() + VIDEO_LINK_TTL_MS;
-    const token = await issueSignedToken({
-      pathname,
-      operations: ["get"],
-      validUntil,
-    });
-    const { presignedUrl } = await presignUrl(token, {
-      operation: "get",
-      pathname,
-      access: "private",
-      validUntil,
-    });
-    return presignedUrl;
-  } catch (error) {
-    console.error("[van-gift] Could not sign video URL:", error);
-    return "";
-  }
 }
 
 function accepted(): NextResponse {
@@ -268,7 +206,11 @@ export async function POST(request: Request) {
     const asIsAcknowledgment = data.asIsAcknowledgment === true;
     const mediaRelease = data.mediaRelease === true;
     const newsletterOptIn = data.newsletterOptIn === true;
-    const videoPathname = extractVideoPathname(data.videoUrl);
+    const videoPathname = extractVideoPathname(
+      data.videoUrl,
+      VAN_VIDEO_PREFIX,
+      "van-gift"
+    );
     const videoSeconds =
       typeof data.videoSeconds === "number" && Number.isFinite(data.videoSeconds)
         ? Math.round(data.videoSeconds)
@@ -382,7 +324,7 @@ export async function POST(request: Request) {
 
     // Sign once here, right before sending, so the link's 7-day clock starts
     // as close as possible to when the reviewer will actually open the email.
-    const videoUrl = await mintVideoLink(videoPathname);
+    const videoUrl = await mintVideoLink(videoPathname, "van-gift");
 
     const resend = new Resend(process.env.RESEND_API_KEY);
     const toAddress =

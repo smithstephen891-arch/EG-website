@@ -1,5 +1,11 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import {
+  ASSISTANCE_VIDEO_PREFIX,
+  extractVideoPathname,
+  formatVideoDuration,
+  mintVideoLink,
+} from "@/lib/video-storage";
 
 export async function POST(request: Request) {
   try {
@@ -16,6 +22,17 @@ export async function POST(request: Request) {
     const doctor = formData.get("doctor") as string;
     const medicalLetter = formData.get("medicalLetter") as string;
     const howHeard = formData.get("howHeard") as string;
+    // Videos live in Blob storage, not in this request: only the URL arrives,
+    // and it is validated before we ever sign or email a link to it.
+    const videoPathname = extractVideoPathname(
+      formData.get("videoUrl"),
+      ASSISTANCE_VIDEO_PREFIX,
+      "apply"
+    );
+    const rawVideoSeconds = Number(formData.get("videoSeconds"));
+    const videoSeconds = Number.isFinite(rawVideoSeconds) && rawVideoSeconds > 0
+      ? Math.round(rawVideoSeconds)
+      : null;
     const additional = formData.get("additional") as string;
     const liabilityWaiver = formData.get("liabilityWaiver") === "on" ? "Yes" : "No";
     const mediaRelease = formData.get("mediaRelease") === "on" ? "Yes" : "No";
@@ -33,9 +50,22 @@ export async function POST(request: Request) {
       console.log("Application submission (no email sent — RESEND_API_KEY not set):", {
         recipientName, guardianName, phone, email, address, age,
         story, equipment, doctor, medicalLetter, howHeard, additional,
+        videoPathname: videoPathname || "(none)",
       });
       return NextResponse.json({ message: "Application received successfully" }, { status: 200 });
     }
+
+    // Signed just before sending, so the 7 day clock starts as close as
+    // possible to when the reviewer actually opens the email.
+    const videoUrl = await mintVideoLink(videoPathname, "apply");
+    const videoLabel = videoPathname
+      ? `Yes${formatVideoDuration(videoSeconds)}`
+      : "No video submitted";
+    const videoTextBlock = videoPathname
+      ? videoUrl
+        ? `\n\nStory Video: ${videoLabel}\nLink (expires in 7 days): ${videoUrl}`
+        : `\n\nStory Video: ${videoLabel}\n(A video was submitted, but a link could not be generated. Check the server logs.)`
+      : "";
 
     // Build attachments from uploaded files
     const attachments: { filename: string; content: Buffer }[] = [];
@@ -55,7 +85,7 @@ export async function POST(request: Request) {
       replyTo: email,
       subject: `New Assistance Application — ${recipientName}`,
       attachments,
-      text: `New Assistance Application\n\nRecipient Name: ${recipientName}\nGuardian Name: ${guardianName || "—"}\nAge: ${age || "—"}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\nTheir Story:\n${story}\n\nRequested Equipment:\n${equipment}\n\nPCP / Therapist: ${doctor || "—"}\n\nLetter of Medical Necessity:\n${medicalLetter}\n\nHow They Heard About Us: ${howHeard || "—"}\n\nAdditional Information:\n${additional || "—"}\n\n========== CONSENT RECORD ==========\nSigned By: ${signedBy}\nEmail: ${email}\nDate & Time: ${submittedAt}\nTimestamp (UTC): ${submittedAtISO}\nIP Address: ${ip}\n\nRelease of Liability, Assumption of Risk, and Hold Harmless Agreement: ${liabilityWaiver === "Yes" ? "ACCEPTED" : "NOT ACCEPTED"}\nMedia and Publicity Release: ${mediaRelease === "Yes" ? "ACCEPTED" : "DECLINED (optional)"}\n====================================\n\n---\nSubmitted via elizabethsgift.com assistance application`,
+      text: `New Assistance Application\n\nRecipient Name: ${recipientName}\nGuardian Name: ${guardianName || "—"}\nAge: ${age || "—"}\nPhone: ${phone}\nEmail: ${email}\nAddress: ${address}\n\nTheir Story:\n${story}\n\nRequested Equipment:\n${equipment}\n\nPCP / Therapist: ${doctor || "—"}\n\nLetter of Medical Necessity:\n${medicalLetter}\n\nHow They Heard About Us: ${howHeard || "—"}\n\nAdditional Information:\n${additional || "—"}${videoTextBlock}\n\n========== CONSENT RECORD ==========\nSigned By: ${signedBy}\nEmail: ${email}\nDate & Time: ${submittedAt}\nTimestamp (UTC): ${submittedAtISO}\nIP Address: ${ip}\n\nRelease of Liability, Assumption of Risk, and Hold Harmless Agreement: ${liabilityWaiver === "Yes" ? "ACCEPTED" : "NOT ACCEPTED"}\nMedia and Publicity Release: ${mediaRelease === "Yes" ? "ACCEPTED" : "DECLINED (optional)"}\n====================================\n\n---\nSubmitted via elizabethsgift.com assistance application`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #352e24;">New Assistance Application</h2>
@@ -92,6 +122,20 @@ export async function POST(request: Request) {
 
           <h3 style="color: #352e24;">Their Story</h3>
           <p style="color: #555; line-height: 1.6; white-space: pre-wrap;">${story}</p>
+
+          ${
+            videoPathname
+              ? `<h3 style="color: #352e24;">Story Video</h3>
+                 ${
+                   videoUrl
+                     ? `<p style="color: #555; line-height: 1.6;">${videoLabel}<br />
+                          <a href="${videoUrl}" style="color: #7a7c3b; font-weight: bold;">Watch or download video</a>
+                        </p>
+                        <p style="color: #999; font-size: 12px;">Right-click the link and choose &ldquo;Save Link As&rdquo; to download. This link is private and expires 7 days after this email is sent.</p>`
+                     : `<p style="color: #dc2626;">A video was submitted, but a viewable link could not be generated. Check the server logs.</p>`
+                 }`
+              : ""
+          }
 
           <h3 style="color: #352e24;">Requested Equipment</h3>
           <p style="color: #555; line-height: 1.6; white-space: pre-wrap;">${equipment}</p>

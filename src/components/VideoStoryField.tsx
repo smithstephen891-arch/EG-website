@@ -29,6 +29,10 @@ export interface VideoStoryValue {
 }
 
 interface VideoStoryFieldProps {
+  /** Route that mints the upload token, e.g. "/api/apply/upload". */
+  uploadUrl: string;
+  /** Blob folder for this form, so the two applications stay separable. */
+  pathnamePrefix: string;
   value: VideoStoryValue | null;
   onChange: (value: VideoStoryValue | null) => void;
   onBusyChange: (busy: boolean) => void;
@@ -135,6 +139,8 @@ const primaryButtonClass =
   "inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-olive-dark px-6 py-2.5 text-sm font-semibold text-white hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors disabled:opacity-50";
 
 export default function VideoStoryField({
+  uploadUrl,
+  pathnamePrefix,
   value,
   onChange,
   onBusyChange,
@@ -239,26 +245,27 @@ export default function VideoStoryField({
     recordedBlobRef.current = null;
     swapLocalUrl(null);
     try {
-      // Ask for the best the camera can do. These are "ideal", not "exact",
-      // so the browser quietly steps down to the highest mode the device
-      // actually supports rather than failing outright.
+      // Capped at 1080p rather than asking for 4K. For someone talking to
+      // camera the difference is invisible, while 4K doubles the file and the
+      // upload time, and these uploads often happen on phone data where a
+      // slow transfer is a transfer that fails. "ideal" not "exact", so a
+      // lesser camera steps down instead of erroring.
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: { ideal: 3840 },
-          height: { ideal: 2160 },
-          frameRate: { ideal: 30 },
+          width: { ideal: 1920, max: 1920 },
+          height: { ideal: 1080, max: 1080 },
+          frameRate: { ideal: 30, max: 30 },
           facingMode: "user",
         },
         audio: true,
       });
       streamRef.current = stream;
       const mimeType = pickRecorderMimeType();
-      // Cap the bitrate so a high resolution stream still produces a file an
-      // applicant on mobile data can actually upload: ~8 Mbps puts 3 minutes
-      // near 180 MB, well inside the 500 MB limit.
+      // 6 Mbps is generous for 1080p talking head footage: a full 3 minutes
+      // lands near 135 MB, comfortably inside the 500 MB limit.
       const recorder = new MediaRecorder(stream, {
         ...(mimeType ? { mimeType } : {}),
-        videoBitsPerSecond: 8_000_000,
+        videoBitsPerSecond: 6_000_000,
         audioBitsPerSecond: 128_000,
       });
       chunksRef.current = [];
@@ -359,14 +366,14 @@ export default function VideoStoryField({
       return;
     }
 
-    const pathname = `van-applications/story-${randomId()}.${extensionFor(blob, originalName)}`;
+    const pathname = `${pathnamePrefix}/story-${randomId()}.${extensionFor(blob, originalName)}`;
 
     onBusyChange(true);
     setProgress(0);
     try {
       const result = await upload(pathname, blob, {
         access: "private",
-        handleUploadUrl: "/api/van-gift/upload",
+        handleUploadUrl: uploadUrl,
         contentType: normalizeContentType(blob.type),
         onUploadProgress: ({ percentage }) => setProgress(percentage),
       });

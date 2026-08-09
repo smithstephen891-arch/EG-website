@@ -982,6 +982,8 @@ export default function VanApplicationForm({
 
       {videoUploadEnabled && (
         <VideoStoryField
+          uploadUrl="/api/van-gift/upload"
+          pathnamePrefix="van-applications"
           value={video}
           onChange={setVideo}
           onPendingChange={setVideoPending}

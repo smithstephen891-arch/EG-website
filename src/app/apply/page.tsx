@@ -1,18 +1,46 @@
 "use client";
 
 import { useState, FormEvent } from "react";
+import VideoStoryField, { type VideoStoryValue } from "@/components/VideoStoryField";
 
 export default function ApplyPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [fileNames, setFileNames] = useState<string[]>([]);
   const [showMediaRelease, setShowMediaRelease] = useState(false);
+  const [video, setVideo] = useState<VideoStoryValue | null>(null);
+  const [videoBusy, setVideoBusy] = useState(false);
+  const [videoPending, setVideoPending] = useState(false);
+  const [videoNotice, setVideoNotice] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
+    // A video still uploading, or recorded but never added, would be silently
+    // lost while the applicant believes they sent it.
+    if (videoBusy) {
+      setVideoNotice(
+        "Your video is still uploading. Please wait for it to finish, then submit."
+      );
+      return;
+    }
+    if (videoPending) {
+      setVideoNotice(
+        "You have a video that hasn't been added to your application yet. Choose “Use this video” to include it, or “Discard” to leave it out, then submit."
+      );
+      document.getElementById("video-story")?.scrollIntoView({ block: "center" });
+      return;
+    }
+    setVideoNotice(null);
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
+    if (video) {
+      formData.set("videoUrl", video.url);
+      if (video.seconds !== null) {
+        formData.set("videoSeconds", String(Math.round(video.seconds)));
+      }
+    }
 
     try {
       const res = await fetch("/api/apply", {
@@ -258,6 +286,24 @@ export default function ApplyPage() {
               </div>
             </div>
 
+            {/* Optional story video */}
+            <div>
+              <VideoStoryField
+                uploadUrl="/api/apply/upload"
+                pathnamePrefix="assistance-applications"
+                value={video}
+                onChange={setVideo}
+                onBusyChange={setVideoBusy}
+                onPendingChange={setVideoPending}
+                disabled={loading}
+              />
+              {videoNotice && (
+                <p role="alert" className="mt-2 text-sm font-medium text-red-700">
+                  {videoNotice}
+                </p>
+              )}
+            </div>
+
             <div>
               <label htmlFor="howHeard" className="block text-sm font-medium text-charcoal mb-2">
                 How did you hear about us?
@@ -458,6 +504,35 @@ export default function ApplyPage() {
                   <span className="text-charcoal/40">(Optional)</span>
                 </label>
               </div>
+            </div>
+
+            <div className="rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
+              <p className="font-semibold text-charcoal">Beware of scams</p>
+              <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
+                Elizabeth&apos;s Gift will{" "}
+                <strong className="font-semibold text-charcoal">
+                  never ask you for money
+                </strong>{" "}
+                at any point in this process. There is no fee to apply, no fee
+                to be selected, and no payment of any kind required to receive
+                equipment. We will never ask for your bank account, card, or
+                payment information.
+              </p>
+              <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
+                We only contact applicants from an{" "}
+                <strong className="font-semibold text-charcoal">
+                  @elizabethsgift.com
+                </strong>{" "}
+                address. If someone claiming to be us asks you for payment, it
+                isn&apos;t us. Please report it to{" "}
+                <a
+                  href="mailto:info@elizabethsgift.com"
+                  className="font-semibold text-olive underline underline-offset-2 hover:text-charcoal"
+                >
+                  info@elizabethsgift.com
+                </a>
+                .
+              </p>
             </div>
 
             <button
