@@ -8,25 +8,25 @@ import { INSTAGRAM_REEL_URL } from "@/lib/van-share";
 /*
  * A cross-fading preview card that links out to the Instagram reel.
  *
- * Only the first frame is an actual frame of the video: it is the cover image
- * published with the post. It keeps its original filename because the same
- * clip runs on both platforms, so the frame is still the right one. The rest
- * are the van photos, because neither platform exposes other frames. If real
- * stills are ever exported from the video, drop them in here and the animation
- * improves with no other changes.
+ * All three are real frames of the reel, pulled from the source video at 6s,
+ * 16s and 34s. They are the three exterior shots: the rest of the clip is one
+ * static talking-head take whose burned-in captions land mid-sentence, which
+ * reads as broken text on a still. Frames are 320x568 because that is the
+ * resolution of the source video, so they are soft on a 2x display; a
+ * higher-resolution export dropped in at the same names is the only fix.
  */
 const FRAMES = [
   {
-    src: "/images/van/tiktok-cover.jpg",
-    alt: "Elizabeth's Gift founder speaking to camera inside the van about giving it away",
+    src: "/images/van/reel-frame-1.jpg",
+    alt: "The van with its rear hatch open and the wheelchair ramp lowered to the ground",
   },
   {
-    src: "/images/van/van-photo-2.jpg",
-    alt: "The van's rear-entry wheelchair ramp lowered to the ground",
-  },
-  {
-    src: "/images/van/van-photo-1.jpg",
+    src: "/images/van/reel-frame-2.jpg",
     alt: "Front three-quarter view of the white 2017 Dodge Grand Caravan",
+  },
+  {
+    src: "/images/van/reel-frame-3.jpg",
+    alt: "The van seen from behind on a tree-lined drive with its ramp extended",
   },
 ];
 
