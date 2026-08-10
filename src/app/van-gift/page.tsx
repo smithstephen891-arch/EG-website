@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import NewsletterSection from "@/components/NewsletterSection";
 import VanApplicationForm from "@/components/VanApplicationForm";
+import VanFollowLinks from "@/components/VanFollowLinks";
 import VanHeroShare from "@/components/VanHeroShare";
 import VanShareSection from "@/components/VanShareSection";
 import VanVideoPreview from "@/components/VanVideoPreview";
@@ -183,6 +184,7 @@ export default function VanGiveawayPage() {
             <div>
               <VanVideoPreview />
               <VanHeroShare />
+              <VanFollowLinks className="mx-auto mt-5 w-full max-w-[280px] border-t border-charcoal/10 pt-5 sm:max-w-[320px]" />
             </div>
           </div>
         </div>

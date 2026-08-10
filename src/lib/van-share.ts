@@ -18,13 +18,21 @@ export const VAN_SHARE_URL = `https://www.elizabethsgift.com${VAN_PATH}`;
  * on-page share section, and the hero preview all read from here. Leaving a
  * value empty hides that option rather than showing anything broken.
  *
- * Both carry the same clip. The hero preview points at the reel; the share
- * section offers either, so neither post's existing traction is stranded.
+ * Both carry the same clip. The hero preview points at the reel; the popup
+ * offers either, so neither post's existing traction is stranded.
  */
 export const TIKTOK_VIDEO_URL =
   "https://www.tiktok.com/@elizabethsgift/video/7671851728903359757";
-export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@elizabethsgift";
 export const INSTAGRAM_REEL_URL = "https://www.instagram.com/reel/Db13sqdsJNP/";
+
+/*
+ * Profiles, for the follow links rather than the posts. The Instagram handle is
+ * the same one the footer, the contact page and this page's structured data
+ * already point at; it is repeated here so the van page's social links all come
+ * from one import, not because there is a second account.
+ */
+export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@elizabethsgift";
+export const INSTAGRAM_PROFILE_URL = "https://instagram.com/elizabethsgift";
 
 export const SHARE_TITLE = "Apply for a Wheelchair Accessible Van";
 export const SHARE_BODY =

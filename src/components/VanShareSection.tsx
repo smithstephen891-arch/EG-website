@@ -1,17 +1,12 @@
 "use client";
 
-import { Check, Copy, Mail, MessageSquare, Play, Share2 } from "lucide-react";
-import {
-  INSTAGRAM_REEL_URL,
-  TIKTOK_VIDEO_URL,
-  buildMailHref,
-  buildSmsHref,
-} from "@/lib/van-share";
+import { Check, Copy, Mail, MessageSquare, Share2 } from "lucide-react";
+import { buildMailHref, buildSmsHref } from "@/lib/van-share";
 import { useShareLink } from "@/lib/use-share-link";
+import VanFollowLinks from "@/components/VanFollowLinks";
 
-// flex-wrap with a shared basis rather than a fixed grid: the number of tiles
-// changes once the TikTok and Instagram links are filled in, and this keeps
-// every row balanced instead of stranding one tile on its own.
+// flex-wrap with a shared basis rather than a fixed grid, so the three tiles
+// stay balanced at every width instead of stranding one on its own row.
 const tileClass =
   "flex min-h-11 flex-1 basis-48 items-center justify-center gap-2.5 rounded-xl border border-charcoal/15 bg-white px-5 py-3.5 text-center font-semibold text-charcoal transition-colors hover:border-charcoal/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2";
 
@@ -49,30 +44,6 @@ export default function VanShareSection() {
           Email the link
         </a>
 
-        {TIKTOK_VIDEO_URL && (
-          <a
-            href={TIKTOK_VIDEO_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={tileClass}
-          >
-            <Play aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-olive-dark" />
-            Share the TikTok
-          </a>
-        )}
-
-        {INSTAGRAM_REEL_URL && (
-          <a
-            href={INSTAGRAM_REEL_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={tileClass}
-          >
-            <Play aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-olive-dark" />
-            Share the Reel
-          </a>
-        )}
-
         <button type="button" onClick={copyLink} className={tileClass}>
           {copied ? (
             <Check aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-olive-dark" />
@@ -86,6 +57,8 @@ export default function VanShareSection() {
       <p aria-live="polite" className="sr-only">
         {copied ? "Link copied to clipboard" : ""}
       </p>
+
+      <VanFollowLinks className="mt-7 border-t border-charcoal/10 pt-6" />
     </div>
   );
 }
