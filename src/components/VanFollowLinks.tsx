@@ -1,5 +1,9 @@
-import { Instagram } from "lucide-react";
-import { INSTAGRAM_PROFILE_URL, TIKTOK_PROFILE_URL } from "@/lib/van-share";
+import { Facebook, Instagram } from "lucide-react";
+import {
+  FACEBOOK_PROFILE_URL,
+  INSTAGRAM_PROFILE_URL,
+  TIKTOK_PROFILE_URL,
+} from "@/lib/van-share";
 
 /*
  * Follow links for the two accounts the van is being promoted on.
@@ -29,8 +33,12 @@ function TikTokIcon({ className }: { className?: string }) {
   );
 }
 
+// Three names have to fit the 280px hero column on the narrowest phones, so the
+// padding is tight and the label drops a step at that width. Names are kept
+// rather than going icon-only like the footer: the TikTok mark below is
+// hand-drawn, and an unfamiliar glyph with no word beside it is unidentifiable.
 const linkClass =
-  "flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full px-3 py-2 text-sm font-semibold text-charcoal/70 transition-colors hover:bg-white hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2";
+  "flex min-h-11 min-w-0 flex-1 items-center justify-center gap-1.5 rounded-full px-1.5 py-2 text-xs font-semibold text-charcoal/70 transition-colors hover:bg-white hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 sm:gap-2 sm:px-3 sm:text-sm";
 
 export default function VanFollowLinks({
   className = "",
@@ -60,6 +68,16 @@ export default function VanFollowLinks({
         >
           <TikTokIcon className="h-4 w-4 flex-shrink-0" />
           TikTok
+        </a>
+
+        <a
+          href={FACEBOOK_PROFILE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={linkClass}
+        >
+          <Facebook aria-hidden="true" className="h-4 w-4 flex-shrink-0" />
+          Facebook
         </a>
       </div>
     </div>

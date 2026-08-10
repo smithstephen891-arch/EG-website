@@ -33,6 +33,7 @@ export const INSTAGRAM_REEL_URL = "https://www.instagram.com/reel/Db13sqdsJNP/";
  */
 export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@elizabethsgift";
 export const INSTAGRAM_PROFILE_URL = "https://instagram.com/elizabethsgift";
+export const FACEBOOK_PROFILE_URL = "https://facebook.com/elizabethsgift";
 
 export const SHARE_TITLE = "Apply for a Wheelchair Accessible Van";
 export const SHARE_BODY =
