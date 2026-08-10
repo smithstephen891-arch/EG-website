@@ -8,29 +8,40 @@ import { INSTAGRAM_REEL_URL } from "@/lib/van-share";
 /*
  * A cross-fading preview card that links out to the Instagram reel.
  *
- * All three are real frames of the reel, pulled from the source video at 6s,
- * 16s and 34s. They are the three exterior shots: the rest of the clip is one
- * static talking-head take whose burned-in captions land mid-sentence, which
- * reads as broken text on a still. Frames are 320x568 because that is the
- * resolution of the source video, so they are soft on a 2x display; a
- * higher-resolution export dropped in at the same names is the only fix.
+ * All three are real frames of the reel, pulled from the source video at 0s,
+ * 6.5s and 9.5s. They are chosen for their burned-in captions, not their
+ * composition: the opening ten seconds are where the clip states what we are
+ * doing, and these are the three moments a caption reads as a complete thought
+ * rather than a mid-sentence fragment. Together they run headline, then what
+ * the van is, then the terms. Every caption sits in the same band around 70%
+ * height, so the text holds still across the fade instead of jumping.
+ *
+ * Frames are 320x568 because that is the resolution of the source video, so
+ * they are soft on a 2x display; a higher-resolution export dropped in at the
+ * same names is the only fix.
  */
 const FRAMES = [
   {
     src: "/images/van/reel-frame-1.jpg",
-    alt: "The van with its rear hatch open and the wheelchair ramp lowered to the ground",
+    alt: 'Inside the van, captioned "Help us find someone to give this van to!"',
   },
   {
     src: "/images/van/reel-frame-2.jpg",
-    alt: "Front three-quarter view of the white 2017 Dodge Grand Caravan",
+    alt: 'The van with its rear hatch open and the ramp lowered, captioned "Wheelchair accessible van"',
   },
   {
     src: "/images/van/reel-frame-3.jpg",
-    alt: "The van seen from behind on a tree-lined drive with its ramp extended",
+    alt: 'Inside the van, captioned "No strings attached"',
   },
 ];
 
-const FRAME_MS = 2600;
+/*
+ * Long enough to read the longest caption. The eight words of the first frame
+ * need appreciably more than a glance, and the fade eats into the dwell at both
+ * ends, so this is the readable time plus the fade rather than a pace picked to
+ * look lively.
+ */
+const FRAME_MS = 3600;
 
 export default function VanVideoPreview() {
   const [index, setIndex] = useState(0);
@@ -64,7 +75,7 @@ export default function VanVideoPreview() {
           <div
             key={frame.src}
             aria-hidden={i === 0 ? undefined : true}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
               i === index ? "opacity-100" : "opacity-0"
             }`}
           >
