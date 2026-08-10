@@ -3,15 +3,17 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Play } from "lucide-react";
-import { TIKTOK_VIDEO_URL } from "@/lib/van-share";
+import { INSTAGRAM_REEL_URL } from "@/lib/van-share";
 
 /*
- * A cross-fading preview card that links out to the TikTok post.
+ * A cross-fading preview card that links out to the Instagram reel.
  *
  * Only the first frame is an actual frame of the video: it is the cover image
- * TikTok publishes for the post. The rest are the van photos, because TikTok
- * exposes no other frames. If real stills are ever exported from the video,
- * drop them in here and the animation improves with no other changes.
+ * published with the post. It keeps its original filename because the same
+ * clip runs on both platforms, so the frame is still the right one. The rest
+ * are the van photos, because neither platform exposes other frames. If real
+ * stills are ever exported from the video, drop them in here and the animation
+ * improves with no other changes.
  */
 const FRAMES = [
   {
@@ -47,10 +49,10 @@ export default function VanVideoPreview() {
 
   return (
     <a
-      href={TIKTOK_VIDEO_URL}
+      href={INSTAGRAM_REEL_URL}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label="Watch our video about the van on TikTok"
+      aria-label="Watch our video about the van on Instagram"
       className="group relative mx-auto block w-full max-w-[280px] overflow-hidden rounded-3xl bg-charcoal shadow-xl ring-1 ring-charcoal/10 transition-transform duration-300 hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-4 sm:max-w-[320px]"
     >
       <div className="relative aspect-[9/16]">
@@ -81,7 +83,7 @@ export default function VanVideoPreview() {
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-transparent to-charcoal/30" />
 
         <span className="absolute left-4 top-4 rounded-full bg-charcoal/70 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-cream backdrop-blur-sm">
-          TikTok
+          Instagram
         </span>
 
         <span className="absolute inset-0 flex items-center justify-center">

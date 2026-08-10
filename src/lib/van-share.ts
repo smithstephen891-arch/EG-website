@@ -18,12 +18,13 @@ export const VAN_SHARE_URL = `https://www.elizabethsgift.com${VAN_PATH}`;
  * on-page share section, and the hero preview all read from here. Leaving a
  * value empty hides that option rather than showing anything broken.
  *
- * TODO: add INSTAGRAM_REEL_URL once the reel is posted.
+ * Both carry the same clip. The hero preview points at the reel; the share
+ * section offers either, so neither post's existing traction is stranded.
  */
 export const TIKTOK_VIDEO_URL =
   "https://www.tiktok.com/@elizabethsgift/video/7671851728903359757";
 export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@elizabethsgift";
-export const INSTAGRAM_REEL_URL = "";
+export const INSTAGRAM_REEL_URL = "https://www.instagram.com/reel/Db13sqdsJNP/";
 
 export const SHARE_TITLE = "Apply for a Wheelchair Accessible Van";
 export const SHARE_BODY =

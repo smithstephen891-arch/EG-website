@@ -189,9 +189,11 @@ export default function VanPromoPopup() {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent md:bg-gradient-to-r md:from-transparent md:to-charcoal/20" />
 
-            {(TIKTOK_VIDEO_URL || INSTAGRAM_REEL_URL) && (
+            {/* Reel first, to match the hero preview card. Falls back to
+                TikTok so blanking either link never leaves a dead button. */}
+            {(INSTAGRAM_REEL_URL || TIKTOK_VIDEO_URL) && (
               <a
-                href={TIKTOK_VIDEO_URL || INSTAGRAM_REEL_URL}
+                href={INSTAGRAM_REEL_URL || TIKTOK_VIDEO_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group absolute inset-0 flex items-center justify-center focus-visible:outline-none"
