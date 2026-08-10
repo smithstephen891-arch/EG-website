@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import NewsletterSection from "@/components/NewsletterSection";
 import VanApplicationForm from "@/components/VanApplicationForm";
+import VanHeroShare from "@/components/VanHeroShare";
 import VanShareSection from "@/components/VanShareSection";
 import VanVideoPreview from "@/components/VanVideoPreview";
 import { Check, ShieldAlert } from "lucide-react";
@@ -179,7 +180,10 @@ export default function VanGiveawayPage() {
             </div>
           </div>
 
-            <VanVideoPreview />
+            <div>
+              <VanVideoPreview />
+              <VanHeroShare />
+            </div>
           </div>
         </div>
       </section>

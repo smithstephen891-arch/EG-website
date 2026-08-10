@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { Check, Copy, Mail, MessageSquare, Play, Share2 } from "lucide-react";
 import {
   INSTAGRAM_REEL_URL,
   TIKTOK_VIDEO_URL,
-  VAN_SHARE_URL,
   buildMailHref,
   buildSmsHref,
-  canNativeShare,
-  nativeShare,
 } from "@/lib/van-share";
+import { useShareLink } from "@/lib/use-share-link";
 
 // flex-wrap with a shared basis rather than a fixed grid: the number of tiles
 // changes once the TikTok and Instagram links are filled in, and this keeps
@@ -19,29 +16,7 @@ const tileClass =
   "flex min-h-11 flex-1 basis-48 items-center justify-center gap-2.5 rounded-xl border border-charcoal/15 bg-white px-5 py-3.5 text-center font-semibold text-charcoal transition-colors hover:border-charcoal/35 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2";
 
 export default function VanShareSection() {
-  const [copied, setCopied] = useState(false);
-  const shareUrl = VAN_SHARE_URL;
-
-  async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      window.setTimeout(() => setCopied(false), 2500);
-    } catch {
-      setCopied(false);
-    }
-  }
-
-  // Always rendered rather than gated on navigator.share, which is undefined
-  // during the server render and would mismatch on hydration. Desktop browsers
-  // without a share sheet fall back to copying the link.
-  async function shareOrCopy() {
-    if (canNativeShare()) {
-      await nativeShare(shareUrl);
-      return;
-    }
-    await copyLink();
-  }
+  const { url: shareUrl, copied, copyLink, shareOrCopy } = useShareLink();
 
   return (
     <div className="rounded-2xl bg-white p-8 shadow-sm md:p-10">
