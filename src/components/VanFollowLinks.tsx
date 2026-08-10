@@ -39,9 +39,7 @@ export default function VanFollowLinks({
 }) {
   return (
     <div className={className}>
-      <p className="text-center text-sm text-charcoal/70">
-        Follow along for updates on the van
-      </p>
+      <p className="text-center text-sm text-charcoal/70">Follow us on:</p>
 
       <div className="mt-1.5 flex items-center justify-center gap-1">
         <a
