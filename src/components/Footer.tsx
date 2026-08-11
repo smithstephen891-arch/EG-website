@@ -49,7 +49,7 @@ export default function Footer() {
             </h3>
             <div className="flex gap-4 mb-4">
               <a
-                href="https://facebook.com/elizabethsgift"
+                href="https://www.facebook.com/profile.php?id=61575360463395"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-cream transition-colors"

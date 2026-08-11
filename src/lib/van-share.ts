@@ -33,7 +33,10 @@ export const INSTAGRAM_REEL_URL = "https://www.instagram.com/reel/Db13sqdsJNP/";
  */
 export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@elizabethsgift";
 export const INSTAGRAM_PROFILE_URL = "https://instagram.com/elizabethsgift";
-export const FACEBOOK_PROFILE_URL = "https://facebook.com/elizabethsgift";
+// The id form rather than the /people/Elizabeths-Gift/<id>/ one it redirects
+// to: that path embeds the display name and breaks if the page is ever renamed.
+export const FACEBOOK_PROFILE_URL =
+  "https://www.facebook.com/profile.php?id=61575360463395";
 
 export const SHARE_TITLE = "Apply for a Wheelchair Accessible Van";
 export const SHARE_BODY =

@@ -193,7 +193,7 @@ export default function ContactPage() {
                   </h3>
                   <div className="flex gap-4">
                     <a
-                      href="https://facebook.com/elizabethsgift"
+                      href="https://www.facebook.com/profile.php?id=61575360463395"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-charcoal/60 hover:text-charcoal transition-colors"
