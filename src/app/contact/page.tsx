@@ -1,7 +1,14 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { Facebook, Instagram, Mail } from "lucide-react";
+import { Facebook, Instagram, Linkedin, Mail } from "lucide-react";
+import TikTokIcon from "@/components/TikTokIcon";
+import {
+  FACEBOOK_PROFILE_URL,
+  INSTAGRAM_PROFILE_URL,
+  LINKEDIN_PROFILE_URL,
+  TIKTOK_PROFILE_URL,
+} from "@/lib/social";
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
@@ -191,9 +198,27 @@ export default function ContactPage() {
                   <h3 className="font-semibold text-charcoal mb-4">
                     Find Us on Social Media
                   </h3>
-                  <div className="flex gap-4">
+                  <div className="flex flex-wrap gap-x-6 gap-y-3">
                     <a
-                      href="https://www.facebook.com/profile.php?id=61575360463395"
+                      href={INSTAGRAM_PROFILE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-charcoal/60 hover:text-charcoal transition-colors"
+                    >
+                      <Instagram size={22} />
+                      <span className="text-sm font-medium">Instagram</span>
+                    </a>
+                    <a
+                      href={TIKTOK_PROFILE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-charcoal/60 hover:text-charcoal transition-colors"
+                    >
+                      <TikTokIcon className="h-[22px] w-[22px]" />
+                      <span className="text-sm font-medium">TikTok</span>
+                    </a>
+                    <a
+                      href={FACEBOOK_PROFILE_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-charcoal/60 hover:text-charcoal transition-colors"
@@ -202,13 +227,13 @@ export default function ContactPage() {
                       <span className="text-sm font-medium">Facebook</span>
                     </a>
                     <a
-                      href="https://instagram.com/elizabethsgift"
+                      href={LINKEDIN_PROFILE_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-2 text-charcoal/60 hover:text-charcoal transition-colors"
                     >
-                      <Instagram size={22} />
-                      <span className="text-sm font-medium">@elizabethsgift</span>
+                      <Linkedin size={22} />
+                      <span className="text-sm font-medium">LinkedIn</span>
                     </a>
                   </div>
                 </div>

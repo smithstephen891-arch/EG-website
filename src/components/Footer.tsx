@@ -1,7 +1,14 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Facebook, Instagram } from "lucide-react";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
+import TikTokIcon from "@/components/TikTokIcon";
 import { SHOW_EVENTS } from "@/lib/features";
+import {
+  FACEBOOK_PROFILE_URL,
+  INSTAGRAM_PROFILE_URL,
+  LINKEDIN_PROFILE_URL,
+  TIKTOK_PROFILE_URL,
+} from "@/lib/social";
 
 export default function Footer() {
   return (
@@ -47,9 +54,30 @@ export default function Footer() {
             <h3 className="font-serif text-lg font-semibold text-cream mb-4">
               Connect
             </h3>
+            {/* Same order as every other place all four are listed. The
+                hand-drawn TikTok mark is sized by class rather than lucide's
+                `size` prop; both land on the same 24px box. */}
             <div className="flex gap-4 mb-4">
               <a
-                href="https://www.facebook.com/profile.php?id=61575360463395"
+                href={INSTAGRAM_PROFILE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-cream transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram size={24} />
+              </a>
+              <a
+                href={TIKTOK_PROFILE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-cream transition-colors"
+                aria-label="TikTok"
+              >
+                <TikTokIcon className="h-6 w-6" />
+              </a>
+              <a
+                href={FACEBOOK_PROFILE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-cream transition-colors"
@@ -58,13 +86,13 @@ export default function Footer() {
                 <Facebook size={24} />
               </a>
               <a
-                href="https://instagram.com/elizabethsgift"
+                href={LINKEDIN_PROFILE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-cream transition-colors"
-                aria-label="Instagram"
+                aria-label="LinkedIn"
               >
-                <Instagram size={24} />
+                <Linkedin size={24} />
               </a>
             </div>
             <p className="text-sm text-cream/60">
