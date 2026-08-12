@@ -6,13 +6,14 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
+// Apply and Donate are deliberately absent: both already have a button of their
+// own at the end of the nav, and listing them twice split one destination across
+// two controls of different weight.
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/the-need", label: "The Need" },
-  { href: "/apply", label: "Apply" },
   { href: "/van-gift", label: "Accessible Van" },
-  { href: "/donate", label: "Donate" },
   { href: "/contact", label: "Contact" },
 ];
 
