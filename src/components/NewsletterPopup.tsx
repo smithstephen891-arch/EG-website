@@ -4,14 +4,35 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { NEWSLETTER_RESOLVED_EVENT } from "./VanPromoPopup";
 
+// Opens this modal on request, from a button anywhere on the site. `detail.source`
+// is what the signup is attributed to, so a deliberate click keeps the page it
+// came from rather than being logged as the timed popup.
+export const NEWSLETTER_OPEN_EVENT = "eg:newsletter-open";
+
 const STORAGE_KEY = "eg_newsletter";
 const DISMISS_DAYS = 14;
 const SHOW_DELAY_MS = 4000;
+const TIMED_SOURCE = "Popup";
 
 export default function NewsletterPopup() {
   const [visible, setVisible] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [source, setSource] = useState(TIMED_SOURCE);
+
+  // Asking for it beats every reason the timer would have stayed quiet: a past
+  // dismissal, a past signup, or the delay not having elapsed. `submitted` is
+  // deliberately left alone, so someone who just signed up and clicks again is
+  // told they are on the list rather than handed a second empty form.
+  useEffect(() => {
+    function onOpen(e: Event) {
+      const detail = (e as CustomEvent<{ source?: string }>).detail;
+      setSource(detail?.source || TIMED_SOURCE);
+      setVisible(true);
+    }
+    window.addEventListener(NEWSLETTER_OPEN_EVENT, onOpen);
+    return () => window.removeEventListener(NEWSLETTER_OPEN_EVENT, onOpen);
+  }, []);
 
   useEffect(() => {
     try {
@@ -57,7 +78,7 @@ export default function NewsletterPopup() {
       await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, source: "Popup" }),
+        body: JSON.stringify({ email, name, source }),
       });
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify({ status: "subscribed", timestamp: Date.now() }));

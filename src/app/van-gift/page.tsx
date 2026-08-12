@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import NewsletterSection from "@/components/NewsletterSection";
+import NewsletterButton from "@/components/NewsletterButton";
 import VanFollowLinks from "@/components/VanFollowLinks";
 import VanHeroShare from "@/components/VanHeroShare";
 import VanShareSection from "@/components/VanShareSection";
@@ -174,12 +174,12 @@ export default function VanGiveawayPage() {
               </p>
 
               <div className="mt-10 flex flex-col sm:flex-row gap-4">
-                <a
-                  href="#newsletter"
+                <NewsletterButton
+                  source="Accessible Van Page"
                   className="rounded-full bg-olive-dark px-8 py-3.5 text-center font-semibold text-white hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
                 >
                   Join our mailing list
-                </a>
+                </NewsletterButton>
                 <Link
                   href="/about"
                   className="rounded-full border-2 border-charcoal/20 px-8 py-3.5 text-center font-semibold text-charcoal hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
@@ -199,16 +199,8 @@ export default function VanGiveawayPage() {
         </div>
       </section>
 
-      {/* Newsletter, immediately below the ask rather than at the foot of the
-          page: signing up is what the notice above actually requests. */}
-      <section id="newsletter" className="bg-cream scroll-mt-24">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
-          <NewsletterSection source="Accessible Van Page" />
-        </div>
-      </section>
-
       {/* About the van: lead photo sits beside the spec sheet */}
-      <section className="bg-olive/10">
+      <section className="bg-cream">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
           <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-10">
             2017 Dodge Grand Caravan
@@ -255,15 +247,13 @@ export default function VanGiveawayPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Scam warning. Outlived the form it used to sit inside: people who have
-          already applied are still waiting to hear from us, which is exactly the
-          gap someone impersonating us would step into. */}
-      <section className="bg-cream">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
-          <div className="rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
+          {/* Scam warning. Outlived the form it used to sit inside: people who
+              have already applied are still waiting to hear from us, which is
+              exactly the gap someone impersonating us would step into. Rides
+              along in this band rather than claiming one of its own, so the
+              page keeps alternating cleanly. */}
+          <div className="mt-12 max-w-3xl rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
             <p className="flex items-center gap-2 font-semibold text-charcoal">
               <ShieldAlert aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-red-700" />
               Beware of scams
