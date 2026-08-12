@@ -127,16 +127,19 @@ export default function ApplyPage() {
             className="mb-10 flex items-start gap-3 rounded-xl bg-gold/20 px-6 py-5"
           >
             <Info aria-hidden="true" className="mt-0.5 h-5 w-5 flex-shrink-0 text-charcoal/70" />
-            <div>
-              <p className="font-semibold text-charcoal">
-                The van application is currently closed.
-              </p>
-              <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
-                This is our general equipment application. Please do not submit
-                van applications here, as we have other needs we are trying to
-                fulfill separate from the van.
-              </p>
-            </div>
+            {/* Deliberately no bold "applications are closed" heading. Scanned
+                rather than read, that line reads as this form being closed too.
+                The only emphasis goes on what this form is, so a skimmer lands
+                on the reassurance and the closure stays inside the sentence. */}
+            <p className="text-sm text-charcoal/80 leading-relaxed">
+              This is our{" "}
+              <strong className="font-semibold text-charcoal">
+                general equipment application
+              </strong>
+              , and it is open. The van application is currently closed — please
+              do not submit van applications here, as we have other needs we are
+              trying to fulfill separate from the van.
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-8">
