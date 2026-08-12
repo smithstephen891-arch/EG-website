@@ -2,22 +2,29 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import NewsletterSection from "@/components/NewsletterSection";
-import VanApplicationForm from "@/components/VanApplicationForm";
 import VanFollowLinks from "@/components/VanFollowLinks";
 import VanHeroShare from "@/components/VanHeroShare";
 import VanShareSection from "@/components/VanShareSection";
 import VanVideoPreview from "@/components/VanVideoPreview";
-import { Check, ShieldAlert } from "lucide-react";
+import { SOCIAL_PROFILE_URLS } from "@/lib/social";
+import { ShieldAlert } from "lucide-react";
+
+/*
+ * Applications closed on 12 August 2026. The form and the eligibility rules are
+ * gone; the van, the photos and the video stay, because this page is still where
+ * every link in the wild points and still the best short answer to "what does
+ * Elizabeth's Gift actually do".
+ */
 
 // Browser tab and search results. The share card uses shareTitle below, which
 // reads as a headline rather than a page name.
-const pageTitle = "Apply for a Wheelchair Accessible Van — Elizabeth's Gift";
+const pageTitle = "A Wheelchair Accessible Van — Elizabeth's Gift";
 const pageDescription =
-  "We're looking for a family or individual whose life could be changed by this van.";
+  "Applications for the wheelchair accessible van are now closed. Thank you to everyone who applied and shared it.";
 
-const shareTitle = "Apply for a Wheelchair Accessible Van";
+const shareTitle = "A Wheelchair Accessible Van for Someone Who Needs It";
 const shareDescription =
-  "We're looking for a family or individual whose life could be changed by this van.";
+  "Applications are now closed. Follow along with what Elizabeth's Gift does next.";
 
 // 1200×630 social share card generated from the side-profile photo of the van.
 const ogImage = "/images/van/og-van-gift.jpg";
@@ -68,16 +75,13 @@ const jsonLd = {
         postalCode: "37064",
         addressCountry: "US",
       },
-      sameAs: [
-        "https://www.facebook.com/profile.php?id=61575360463395",
-        "https://instagram.com/elizabethsgift",
-      ],
+      sameAs: SOCIAL_PROFILE_URLS,
     },
     {
       "@type": "SpecialAnnouncement",
-      name: "A Wheelchair Accessible Van for Someone Who Needs It",
-      text: "Elizabeth's Gift is gifting a 2017 Dodge Grand Caravan with a rear-entry manual wheelchair ramp, at no cost and as-is, to someone in need of accessible transportation.",
-      datePosted: "2026-08-07",
+      name: "Applications for the Wheelchair Accessible Van Are Closed",
+      text: "Elizabeth's Gift is no longer accepting applications for the 2017 Dodge Grand Caravan with a rear-entry manual wheelchair ramp. The vehicle is still being gifted at no cost to a selected applicant.",
+      datePosted: "2026-08-12",
       url: "https://www.elizabethsgift.com/van-gift",
       announcementLocation: { "@id": "https://www.elizabethsgift.com/#org" },
       spatialCoverage: { "@type": "Country", name: "United States" },
@@ -121,13 +125,6 @@ const supportingImages = [
   },
 ];
 
-const eligibilityRequirements = [
-  "You must be a resident of the United States.",
-  "You must be at least 18 years old to apply.",
-  "You must have held a valid U.S. driver's license for at least one year prior to submitting this application.",
-  "You do not currently own a handicap accessible van.",
-];
-
 export default function VanGiveawayPage() {
   return (
     <>
@@ -138,60 +135,80 @@ export default function VanGiveawayPage() {
         }}
       />
 
-      {/* Hero */}
+      {/* Applications closed notice */}
       <section className="bg-olive/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
           {/* Fixed track for the video card: an `auto` track sized to a
               `w-full` child collapses to zero width. */}
           <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-16">
-          <div className="max-w-3xl">
-            <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-charcoal">
-              This Van Could Change Someone&apos;s Life
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-charcoal/70 leading-relaxed">
-              We&apos;re giving this wheelchair accessible van to someone who
-              needs it, at no cost. If that&apos;s you or someone you care for,
-              we&apos;d be honored to hear your story.
-            </p>
-            <p className="mt-4 text-base md:text-lg text-charcoal/70 leading-relaxed">
-              Elizabeth&apos;s Gift is a registered 501(c)(3) nonprofit
-              providing mobility equipment to people with disabilities at no
-              cost, helping individuals live full lives.{" "}
-              <Link
-                href="/about"
-                className="font-semibold text-olive-dark underline underline-offset-4 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 rounded transition-colors"
-              >
-                Learn more about us
-              </Link>
-              .
-            </p>
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <a
-                href="#apply"
-                className="rounded-full bg-olive-dark px-8 py-3.5 text-center font-semibold text-white hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
-              >
-                Apply Now
-              </a>
-              <a
-                href="#eligibility"
-                className="rounded-full border-2 border-charcoal/20 px-8 py-3.5 text-center font-semibold text-charcoal hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
-              >
-                Who Can Apply
-              </a>
+            <div className="max-w-3xl">
+              {/* The news, in the one line someone reads before deciding
+                  whether to read the rest. The heading below is the thank-you,
+                  which is the part worth dwelling on but not the part worth
+                  discovering three paragraphs down. */}
+              <p className="inline-block rounded-full bg-charcoal/10 px-4 py-1.5 text-sm font-semibold uppercase tracking-wide text-charcoal/70">
+                Applications are now closed
+              </p>
+              <h1 className="mt-5 font-serif text-3xl md:text-4xl lg:text-5xl text-charcoal">
+                Thank you for your interest in Elizabeth&apos;s Gift.
+              </h1>
+              <p className="mt-6 text-lg md:text-xl text-charcoal/70 leading-relaxed">
+                We are no longer accepting applications for the wheelchair van.
+                Our hope is to have more opportunities to provide more vehicles
+                to those in need in the future, but at this time our resources
+                are limited.
+              </p>
+              <p className="mt-4 text-lg md:text-xl text-charcoal/70 leading-relaxed">
+                We would be honored to have you follow along with everything
+                we&apos;re doing by subscribing to our mailing list and
+                following us on social media.
+              </p>
+
+              {/* Survives from the old hero. Most of this page's traffic still
+                  arrives cold from social, and with the application gone this
+                  is the only line that says who is behind the van. */}
+              <p className="mt-6 text-base text-charcoal/60 leading-relaxed">
+                Elizabeth&apos;s Gift is a registered 501(c)(3) nonprofit
+                providing mobility equipment to people with disabilities at no
+                cost, helping individuals live full lives.
+              </p>
+
+              <div className="mt-10 flex flex-col sm:flex-row gap-4">
+                <a
+                  href="#newsletter"
+                  className="rounded-full bg-olive-dark px-8 py-3.5 text-center font-semibold text-white hover:bg-olive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
+                >
+                  Join our mailing list
+                </a>
+                <Link
+                  href="/about"
+                  className="rounded-full border-2 border-charcoal/20 px-8 py-3.5 text-center font-semibold text-charcoal hover:border-charcoal/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 transition-colors"
+                >
+                  Learn more about us
+                </Link>
+              </div>
+
+              <VanFollowLinks className="mt-8 max-w-xl border-t border-charcoal/10 pt-6" />
             </div>
-          </div>
 
             <div>
               <VanVideoPreview />
               <VanHeroShare />
-              <VanFollowLinks className="mx-auto mt-5 w-full max-w-[280px] border-t border-charcoal/10 pt-5 sm:max-w-[320px]" />
             </div>
           </div>
         </div>
       </section>
 
+      {/* Newsletter, immediately below the ask rather than at the foot of the
+          page: signing up is what the notice above actually requests. */}
+      <section id="newsletter" className="bg-cream scroll-mt-24">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
+          <NewsletterSection source="Accessible Van Page" />
+        </div>
+      </section>
+
       {/* About the van: lead photo sits beside the spec sheet */}
-      <section className="bg-cream">
+      <section className="bg-olive/10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
           <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-10">
             2017 Dodge Grand Caravan
@@ -241,49 +258,12 @@ export default function VanGiveawayPage() {
         </div>
       </section>
 
-      {/* Eligibility */}
-      <section id="eligibility" className="bg-charcoal text-cream scroll-mt-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
-          <h2 className="font-serif text-3xl md:text-4xl text-cream mb-10">
-            Who Can Apply
-          </h2>
-          <ul className="space-y-4 max-w-3xl">
-            {eligibilityRequirements.map((requirement) => (
-              <li key={requirement} className="flex items-start gap-3">
-                <Check aria-hidden="true" className="mt-1 h-5 w-5 flex-shrink-0 text-olive-muted" />
-                <span className="text-cream/80 text-lg leading-relaxed">{requirement}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8 max-w-3xl rounded-2xl bg-charcoal-light p-6 border-l-4 border-olive">
-            <p className="text-cream/80 leading-relaxed">
-              Completing this application is{" "}
-              <strong className="font-semibold text-cream">not a guarantee</strong>{" "}
-              of receiving the vehicle. We review every application and will
-              contact selected applicants directly.
-            </p>
-          </div>
-          <a
-            href="#apply"
-            className="mt-10 inline-block rounded-full bg-gold px-8 py-3.5 font-semibold text-charcoal hover:bg-gold/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal transition-colors"
-          >
-            Apply Now
-          </a>
-        </div>
-      </section>
-
-      {/* Application form */}
-      <section id="apply" className="bg-cream scroll-mt-24">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
-          <h2 className="font-serif text-3xl md:text-4xl text-charcoal mb-4">
-            Apply for the Van
-          </h2>
-          <p className="text-charcoal/70 leading-relaxed mb-8">
-            Tell us about yourself and why you need this vehicle. We review
-            every application.
-          </p>
-
-          <div className="mb-10 rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
+      {/* Scam warning. Outlived the form it used to sit inside: people who have
+          already applied are still waiting to hear from us, which is exactly the
+          gap someone impersonating us would step into. */}
+      <section className="bg-cream">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+          <div className="rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
             <p className="flex items-center gap-2 font-semibold text-charcoal">
               <ShieldAlert aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-red-700" />
               Beware of scams
@@ -293,10 +273,9 @@ export default function VanGiveawayPage() {
               <strong className="font-semibold text-charcoal">
                 never ask you for money
               </strong>{" "}
-              at any point in this process. There is no fee to apply, no fee to
-              be selected, and no payment of any kind required to receive the
-              vehicle. We will never ask for your bank account, card, or
-              payment information.
+              at any point in this process. There is no fee to be selected and
+              no payment of any kind required to receive the vehicle. We will
+              never ask for your bank account, card, or payment information.
             </p>
             <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
               We only contact applicants from an{" "}
@@ -314,10 +293,6 @@ export default function VanGiveawayPage() {
               .
             </p>
           </div>
-          {/* Video uploads light up once a Vercel Blob store is linked. */}
-          <VanApplicationForm
-            videoUploadEnabled={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
-          />
         </div>
       </section>
 
@@ -325,13 +300,6 @@ export default function VanGiveawayPage() {
       <section className="bg-olive/10">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
           <VanShareSection />
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="bg-cream">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 border-t border-charcoal/10">
-          <NewsletterSection source="Accessible Van Page" />
         </div>
       </section>
     </>

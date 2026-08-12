@@ -221,12 +221,12 @@ export default function VanPromoPopup() {
                   id="van-promo-heading"
                   className="mt-3 font-serif text-2xl leading-tight text-charcoal sm:text-3xl"
                 >
-                  Do you know someone who needs this?
+                  A wheelchair accessible van, at no cost
                 </h2>
                 <p className="mt-4 text-charcoal/70 leading-relaxed">
                   We&apos;re gifting a wheelchair accessible van to someone who
-                  needs it, at no cost. The hardest part is reaching the person
-                  it&apos;s meant for, and that&apos;s where you come in.
+                  needs it. Applications for this one have closed, but the
+                  further word travels, the more people we can reach next time.
                 </p>
                 <p className="mt-3 font-semibold text-charcoal">
                   Help us spread the word.
@@ -244,13 +244,17 @@ export default function VanPromoPopup() {
                     Share with someone
                   </button>
 
+                  {/* Where Apply used to sit. With applications closed the only
+                      thing left to send someone to is the story itself, so the
+                      gold slot goes to the van page rather than disappearing. */}
                   <div className="grid grid-cols-2 gap-3">
                     <Link
-                      href={`${VAN_PATH}#apply`}
+                      href={VAN_PATH}
                       onClick={close}
                       className="flex items-center justify-center gap-2 rounded-full bg-gold px-4 py-3 font-semibold text-charcoal transition-colors hover:bg-gold/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2"
                     >
-                      Apply
+                      <Info aria-hidden="true" className="h-4 w-4" />
+                      More info
                     </Link>
                     <Link
                       href="/donate"
@@ -261,15 +265,6 @@ export default function VanPromoPopup() {
                       Donate
                     </Link>
                   </div>
-
-                  <Link
-                    href={VAN_PATH}
-                    onClick={close}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg py-2.5 text-sm font-medium text-olive-dark underline underline-offset-4 transition-colors hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark"
-                  >
-                    <Info aria-hidden="true" className="h-4 w-4" />
-                    More information about the van
-                  </Link>
                 </div>
 
                 <button
@@ -298,8 +293,8 @@ export default function VanPromoPopup() {
                   Help us spread the word
                 </h2>
                 <p className="mt-3 text-charcoal/70 leading-relaxed">
-                  Send this to anyone who might need a wheelchair accessible
-                  vehicle, or share it with your friends.
+                  Share what Elizabeth&apos;s Gift is doing with your friends, so
+                  more people find us before the next van does.
                 </p>
 
                 <div className="mt-6 space-y-2.5">

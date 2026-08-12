@@ -7,14 +7,13 @@ import { useShareLink } from "@/lib/use-share-link";
 /*
  * The compact share row that sits directly under the hero video card.
  *
- * The full share section is at the bottom of the page, below the entire
- * application form, so only people who scroll past the form ever reach it. The
- * people best placed to help are the opposite: they read the hero, work out the
- * van is not for them, and leave. This catches them at that moment.
+ * The full share section is at the bottom of the page, so only people who scroll
+ * the whole way ever reach it. Most of this page's traffic arrives from social,
+ * reads the notice at the top, and leaves. This catches them at that moment.
  *
- * Deliberately quieter than Apply Now, which is the primary action for anyone
- * this page is actually for: outlined rather than filled, and sized to the video
- * card so it reads as part of that column instead of a third competing CTA.
+ * Deliberately quieter than the mailing list button beside it: outlined rather
+ * than filled, and sized to the video card so it reads as part of that column
+ * instead of a third competing CTA.
  */
 
 const miniClass =
@@ -26,7 +25,7 @@ export default function VanHeroShare() {
   return (
     <div className="mx-auto mt-5 w-full max-w-[280px] sm:max-w-[320px]">
       <p className="text-center text-sm text-charcoal/70">
-        Not the right fit? Help us find who it is.
+        Help us spread the word.
       </p>
 
       <button

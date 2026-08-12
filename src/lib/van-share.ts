@@ -25,22 +25,17 @@ export const TIKTOK_VIDEO_URL =
   "https://www.tiktok.com/@elizabethsgift/video/7671851728903359757";
 export const INSTAGRAM_REEL_URL = "https://www.instagram.com/reel/Db13sqdsJNP/";
 
-/*
- * Profiles, for the follow links rather than the posts. The Instagram handle is
- * the same one the footer, the contact page and this page's structured data
- * already point at; it is repeated here so the van page's social links all come
- * from one import, not because there is a second account.
- */
-export const TIKTOK_PROFILE_URL = "https://www.tiktok.com/@elizabethsgift";
-export const INSTAGRAM_PROFILE_URL = "https://instagram.com/elizabethsgift";
-// The id form rather than the /people/Elizabeths-Gift/<id>/ one it redirects
-// to: that path embeds the display name and breaks if the page is ever renamed.
-export const FACEBOOK_PROFILE_URL =
-  "https://www.facebook.com/profile.php?id=61575360463395";
+// Profiles moved to lib/social.ts once they were needed off the van page too.
 
-export const SHARE_TITLE = "Apply for a Wheelchair Accessible Van";
+/*
+ * Applications closed on 12 August 2026, so neither of these may promise one any
+ * more. They still lead with the van because that is what the link previews and
+ * what people recognise; what the page now asks for is attention, not an
+ * application.
+ */
+export const SHARE_TITLE = "A Wheelchair Accessible Van for Someone Who Needs It";
 export const SHARE_BODY =
-  "Elizabeth's Gift is giving a wheelchair accessible van to someone who needs it, at no cost. If you know someone whose life this could change, here's the application:";
+  "Elizabeth's Gift is giving a wheelchair accessible van to someone who needs it, at no cost. Applications are now closed, but here's the story:";
 
 export function buildMailHref(url: string): string {
   return `mailto:?subject=${encodeURIComponent(SHARE_TITLE)}&body=${encodeURIComponent(

@@ -16,12 +16,12 @@ export default function VanShareSection() {
   return (
     <div className="rounded-2xl bg-white p-8 shadow-sm md:p-10">
       <h2 className="font-serif text-2xl md:text-3xl text-charcoal">
-        Know someone who needs this?
+        Help us reach further next time
       </h2>
       <p className="mt-3 text-charcoal/70 leading-relaxed">
-        The hardest part of giving this van away is reaching the person
-        it&apos;s meant for. If this isn&apos;t the right fit for you, please
-        pass it along to someone it could change everything for.
+        This van found its way to the people who needed it because others passed
+        it on. Share what Elizabeth&apos;s Gift is doing, and help us get to the
+        next person waiting on a way to get where they need to go.
       </p>
 
       <button
