@@ -136,7 +136,7 @@ export default function ApplyPage() {
               <strong className="font-semibold text-charcoal">
                 general equipment application
               </strong>
-              . The van application is currently closed — please do not submit
+              . The van application is currently closed. Please do not submit
               van applications here, as we have other needs we are trying to
               fulfill separate from the van.
             </p>
