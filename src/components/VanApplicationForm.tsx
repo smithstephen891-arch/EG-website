@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ReactNode } from "react";
-import { AlertCircle, Info, X } from "lucide-react";
+import { AlertCircle, Info, ShieldAlert, X } from "lucide-react";
 import VideoStoryField, { type VideoStoryValue } from "./VideoStoryField";
 
 type YesNo = "" | "yes" | "no";
@@ -755,6 +755,40 @@ export default function VanApplicationForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate className="relative space-y-8">
+      {/* Lives here rather than on the page so it is swapped out along with the
+          form. The success state carries its own shorter version, and a
+          page-level copy stayed on screen underneath it, warning twice. */}
+      <div className="rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
+        <p className="flex items-center gap-2 font-semibold text-charcoal">
+          <ShieldAlert aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-red-700" />
+          Beware of scams
+        </p>
+        <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
+          Elizabeth&apos;s Gift will{" "}
+          <strong className="font-semibold text-charcoal">
+            never ask you for money
+          </strong>{" "}
+          at any point in this process. There is no fee to apply, no fee to be
+          selected, and no payment of any kind required to receive the vehicle.
+          We will never ask for your bank account, card, or payment information.
+        </p>
+        <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
+          We only contact applicants from an{" "}
+          <strong className="font-semibold text-charcoal">
+            @elizabethsgift.com
+          </strong>{" "}
+          address. If someone claiming to be us asks you for payment, it
+          isn&apos;t us. Please report it to{" "}
+          <a
+            href="mailto:info@elizabethsgift.com"
+            className="font-semibold text-olive-dark underline underline-offset-2 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 rounded"
+          >
+            info@elizabethsgift.com
+          </a>
+          .
+        </p>
+      </div>
+
       <p className="text-sm text-charcoal/60">
         Fields marked with an asterisk (<span aria-hidden="true">*</span>
         <span className="sr-only">star</span>) are required.

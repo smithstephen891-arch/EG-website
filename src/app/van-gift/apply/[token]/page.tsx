@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import VanApplicationForm from "@/components/VanApplicationForm";
-import { Check, ShieldAlert } from "lucide-react";
+import { Check } from "lucide-react";
 
 /*
  * The van application, reachable only by someone holding the link.
@@ -99,38 +99,8 @@ export default async function PrivateVanApplicationPage({
 
       <section className="bg-cream">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-20 md:py-24">
-          <div className="mb-10 rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
-            <p className="flex items-center gap-2 font-semibold text-charcoal">
-              <ShieldAlert aria-hidden="true" className="h-5 w-5 flex-shrink-0 text-red-700" />
-              Beware of scams
-            </p>
-            <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
-              Elizabeth&apos;s Gift will{" "}
-              <strong className="font-semibold text-charcoal">
-                never ask you for money
-              </strong>{" "}
-              at any point in this process. There is no fee to apply, no fee to
-              be selected, and no payment of any kind required to receive the
-              vehicle. We will never ask for your bank account, card, or
-              payment information.
-            </p>
-            <p className="mt-2 text-sm text-charcoal/80 leading-relaxed">
-              We only contact applicants from an{" "}
-              <strong className="font-semibold text-charcoal">
-                @elizabethsgift.com
-              </strong>{" "}
-              address. If someone claiming to be us asks you for payment,
-              it isn&apos;t us. Please report it to{" "}
-              <a
-                href="mailto:info@elizabethsgift.com"
-                className="font-semibold text-olive-dark underline underline-offset-2 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-olive-dark focus-visible:ring-offset-2 rounded"
-              >
-                info@elizabethsgift.com
-              </a>
-              .
-            </p>
-          </div>
-
+          {/* The scam warning is the form's own, so that submitting replaces it
+              rather than leaving it above the confirmation. */}
           {/* Video uploads light up once a Vercel Blob store is linked. */}
           <VanApplicationForm
             videoUploadEnabled={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
