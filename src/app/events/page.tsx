@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instagram } from "lucide-react";
+import { OG_IMAGES } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "Events — Elizabeth's Gift",
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
     title: "Events — Elizabeth's Gift",
     description:
       "Annual events benefiting Elizabeth's Gift, including our Benefit Dinner and the Townies Open golf tournament.",
-    images: [{ url: "/icon.png", width: 512, height: 512, alt: "Elizabeth's Gift" }],
+    images: OG_IMAGES,
   },
 };
 

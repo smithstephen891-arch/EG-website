@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import NewsletterSection from "@/components/NewsletterSection";
+import { OG_IMAGES } from "@/lib/og";
 
 export const metadata: Metadata = {
   title: "The Need — Elizabeth's Gift",
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
     title: "The Need — Elizabeth's Gift",
     description:
       "The right equipment isn't a luxury — it's the bridge between isolation and a full life. Why insurance leaves a gap, and how Elizabeth's Gift closes it.",
-    images: [{ url: "/icon.png", width: 512, height: 512, alt: "Elizabeth's Gift" }],
+    images: OG_IMAGES,
   },
 };
 
