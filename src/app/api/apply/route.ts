@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { formatAddressBlock, formatAddressOneLine } from "@/lib/address";
 import {
   ASSISTANCE_VIDEO_PREFIX,
   extractVideoPathname,
@@ -15,7 +16,17 @@ export async function POST(request: Request) {
     const guardianName = formData.get("guardianName") as string;
     const phone = formData.get("phone") as string;
     const email = formData.get("email") as string;
-    const address = formData.get("address") as string;
+    // The address arrives in parts now. Composed here so the reviewer's email
+    // still reads as an address rather than five labelled fragments.
+    const addressParts = {
+      street: (formData.get("street") as string) || "",
+      unit: (formData.get("unit") as string) || "",
+      city: (formData.get("city") as string) || "",
+      state: (formData.get("state") as string) || "",
+      zip: (formData.get("zip") as string) || "",
+    };
+    const address = formatAddressOneLine(addressParts);
+    const addressHtml = formatAddressBlock(addressParts).replace(/\n/g, "<br />");
     const age = formData.get("age") as string;
     const story = formData.get("story") as string;
     const equipment = formData.get("equipment") as string;
@@ -113,8 +124,8 @@ export async function POST(request: Request) {
               <td style="padding: 8px 0; color: #352e24;"><a href="mailto:${email}">${email}</a></td>
             </tr>
             <tr>
-              <td style="padding: 8px 0; color: #666;"><strong>Address</strong></td>
-              <td style="padding: 8px 0; color: #352e24;">${address}</td>
+              <td style="padding: 8px 0; color: #666; vertical-align: top;"><strong>Address</strong></td>
+              <td style="padding: 8px 0; color: #352e24;">${addressHtml}</td>
             </tr>
           </table>
 

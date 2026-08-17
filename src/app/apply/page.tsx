@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { Info } from "lucide-react";
+import AddressFields from "@/components/AddressFields";
 import VideoStoryField, { type VideoStoryValue } from "@/components/VideoStoryField";
 
 export default function ApplyPage() {
@@ -196,18 +197,7 @@ export default function ApplyPage() {
               </div>
             </div>
 
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-charcoal mb-2">
-                Home Address *
-              </label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                required
-                className="w-full rounded-lg border border-charcoal/20 bg-white px-4 py-3 text-charcoal placeholder:text-charcoal/40 focus:border-olive focus:ring-2 focus:ring-olive/20 outline-none transition"
-              />
-            </div>
+            <AddressFields />
 
             <div className="max-w-xs">
               <label htmlFor="age" className="block text-sm font-medium text-charcoal mb-2">
