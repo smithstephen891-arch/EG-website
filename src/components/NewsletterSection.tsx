@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { NEWSLETTER_RESOLVED_EVENT } from "./VanPromoPopup";
 
 interface NewsletterSectionProps {
   source?: string;
@@ -25,7 +24,6 @@ export default function NewsletterSection({ source = "Website", dark = false }: 
         body: JSON.stringify({ email, name, source }),
       });
       setSubmitted(true);
-      window.dispatchEvent(new CustomEvent(NEWSLETTER_RESOLVED_EVENT));
     } catch {
       alert("Something went wrong. Please try again.");
     } finally {

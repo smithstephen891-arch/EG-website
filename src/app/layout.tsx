@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NewsletterPopup from "@/components/NewsletterPopup";
-import VanPromoPopup from "@/components/VanPromoPopup";
 import { DonationProvider } from "@/context/DonationContext";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -43,7 +42,6 @@ export default function RootLayout({
           <main className="pt-20">{children}</main>
           <Footer />
           <NewsletterPopup />
-          <VanPromoPopup />
           <Analytics />
         </DonationProvider>
       </body>

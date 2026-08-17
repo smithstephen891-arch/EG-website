@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-import { NEWSLETTER_RESOLVED_EVENT } from "./VanPromoPopup";
 
 // Opens this modal on request, from a button anywhere on the site. `detail.source`
 // is what the signup is attributed to, so a deliberate click keeps the page it
@@ -56,16 +55,7 @@ export default function NewsletterPopup() {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({ status: "dismissed", timestamp: Date.now() }));
     } catch { /* ignore */ }
-    closeAndContinue();
-  }
-
-  // Announce as this modal closes, so the van promo never stacks on top of
-  // it. Fires however the reader responded: subscribing, declining, or just
-  // closing. Someone who does not want our emails may still know the person
-  // who needs the van.
-  function closeAndContinue() {
     setVisible(false);
-    window.dispatchEvent(new CustomEvent(NEWSLETTER_RESOLVED_EVENT));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -119,7 +109,7 @@ export default function NewsletterPopup() {
               Elizabeth&apos;s Gift and the work we&apos;re doing together.
             </p>
             <button
-              onClick={closeAndContinue}
+              onClick={() => setVisible(false)}
               className="mt-6 rounded-full bg-olive px-8 py-3 font-semibold text-white hover:bg-olive-light transition-colors"
             >
               Close
