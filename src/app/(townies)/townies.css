@@ -1,0 +1,33 @@
+/* Second Tailwind entry, for the Townies Open site only. The (eg) and
+   (townies) route groups are separate root layouts, so each document loads
+   just its own stylesheet and the two brands can't bleed into each other. */
+
+/* source(none) turns off whole-project scanning; only the paths below feed
+   this bundle. If a townies page ever imports a component from outside these
+   directories, add that directory here — otherwise its utility classes
+   silently won't exist in this stylesheet. */
+@import "tailwindcss" source(none);
+@source "./";
+@source "../../components/townies";
+
+@theme inline {
+  --color-forest: #3d513f; /* background green baked into the logo art */
+  --color-acid: #dcd641; /* wordmark yellow */
+  --color-celery: #e6e8b0; /* type color from the 2026 flyer */
+  --color-grey-green: #585b58; /* background from the 2026 flyer */
+  --font-sans: var(--font-poppins);
+}
+
+/* Same guard, and rationale, as globals.css: one overflowing element must not
+   let mobile browsers drag the whole layout sideways. */
+html,
+body {
+  overflow-x: hidden;
+  overflow-x: clip;
+}
+
+body {
+  background: var(--color-forest);
+  color: var(--color-celery);
+  font-family: var(--font-poppins), system-ui, sans-serif;
+}
