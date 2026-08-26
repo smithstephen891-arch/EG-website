@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Corben } from "next/font/google";
-import "../globals.css";
+import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import NewsletterPopup from "@/components/NewsletterPopup";
@@ -27,11 +27,8 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.elizabethsgift.com"),
   title: siteTitle,
   description: siteDescription,
-  // Listed explicitly because the icon files live in public/, not as app-dir
-  // file conventions: inside a route group those would serve under hashed
-  // URLs, breaking the stable /icon.png address.
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }, "/icon.png"],
+    icon: "/icon.png",
     apple: "/apple-icon.png",
   },
   // The default link preview for every page that does not set its own.
