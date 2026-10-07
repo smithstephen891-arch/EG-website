@@ -487,40 +487,71 @@ export default function ApplyPage() {
               </div>
             </div>
 
-            {/* ── Media & Publicity Release (Optional) ── */}
-            <div className="rounded-xl border border-charcoal/20 bg-olive/5 px-6 py-5 space-y-3">
+            {/* ── Media & Publicity Release (answer required, either answer accepted) ── */}
+            <fieldset className="rounded-xl border border-charcoal/20 bg-olive/5 px-6 py-5 space-y-3">
+              <legend className="sr-only">Media and Publicity Release</legend>
               <h3 className="font-serif text-lg text-charcoal">
-                Can We Share Your Story to Help More People?
+                Can We Share Your Story to Help More People?{" "}
+                <span className="text-red-600">*</span>
               </h3>
               <p className="text-sm text-charcoal/60 leading-relaxed">
                 One of the most powerful ways to grow our mission is by sharing
                 the stories of the people we serve. If you&apos;re comfortable, we&apos;d
                 love the opportunity to share your story — on our website, social
                 media, or in other materials — to inspire others and help us
-                reach more people who need support. This is completely optional.
+                reach more people who need support. Please choose one option
+                below. Your answer does not affect whether your application is
+                approved.{" "}
+                <button
+                  type="button"
+                  onClick={() => setShowMediaRelease(true)}
+                  className="text-olive underline hover:text-olive-light transition-colors"
+                >
+                  Read the full media release
+                </button>
               </p>
-              <div className="flex items-start gap-3 pt-1">
-                <input
-                  type="checkbox"
-                  id="mediaRelease"
-                  name="mediaRelease"
-                  className="mt-0.5 h-4 w-4 rounded border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
-                />
-                <label htmlFor="mediaRelease" className="text-sm text-charcoal leading-snug cursor-pointer">
-                  Yes, Elizabeth&apos;s Gift may use my name, image, and story to
-                  help spread the word.{" "}
-                  <button
-                    type="button"
-                    onClick={() => setShowMediaRelease(true)}
-                    className="text-olive underline hover:text-olive-light transition-colors"
-                  >
-                    Read the full media release
-                  </button>
-                  {" "}
-                  <span className="text-charcoal/40">(Optional)</span>
+              <div className="space-y-3 pt-1">
+                <label
+                  htmlFor="mediaReleaseYes"
+                  className="flex items-start gap-3 rounded-lg border border-charcoal/15 bg-white/60 px-4 py-3 cursor-pointer has-[:checked]:border-olive has-[:checked]:bg-olive/10"
+                >
+                  <input
+                    type="radio"
+                    id="mediaReleaseYes"
+                    name="mediaRelease"
+                    value="yes"
+                    required
+                    className="mt-0.5 h-4 w-4 border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-sm text-charcoal leading-snug">
+                    <strong>Yes, I give permission.</strong> Elizabeth&apos;s Gift
+                    may use the recipient&apos;s name, photos, voice or video, and
+                    story on its website, social media, newsletters, and other
+                    materials to share its mission. No payment is involved, and I
+                    can withdraw permission for future use at any time by emailing
+                    info@elizabethsgift.com.
+                  </span>
+                </label>
+                <label
+                  htmlFor="mediaReleaseNo"
+                  className="flex items-start gap-3 rounded-lg border border-charcoal/15 bg-white/60 px-4 py-3 cursor-pointer has-[:checked]:border-olive has-[:checked]:bg-olive/10"
+                >
+                  <input
+                    type="radio"
+                    id="mediaReleaseNo"
+                    name="mediaRelease"
+                    value="no"
+                    required
+                    className="mt-0.5 h-4 w-4 border-charcoal/30 accent-olive cursor-pointer flex-shrink-0"
+                  />
+                  <span className="text-sm text-charcoal leading-snug">
+                    <strong>No, I do not give permission.</strong> Elizabeth&apos;s
+                    Gift will not use the recipient&apos;s name, photos, voice or
+                    video, or story in any public or promotional materials.
+                  </span>
                 </label>
               </div>
-            </div>
+            </fieldset>
 
             <div className="rounded-xl border border-red-700/25 bg-red-700/5 px-6 py-5">
               <p className="font-semibold text-charcoal">Beware of scams</p>
@@ -581,7 +612,7 @@ export default function ApplyPage() {
             </div>
             <div className="px-6 py-5 overflow-y-auto text-sm text-charcoal/70 leading-relaxed space-y-3">
               <p>
-                By checking the box on the application form, I, the undersigned
+                By selecting &quot;Yes, I give permission&quot; on the application form, I, the undersigned
                 applicant (or the authorized parent, legal guardian, or
                 representative of the individual identified in this application),
                 hereby grant to Elizabeth&apos;s Gift, its successors, assigns,
