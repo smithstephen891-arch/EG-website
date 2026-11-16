@@ -99,8 +99,8 @@ export default function Home() {
           <div className="mt-14 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-5xl mx-auto">
             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl shadow-sm">
               <Image
-                src="/images/home/elizabeth-pool.jpg"
-                alt="Elizabeth as a child with her father floating in a pool"
+                src="/images/home/elizabeth-laughing.jpg"
+                alt="Elizabeth laughing in her wheelchair as three loved ones gather around her"
                 fill
                 sizes="(max-width: 640px) 100vw, 33vw"
                 className="object-cover"

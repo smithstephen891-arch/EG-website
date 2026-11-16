@@ -32,10 +32,10 @@ export default function AboutPage() {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-20">
           <div className="overflow-hidden rounded-2xl">
             <Image
-              src="/images/family-elizabeth.jpg"
-              alt="The family with Elizabeth"
-              width={2048}
-              height={1182}
+              src="/images/family-night-to-shine.jpg"
+              alt="Elizabeth in a red dress and white wrap, surrounded by family and friends at Night to Shine"
+              width={1536}
+              height={1229}
               className="w-full h-auto"
               priority
             />
