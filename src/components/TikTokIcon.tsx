@@ -4,9 +4,8 @@
  * grid and currentColor of the lucide icons it sits beside, so it takes the
  * same sizing classes and inherits colour the same way.
  *
- * Shared rather than local to one component: the footer, the contact page and
- * the van page's follow row all need it, and a second hand-drawn copy would
- * drift.
+ * Shared rather than local to one component: the footer and the contact page
+ * both need it, and a second hand-drawn copy would drift.
  */
 export default function TikTokIcon({ className }: { className?: string }) {
   return (

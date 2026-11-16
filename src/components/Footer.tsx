@@ -41,7 +41,6 @@ export default function Footer() {
               <Link href="/about" className="text-sm hover:text-cream transition-colors">About</Link>
               <Link href="/apply" className="text-sm hover:text-cream transition-colors">Apply for Assistance</Link>
               <Link href="/donate" className="text-sm hover:text-cream transition-colors">Donate</Link>
-              <Link href="/van-gift" className="text-sm hover:text-cream transition-colors">Accessible Van</Link>
               {SHOW_EVENTS && (
                 <Link href="/events" className="text-sm hover:text-cream transition-colors">Events</Link>
               )}

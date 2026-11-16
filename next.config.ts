@@ -3,19 +3,20 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async redirects() {
     return [
-      // The van page originally shipped at /van-giveaway and was shared on
-      // social under that URL. Keep those posts working after the rename.
+      // The accessible van page came down in November 2026 after the van was
+      // given away. Its URLs (including the original /van-giveaway) were shared
+      // widely on social, so send those visitors to the home page rather than a
+      // 404. Temporary on purpose: browsers cache a permanent redirect, which
+      // would get in the way if a future campaign ever reuses the path.
       {
-        source: "/van-giveaway",
-        destination: "/van-gift",
-        permanent: true,
+        source: "/van-gift/:path*",
+        destination: "/",
+        permanent: false,
       },
-      // Older submissions from a cached page could still post to the old API
-      // path. 308 preserves the POST method and body.
       {
-        source: "/api/van-giveaway/:path*",
-        destination: "/api/van-gift/:path*",
-        permanent: true,
+        source: "/van-giveaway/:path*",
+        destination: "/",
+        permanent: false,
       },
     ];
   },

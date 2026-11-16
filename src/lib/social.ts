@@ -1,12 +1,8 @@
 /**
  * The organisation's social profiles, in one place.
  *
- * Every follow link on the site reads from here — the footer, the contact page,
- * the van page's follow row, and the `sameAs` list in its structured data — so
- * adding an account is one edit rather than a hunt through four files.
- *
- * Links to individual posts live in van-share.ts instead: those belong to a
- * campaign, these belong to the organisation.
+ * Every follow link on the site reads from here (the footer and the contact
+ * page), so adding an account is one edit rather than a hunt through files.
  */
 
 export const INSTAGRAM_PROFILE_URL = "https://instagram.com/elizabethsgift";

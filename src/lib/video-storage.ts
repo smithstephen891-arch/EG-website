@@ -3,8 +3,7 @@ import { issueSignedToken, presignUrl } from "@vercel/blob";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 
 /**
- * Shared plumbing for applicant story videos, used by both the accessible van
- * application and the general assistance application.
+ * Plumbing for applicant story videos on the general assistance application.
  *
  * Videos go straight from the browser to Vercel Blob and never pass through a
  * function: a 3 minute video is far larger than the serverless request body
@@ -31,8 +30,7 @@ const ALLOWED_CONTENT_TYPES = [
 
 const EXTENSIONS = "mp4|mov|webm|mkv|m4v|3gp";
 
-/** Folder each form stores into, so the two are told apart at a glance. */
-export const VAN_VIDEO_PREFIX = "van-applications";
+/** Folder the assistance form stores into. */
 export const ASSISTANCE_VIDEO_PREFIX = "assistance-applications";
 
 /**
